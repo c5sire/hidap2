@@ -1,0 +1,140 @@
+library(shiny)
+library(rhandsontable)
+library(shinyTree)
+library(shinyFiles)
+
+source("R/global.R") # global needs to be loaded first
+source("R/utils.R")
+source("R/utils_crop.R")
+source("R/utils_program.R")
+source("R/utils_program_stage.R")
+source("R/utils_material.R")
+
+#source("R/perspectives.R")
+
+
+shinyServer <- function(input, output, session) {
+
+  volumes <- getVolumes()
+
+  values = reactiveValues()
+  setHot_crops = function(x) values[["hot_crops"]] = x
+  setHot_programs = function(x) values[["hot_programs"]] = x
+  setHot_program_stages = function(x) values[["hot_program_stages"]] = x
+  setHot_materials = function(x) values[["hot_materials"]] = x
+  setFile_materials = function(x) values[["file_materials"]] = x
+
+  observe({
+    input$saveBtn
+    if (!is.null(values[["hot_crops"]])) {
+      post_crop_table(values[["hot_crops"]])
+    }
+    if (!is.null(values[["hot_programs"]])) {
+      post_program_table(values[["hot_programs"]])
+    }
+    if (!is.null(values[["hot_program_stages"]])) {
+      post_program_stage_table(values[["hot_program_stages"]])
+    }
+    if (!is.null(values[["hot_materials"]])) {
+      post_material_table(values[["hot_materials"]])
+    }
+
+  })
+
+  output$hot_crops = renderRHandsontable({
+    if (!is.null(input$hot_crops)) {
+      DF = hot_to_r(input$hot_crops)
+    } else {
+      DF = get_crop_table()
+    }
+
+    setHot_crops(DF)
+    rhandsontable(DF) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+      # %>% hot_context_menu(allowRowEdit = FALSE)
+  })
+
+  output$hot_programs = renderRHandsontable({
+    if (!is.null(input$hot_programs)) {
+      DF_programs = hot_to_r(input$hot_programs)
+    } else {
+      DF_programs = get_program_table()
+    }
+
+    setHot_programs(DF_programs)
+    rhandsontable(DF_programs,   stretchH = "all") %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+  })
+
+  output$hot_program_stages = renderRHandsontable({
+    if (!is.null(input$hot_program_stages)) {
+      DF_program_stages = hot_to_r(input$hot_program_stages)
+    } else {
+      DF_program_stages = get_program_stage_table()
+    }
+
+    setHot_program_stages(DF_program_stages)
+    rhandsontable(DF_program_stages,   stretchH = "all") %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+  })
+
+
+  output$hot_materials = renderRHandsontable({
+    if (!is.null(input$hot_materials)) {
+      DF_materials = hot_to_r(input$hot_materials)
+    } else {
+      DF_materials = get_material_table()
+    }
+
+    setHot_materials(DF_materials)
+    rhandsontable(DF_materials,   stretchH = "all") %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+  })
+
+  output$material_tree <- renderTree({
+    material_list_tree()
+  })
+
+
+  shinyFileChoose(input, 'mlist_files', session = session,
+                  roots = volumes , filetypes = c('', 'xlsx')
+                  )
+
+  output$mlist_path <- renderPrint({
+    out <- as.character(parseFilePaths(volumes, input$mlist_files)$datapath)
+    setFile_materials(out)
+    cat(out)
+    out
+    })
+
+
+  output$selTxt <- renderText({
+    tree <- input$material_tree
+    if (is.null(tree)){
+      "None"
+    } else{
+      x <- unlist(get_selected(tree))
+      #cat(x)
+      #setHot_materials(x)
+      x
+    }
+  })
+
+  mlist_text <- eventReactive(input$doListButton, {
+    fn = values[["file_materials"]]
+    if(input$mlist_choose_list_source == "List"){
+      fn = file.path(fname_material_list, input$mlist_lists)
+    }
+    #print(fn)
+    import_list_from_prior(input$mlist_crop, input$mlist_year, input$mlist_name,
+                           fn)
+
+  })
+
+  # output$selTxt <- renderText({
+  #   mlist_text()
+  # })
+
+
+}
+
