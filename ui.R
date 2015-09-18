@@ -14,6 +14,9 @@ source("R/tab_resource_crop.R")
 source("R/tab_resource_program.R")
 source("R/tab_resource_material.R")
 
+source("R/tab_environment_dashboard.R")
+
+
 dashboardPage(skin = "yellow",
 
   dashboardHeader(title = "HIDAP4RTB"),
@@ -45,14 +48,16 @@ dashboardPage(skin = "yellow",
       #  )
       ),
       menuItem("Environment",
-       menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"))
+       menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"),
+                   selected = TRUE)
       ),
       menuItem("Breeding program",
        menuSubItem("Program Dashboard", tabName = "dashboard_program", icon = icon("dashboard"))
       ),
       menuItem("Resources",
-       menuSubItem("Resources Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard",
-                selected = TRUE),
+       menuSubItem("Resources Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard"
+                #selected = TRUE
+                ),
        menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
        menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
        menuSubItem("Plant materials", icon = icon("star"), tabName = "resource_material"),
@@ -79,10 +84,13 @@ dashboardPage(skin = "yellow",
   ),
   dashboardBody(
     tabItems(
+      tab_environment_dashboard(),
+
       tab_resource_dashboard(),
       tab_resource_crop(),
       tab_resource_program(),
       tab_resource_material()
+
     )
   )
 )

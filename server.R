@@ -2,6 +2,7 @@ library(shiny)
 library(rhandsontable)
 library(shinyTree)
 library(shinyFiles)
+library(leaflet)
 
 source("R/global.R") # global needs to be loaded first
 source("R/utils.R")
@@ -11,6 +12,8 @@ source("R/utils_program_stage.R")
 source("R/utils_material.R")
 
 #source("R/perspectives.R")
+locs <- "data/sites/Master-list-trial-sites.xlsx"
+locs <- readxl::read_excel(locs,1)
 
 
 shinyServer <- function(input, output, session) {
@@ -23,6 +26,7 @@ shinyServer <- function(input, output, session) {
   setHot_program_stages = function(x) values[["hot_program_stages"]] = x
   setHot_materials = function(x) values[["hot_materials"]] = x
   setFile_materials = function(x) values[["file_materials"]] = x
+  setMap_msg = function(x) values[["map_msg"]] = ""
 
   observe({
     input$saveBtn
@@ -135,6 +139,79 @@ shinyServer <- function(input, output, session) {
   #   mlist_text()
   # })
 
+  #v <- reactiveValues(msg = "")
+
+
+  locs$LATD <- as.numeric(locs$LATD)
+  locs$LOND <- as.numeric(locs$LOND)
+  lng1 <- min(locs$LOND)
+  lng2 <- max(locs$LOND)
+  lat1 <- min(locs$LATD)
+  lat2 <- max(locs$LATD)
+
+
+  nvar <- abs(round(rnorm(length(locs$LOND))*100, 0)) + 10
+  locs <- cbind(locs, nvar)
+
+  observeEvent(input$map_env_marker_click, {
+    setMap_msg(input$map_env_marker_click)
+
+  })
+
+  output$hist_nvar <- renderPlot({
+    data <- locsInBounds()$nvar
+    x <- 1:length(data)
+    if(length(x) != length(data)) return(NULL)
+    #plot(x, data)
+    hist(data)
+  })
+
+  output$dot_yield <- renderPlot({
+    db <- length(locsInBounds()$nvar)
+    yvar <- rpois(10, db)
+    nmsv <- paste("Clon", 10:19)
+    dta <- as.data.frame(cbind(nmsv, yvar))
+
+    lattice::dotplot(nmsv ~ yvar, data = dta, horizontal=TRUE)
+  })
+
+  loc_info <- eventReactive(input$map_marker_click, {
+    event <- input$map_marker_click
+    msg <- values[["map_msg"]]
+
+    rec <- subset(locs,
+                  LATD == as.numeric(event$lat) & LOND == as.numeric(event$lng))
+    if(nrow(rec) != 1) return("No location selected.")
+    paste(names(rec),": ", rec, "<br/>", sep="")
+  }, ignoreNULL = FALSE)
+
+  output$site_desc <- renderUI ({
+    HTML(loc_info())
+  })
+
+  locsInBounds <- reactive({
+    if (is.null(input$map_bounds))
+      return(locs[FALSE,])
+    bounds <- input$map_bounds
+    latRng <- range(bounds$north, bounds$south)
+    lngRng <- range(bounds$east, bounds$west)
+    #print(bounds)
+    subset(locs,
+           LATD >= latRng[1] & LATD <= latRng[2] &
+             LOND >= lngRng[1] & LOND <= lngRng[2])
+  })
+
+
+  output$map <- renderLeaflet({
+    m = leaflet(width = "50%") %>% addTiles()
+    m  # a map with the default OSM tile layer
+
+    m = m %>% fitBounds(lng1,lat1, lng2, lat2)
+    m
+
+    m %>% addMarkers(locs$LOND, locs$LATD,popup=locs$FULLN,
+                     clusterOptions = markerClusterOptions())
+  })
 
 }
 
