@@ -2,6 +2,7 @@ library(shinydashboard)
 library(rhandsontable)
 library(shinyTree)
 library(shinyFiles)
+library(leaflet)
 
 source("R/global.R") # global needs to be loaded first
 source("R/utils_crop.R")

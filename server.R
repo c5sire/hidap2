@@ -167,11 +167,31 @@ shinyServer <- function(input, output, session) {
 #     hist(data)
 #   })
 
+
   output$rep_loc <- renderUI({
-    fn <- rmarkdown::render("reports/report_location.Rmd", params = list(
-      locs = locsInBounds()))
+    n = nrow(locsInBounds())
+    if(n<1) return("no locations in view!")
+    fn <- rmarkdown::render("reports/report_location.Rmd",
+                            output_format = "all",
+
+                            params = list(
+     locs = locsInBounds())
+     )
+
     html <- readLines("reports/report_location.html")
     HTML(html)
+  })
+
+#   output$rep_loc_pdf <- downloadHandler(
+#     filename = function() {
+#       paste('reports/report_location.pdf', sep='')
+#     },
+#     content = function(con) {
+#       readBin("reports/report_location.pdf", "raw")
+#     }
+#   )
+  output$rep_loc_pdf <- renderUI({
+    #HTML(a(href="reports/report_location.pdf"))
   })
 
   output$dot_yield <- renderPlot({

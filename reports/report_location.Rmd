@@ -2,14 +2,21 @@
 title: "location_report"
 author: "Reinhard Simon"
 date: "September 18, 2015"
-output: html_document
+output: 
+  html_document:
+    theme: united
+  pdf_document:
+    toc: true
+    highlight: zenburn
+  word_document:
+    highlight: "tango"
 params: 
   locs: "no data"
 ---
 
 
 
-```{r}
+```{r, echo=FALSE}
 locs = params$locs
 n = nrow(locs)
 ```
