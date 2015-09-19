@@ -3,6 +3,7 @@ library(rhandsontable)
 library(shinyTree)
 library(shinyFiles)
 library(leaflet)
+library(rmarkdown)
 
 source("R/global.R") # global needs to be loaded first
 source("R/utils.R")
@@ -158,21 +159,32 @@ shinyServer <- function(input, output, session) {
 
   })
 
-  output$hist_nvar <- renderPlot({
-    data <- locsInBounds()$nvar
-    x <- 1:length(data)
-    if(length(x) != length(data)) return(NULL)
-    #plot(x, data)
-    hist(data)
+#   output$hist_nvar <- renderPlot({
+#     data <- locsInBounds()$nvar
+#     x <- 1:length(data)
+#     if(length(x) != length(data)) return(NULL)
+#     #plot(x, data)
+#     hist(data)
+#   })
+
+  output$rep_loc <- renderUI({
+    fn <- rmarkdown::render("reports/report_location.Rmd", params = list(
+      locs = locsInBounds()))
+    html <- readLines("reports/report_location.html")
+    HTML(html)
   })
 
   output$dot_yield <- renderPlot({
-    db <- length(locsInBounds()$nvar)
-    yvar <- rpois(10, db)
-    nmsv <- paste("Clon", 10:19)
-    dta <- as.data.frame(cbind(nmsv, yvar))
+    data <- locsInBounds()$ELEV
+    n = length(data)
+    data <- as.numeric(data)
+    if(n < 1) return("no data")
+    hist(data, main = "Elevation", xlim = c(0,3600))
+    #yvar <- rpois(10, db)
+    #nmsv <- paste("Clon", 10:19)
+    #dta <- as.data.frame(cbind(nmsv, yvar))
 
-    lattice::dotplot(nmsv ~ yvar, data = dta, horizontal=TRUE)
+    #lattice::dotplot(nmsv ~ yvar, data = dta, horizontal=TRUE)
   })
 
   loc_info <- eventReactive(input$map_marker_click, {
