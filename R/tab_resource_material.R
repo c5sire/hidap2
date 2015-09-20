@@ -61,7 +61,7 @@ tab_resource_material <- function(){
           ),
           box( width = 12,
                title = "Plant materials:",
-               verbatimTextOutput('selTxt'),
+               #verbatimTextOutput('selTxt'),
 
                rHandsontableOutput("hot_materials")
           )

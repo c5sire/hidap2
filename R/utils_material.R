@@ -24,17 +24,21 @@ new_material_table <- function(){
                 stringsAsFactors = FALSE)
 }
 
-get_material_table <- function(){
+get_material_table <- function(crop, year, mlist_name){
 
-  if(!file.exists(fname_materials)) {
-    table_materials <- new_material_table()
-    save(table_materials, file = fname_materials)
+  fname_materials <- file.path(fname_material_list, crop,
+                               paste0(year,"_", mlist_name)
+                               )
+  if (!file.exists(fname_materials)) {
+    return(NULL)
   }
+  #print(fname_materials)
   load(fname_materials)
-  table_materials
+  mlist
 }
 
-post_material_table <- function(table_materials){
+post_material_table <- function(table_materials, crop, year){
+
   save(table_materials, file = fname_materials)
 }
 
@@ -42,7 +46,7 @@ list_material_lists <- function(){
   list.files(fname_material_list, recursive = TRUE )
 }
 
-import_list_from_prior <- function(crop, year, name, fname){
+import_list_from_prior <- function(crop, name, fname){
   dp <- file.path(getwd(), fname_material_list, crop)
   if(!dir.exists(dp)) dir.create(dp)
   dp <- file.path(dp, paste0(year, "_",name))
@@ -55,6 +59,12 @@ import_list_from_prior <- function(crop, year, name, fname){
     file.copy(fname, dp)
   }
 
+}
+
+
+
+get_selected_tree_node <- function(tree) {
+  unlist(get_selected(tree))
 }
 
 

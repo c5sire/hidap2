@@ -27,7 +27,8 @@ shinyServer <- function(input, output, session) {
   setHot_program_stages = function(x) values[["hot_program_stages"]] = x
   setHot_materials = function(x) values[["hot_materials"]] = x
   setFile_materials = function(x) values[["file_materials"]] = x
-  setMap_msg = function(x) values[["map_msg"]] = ""
+  setMap_msg = function(x) values[["map_msg"]] = x
+  setMat_list_sel = function(x) values[["mat_list_sel"]]
 
   observe({
     input$saveBtn
@@ -85,15 +86,30 @@ shinyServer <- function(input, output, session) {
 
 
   output$hot_materials = renderRHandsontable({
-    if (!is.null(input$hot_materials)) {
-      DF_materials = hot_to_r(input$hot_materials)
+    tree <- input$material_tree
+    if (is.null(tree)){
+     list_name <- input$mlist_name
     } else {
-      DF_materials = get_material_table()
+     list_name <- get_selected_tree_node(tree)
+    }
+    #print(list_name)
+    list_name = stringr::str_split("2001_TEST123", "_")[[1]][2]
+    if (!is.null(input$hot_materials)) {
+     DF_materials = hot_to_r(input$hot_materials)
+    } else {
+     #DF_materials = get_material_table()
+     DF_materials <- get_material_table(input$mlist_crop,
+                                        input$mlist_year,
+                                        list_name)
+    }
+    print(DF_materials)
+    setHot_materials(DF_materials)
+
+    if(!is.null(DF_materials)){
+      rhandsontable(DF_materials,   stretchH = "all") %>%
+       hot_table(highlightCol = TRUE, highlightRow = TRUE)
     }
 
-    setHot_materials(DF_materials)
-    rhandsontable(DF_materials,   stretchH = "all") %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
   })
 
   output$material_tree <- renderTree({
@@ -112,16 +128,12 @@ shinyServer <- function(input, output, session) {
     out
     })
 
-
   output$selTxt <- renderText({
     tree <- input$material_tree
     if (is.null(tree)){
       "None"
     } else{
-      x <- unlist(get_selected(tree))
-      #cat(x)
-      #setHot_materials(x)
-      x
+      paste(input$mlist_crop ,get_selected_tree_node(tree))
     }
   })
 
@@ -129,9 +141,11 @@ shinyServer <- function(input, output, session) {
     fn = values[["file_materials"]]
     if(input$mlist_choose_list_source == "List"){
       fn = file.path(fname_material_list, input$mlist_lists)
+    } else {
+
     }
     #print(fn)
-    import_list_from_prior(input$mlist_crop, input$mlist_year, input$mlist_name,
+    import_list_from_prior(input$mlist_crop, input$mlist_year,
                            fn)
 
   })
