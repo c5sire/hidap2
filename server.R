@@ -176,7 +176,7 @@ shinyServer <- function(input, output, session) {
     n = nrow(locsInBounds())
     if(n<1) return("no locations in view!")
     fn <- rmarkdown::render("reports/report_location.Rmd",
-                            output_format = "all",
+                            #output_format = "all",
                             output_dir = "www/reports/",
                             params = list(
                               locs = locs))
