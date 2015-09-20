@@ -1,8 +1,9 @@
 name: hidap2
 account: cdcd
 server: shinyapps.io
-bundleId: 269272
+appId: 60664
+bundleId: 269456
 url: https://cdcd.shinyapps.io/hidap2
-when: 1442689265.93906
+when: 1442719149.15477
 asMultiple: FALSE
 asStatic: FALSE

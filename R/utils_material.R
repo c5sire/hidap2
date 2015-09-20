@@ -26,35 +26,39 @@ new_material_table <- function(){
 
 get_material_table <- function(crop, year, mlist_name){
 
-  fname_materials <- file.path(fname_material_list, crop,
+  fname_materials <- file.path(fname_materials, crop,
                                paste0(year,"_", mlist_name)
                                )
+  #print(fname_materials)
   if (!file.exists(fname_materials)) {
     return(NULL)
   }
   #print(fname_materials)
   load(fname_materials)
-  mlist
+  table_materials
 }
 
-post_material_table <- function(table_materials, crop, year){
-
-  save(table_materials, file = fname_materials)
+post_material_table <- function(table_materials, crop, year, name){
+  fname <- file.path(fname_materials, crop, paste0(year, "_", name))
+  save(table_materials, file = fname)
 }
 
 list_material_lists <- function(){
   list.files(fname_material_list, recursive = TRUE )
 }
 
-import_list_from_prior <- function(crop, name, fname){
+import_list_from_prior <- function(crop, year, name, fname){
   dp <- file.path(getwd(), fname_material_list, crop)
   if(!dir.exists(dp)) dir.create(dp)
   dp <- file.path(dp, paste0(year, "_",name))
+  # print("DP")
+  # print(dp)
 
   if(stringr::str_detect(fname, ".xlsx")){
-    mlist <- readxl::read_excel(fname, "materials")
+    #print(fname)
+    table_materials <- readxl::read_excel(fname, "materials")
 
-    save(mlist, file = dp)
+    save(table_materials, file = dp)
   } else {
     file.copy(fname, dp)
   }

@@ -12,10 +12,7 @@ source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
 
-#source("R/perspectives.R")
-locs <- "data/sites/Master-list-trial-sites.xlsx"
-locs <- readxl::read_excel(locs,1)
-
+source("R/server_environment.R")
 
 shinyServer <- function(input, output, session) {
 
@@ -41,9 +38,10 @@ shinyServer <- function(input, output, session) {
     if (!is.null(values[["hot_program_stages"]])) {
       post_program_stage_table(values[["hot_program_stages"]])
     }
-    if (!is.null(values[["hot_materials"]])) {
-      post_material_table(values[["hot_materials"]])
-    }
+    # if (!is.null(values[["hot_materials"]])) {
+    #   post_material_table(values[["hot_materials"]],
+    #                       input$mlist_crop, input$mlist_year, input$mlist_name)
+    # }
 
   })
 
@@ -56,7 +54,7 @@ shinyServer <- function(input, output, session) {
 
     setHot_crops(DF)
     rhandsontable(DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
       # %>% hot_context_menu(allowRowEdit = FALSE)
   })
 
@@ -84,33 +82,25 @@ shinyServer <- function(input, output, session) {
       hot_table(highlightCol = TRUE, highlightRow = TRUE)
   })
 
-
-  output$hot_materials = renderRHandsontable({
-    tree <- input$material_tree
-    if (is.null(tree)){
-     list_name <- input$mlist_name
-    } else {
-     list_name <- get_selected_tree_node(tree)
-    }
-    #print(list_name)
-    list_name = stringr::str_split("2001_TEST123", "_")[[1]][2]
-    if (!is.null(input$hot_materials)) {
-     DF_materials = hot_to_r(input$hot_materials)
-    } else {
-     #DF_materials = get_material_table()
-     DF_materials <- get_material_table(input$mlist_crop,
-                                        input$mlist_year,
-                                        list_name)
-    }
-    print(DF_materials)
-    setHot_materials(DF_materials)
-
-    if(!is.null(DF_materials)){
-      rhandsontable(DF_materials,   stretchH = "all") %>%
-       hot_table(highlightCol = TRUE, highlightRow = TRUE)
-    }
-
+  rv_fp_ml <- reactive({
+    roots = c(wd = ".")
+    fp <- parseFilePaths( roots, input$mlist_files)$datapath
+    fp <- stringr::str_replace(fp, "NA", "")
+   fp
   })
+
+  output$mlist_fc <- renderText({
+    rv_fp_ml()
+  })
+
+  # obs_ml <- observe({
+  #   roots = c(wd = ".")
+  #   fp <- parseFilePaths( roots, input$mlist_files)$datapath
+  #   fp
+  # })
+
+
+
 
   output$material_tree <- renderTree({
     material_list_tree()
@@ -121,162 +111,88 @@ shinyServer <- function(input, output, session) {
                   roots = volumes , filetypes = c('', 'xlsx')
                   )
 
-  output$mlist_path <- renderPrint({
-    out <- as.character(parseFilePaths(volumes, input$mlist_files)$datapath)
-    setFile_materials(out)
-    cat(out)
-    out
-    })
+  #reactiveMaterialList <- reactiveValues(mlist_file = NULL)
 
-  output$selTxt <- renderText({
-    tree <- input$material_tree
-    if (is.null(tree)){
-      "None"
-    } else{
-      paste(input$mlist_crop ,get_selected_tree_node(tree))
-    }
+
+  # output$mlist_fc <- renderPrint({
+  #   out <- as.character(parseFilePaths(volumes, input$mlist_files)$datapath)
+  #   #setFile_materials(out)
+  #   cat(out)
+  #   out
+  #   })
+
+  # output$selTxt <- renderText({
+  #   # tree <- input$material_tree
+  #   # if (is.null(tree)){
+  #   #   "None"
+  #   # } else{
+  #   paste0(input$mlist_crop,": ", input$mlist_year,"_",input$mlist_name)
+  #   #}
+  # })
+
+  output$selectMList <- renderUI({
+    lbl <-paste0("Save modifications to this: ",input$mlist_crop,": ",
+                 input$mlist_year,"_",input$mlist_name)
+
+    actionButton("saveMListButton", lbl)
+
   })
 
-  mlist_text <- eventReactive(input$doListButton, {
-    fn = values[["file_materials"]]
+  observeEvent(input$doListButton, {
     if(input$mlist_choose_list_source == "List"){
       fn = file.path(fname_material_list, input$mlist_lists)
     } else {
-
+      fn = rv_fp_ml()
     }
-    #print(fn)
-    import_list_from_prior(input$mlist_crop, input$mlist_year,
+
+    import_list_from_prior(input$mlist_crop, input$mlist_year, input$mlist_name,
                            fn)
 
   })
 
-  # output$selTxt <- renderText({
-  #   mlist_text()
-  # })
+  observeEvent(input$saveMListButton, {
+    if(!is.null(table_materials)){
+      post_material_table(hot_to_r(input$hot_materials),
+        input$mlist_crop, input$mlist_year, input$mlist_name)
 
-  #v <- reactiveValues(msg = "")
+      fn <- file.path(fname_materials,input$mlist_crop,
+                      paste0(input$mlist_year,"_",input$mlist_name))
+      #print(fn)
+      #save(table_materials, file = fn)
 
-
-  locs$LATD <- as.numeric(locs$LATD)
-  locs$LOND <- as.numeric(locs$LOND)
-  lng1 <- min(locs$LOND)
-  lng2 <- max(locs$LOND)
-  lat1 <- min(locs$LATD)
-  lat2 <- max(locs$LATD)
-
-
-  nvar <- abs(round(rnorm(length(locs$LOND))*100, 0)) + 10
-  locs <- cbind(locs, nvar)
-
-  observeEvent(input$map_env_marker_click, {
-    setMap_msg(input$map_env_marker_click)
-
-  })
-
-#   output$hist_nvar <- renderPlot({
-#     data <- locsInBounds()$nvar
-#     x <- 1:length(data)
-#     if(length(x) != length(data)) return(NULL)
-#     #plot(x, data)
-#     hist(data)
-#   })
-
-
-  output$rep_loc <- renderUI({
-
-    input$locs_report_button
-
-    locs <- isolate({ locsInBounds()})
-    n = nrow(locsInBounds())
-    if(n<1) return("no locations in view!")
-    fn <- rmarkdown::render("reports/report_location.Rmd",
-                            #output_format = "all",
-                            output_dir = "www/reports/",
-                            params = list(
-                              locs = locs))
-
-    html <- readLines("www/reports/report_location.html")
-    HTML(html)
-
-
-  })
-
-#   output$rep_loc_pdf <- downloadHandler(
-#     filename = function() {
-#       paste('reports/report_location.pdf', sep='')
-#     },
-#     content = function(con) {
-#       readBin("reports/report_location.pdf", "raw")
-#     }
-#   )
-  output$rep_loc_docs <- renderUI({
-    file_report = "reports/report_location.pdf"
-    #HTML(a(href="reports/report_location.pdf"))
-    #if(file.exists(file_report)) {
-    #input$locs_report_button
-
-    locs <- isolate({ locsInBounds()})
-
-    pdf <-paste0(" <a href='",file_report,"'>PDF</a>")
-    #}
-    file_report = "reports/report_location.docx"
-    if(file.exists(file_report)) {
-      docx <-paste0("<a href='",file_report,"'>DOCX</a>")
     }
-    HTML(paste(pdf, docx))
-  })
-
-    output$dot_yield <- renderPlot({
-    data <- locsInBounds()$ELEV
-    n = length(data)
-    data <- as.numeric(data)
-    if(n < 1) return("no data")
-    hist(data, main = "Elevation", xlim = c(0,3600))
-    #yvar <- rpois(10, db)
-    #nmsv <- paste("Clon", 10:19)
-    #dta <- as.data.frame(cbind(nmsv, yvar))
-
-    #lattice::dotplot(nmsv ~ yvar, data = dta, horizontal=TRUE)
-  })
-
-  loc_info <- eventReactive(input$map_marker_click, {
-    event <- input$map_marker_click
-    msg <- values[["map_msg"]]
-
-    rec <- subset(locs,
-                  LATD == as.numeric(event$lat) & LOND == as.numeric(event$lng))
-    if(nrow(rec) != 1) return("No location selected.")
-    rec = rec[1:(ncol(rec)-3)]
-    paste(names(rec),": ", rec, "<br/>", sep="")
-  }, ignoreNULL = FALSE)
-
-  output$site_desc <- renderUI ({
-    HTML(loc_info())
-  })
-
-  locsInBounds <- reactive({
-    if (is.null(input$map_bounds))
-      return(locs[FALSE,])
-    bounds <- input$map_bounds
-    latRng <- range(bounds$north, bounds$south)
-    lngRng <- range(bounds$east, bounds$west)
-    #print(bounds)
-    subset(locs,
-           LATD >= latRng[1] & LATD <= latRng[2] &
-             LOND >= lngRng[1] & LOND <= lngRng[2])
   })
 
 
-  output$map <- renderLeaflet({
-    m = leaflet(width = "50%") %>% addTiles()
-    m  # a map with the default OSM tile layer
+  #mlist_data <- reactiveFileReader(1000, session, rv_fp_ml(), load)
 
-    m = m %>% fitBounds(lng1,lat1, lng2, lat2)
-    m
 
-    m %>% addMarkers(locs$LOND, locs$LATD,popup=locs$FULLN,
-                     clusterOptions = markerClusterOptions())
+  output$hot_materials = renderRHandsontable({
+    list_name <- input$mlist_name
+    # #list_name <- rv_fp()
+    # if (!is.null(input$hot_materials)) {
+    #   DF_materials = hot_to_r(input$hot_materials)
+    # } else {
+    #   DF_materials <- get_material_table(input$mlist_crop,
+    #                                      input$mlist_year,
+    #                                      list_name)
+    # }
+    #DF_materials = mlist_data()
+
+    DF_materials <- get_material_table(input$mlist_crop,
+                                       input$mlist_year,
+                                       list_name)
+    setHot_materials(DF_materials)
+
+    if(!is.null(DF_materials)){
+      rhandsontable(DF_materials,   stretchH = "all", limit = 2) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE)
+    }
+
   })
+
+
+  server_environment(input, output, session, values)
 
 }
 

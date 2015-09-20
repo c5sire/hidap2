@@ -15,7 +15,9 @@ tab_resource_material <- function(){
                                           choices = c("List", "Excel") ),
                              conditionalPanel(
                                "input.mlist_choose_list_source == 'Excel'",
-                               shinyFilesButton('mlist_files', 'File select', 'Please select a file', FALSE )
+                               shinyFilesButton('mlist_files', 'File selection', 'Please select a file', FALSE )
+                               ,
+                               verbatimTextOutput("mlist_fc")
                              ),
                              conditionalPanel(
                                "input.mlist_choose_list_source == 'List'",
@@ -37,6 +39,7 @@ tab_resource_material <- function(){
                          box(width = NULL,
                              textInput("mlist_name", "Choose a list name:", "TEST123"),
                              actionButton("doListButton", "Create new material list!")
+
                          )
                   )
 
@@ -62,8 +65,10 @@ tab_resource_material <- function(){
           box( width = 12,
                title = "Plant materials:",
                #verbatimTextOutput('selTxt'),
+               uiOutput('selectMList'),
+               HTML("<br/>"),
 
-               rHandsontableOutput("hot_materials")
+               rHandsontableOutput("hot_materials", height = 300)
           )
   )
 }
