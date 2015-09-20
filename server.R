@@ -169,17 +169,22 @@ shinyServer <- function(input, output, session) {
 
 
   output$rep_loc <- renderUI({
+
+    input$locs_report_button
+
+    locs <- isolate({ locsInBounds()})
     n = nrow(locsInBounds())
     if(n<1) return("no locations in view!")
     fn <- rmarkdown::render("reports/report_location.Rmd",
                             output_format = "all",
-
+                            output_dir = "www/reports/",
                             params = list(
-     locs = locsInBounds())
-     )
+                              locs = locs))
 
-    html <- readLines("reports/report_location.html")
+    html <- readLines("www/reports/report_location.html")
     HTML(html)
+
+
   })
 
 #   output$rep_loc_pdf <- downloadHandler(
@@ -190,11 +195,24 @@ shinyServer <- function(input, output, session) {
 #       readBin("reports/report_location.pdf", "raw")
 #     }
 #   )
-  output$rep_loc_pdf <- renderUI({
+  output$rep_loc_docs <- renderUI({
+    file_report = "reports/report_location.pdf"
     #HTML(a(href="reports/report_location.pdf"))
+    #if(file.exists(file_report)) {
+    #input$locs_report_button
+
+    locs <- isolate({ locsInBounds()})
+
+    pdf <-paste0(" <a href='",file_report,"'>PDF</a>")
+    #}
+    file_report = "reports/report_location.docx"
+    if(file.exists(file_report)) {
+      docx <-paste0("<a href='",file_report,"'>DOCX</a>")
+    }
+    HTML(paste(pdf, docx))
   })
 
-  output$dot_yield <- renderPlot({
+    output$dot_yield <- renderPlot({
     data <- locsInBounds()$ELEV
     n = length(data)
     data <- as.numeric(data)
@@ -214,6 +232,7 @@ shinyServer <- function(input, output, session) {
     rec <- subset(locs,
                   LATD == as.numeric(event$lat) & LOND == as.numeric(event$lng))
     if(nrow(rec) != 1) return("No location selected.")
+    #rec = rec[1:(ncol(rec)-3)]
     paste(names(rec),": ", rec, "<br/>", sep="")
   }, ignoreNULL = FALSE)
 

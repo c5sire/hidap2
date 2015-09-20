@@ -1,26 +1,37 @@
-pdfButton <- function (outputId, label = "PDF", class = NULL)
-{
-  aTag <- tags$a(id = outputId, class = paste("btn btn-default shiny-download-link",
-                                              class), href = "", target = "_blank", icon("pdf"),
-                 label)
-}
-
 
 tab_environment_dashboard <- function(){
   tabItem(tabName = "dashboard_environment",
           fluidRow(
-            box(width = 8,
-                leafletOutput("map")
-                ),
-            box(width = 4, title="Site", htmlOutput("site_desc")),
-#             box(width = 4, title="Yield across sites",
-#                 plotOutput("hist_nvar", height = 250)),
-            box(width = 8, title = "Location summary report",
-                htmlOutput("rep_loc_pdf"),
-                htmlOutput("rep_loc")),
-            box(width = 4, #title="Top ten varieties",
-                plotOutput("dot_yield", height = 250))
+            column(width = 8,
+                   box(width = NULL,
+                       collapsible = TRUE,
+                       leafletOutput("map")
+                   ),
+                   box(width = NULL,
+                       title = "Location summary report",
+                       #actionButton("locs_report_button", "Do report!"),
+                       htmlOutput("rep_loc_docs"),
+                       #htmlOutput("rep_loc_docx"),
+                       htmlOutput("rep_loc"))
 
+            ),
+            column(width = 4,
+                   tabBox(width = NULL, title = "Site", collapsible = TRUE,
+                      tabPanel("Info",
+                          htmlOutput("site_desc")
+                      ),
+                      tabPanel("Genotypes",
+                          ""
+                      ),
+                      tabPanel("Fieldtrials",
+                          ""
+                      )
+                    ),
+
+                   box(width = NULL,
+                       plotOutput("dot_yield"))
+
+            )
           )
   )
 }
