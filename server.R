@@ -232,7 +232,7 @@ shinyServer <- function(input, output, session) {
     rec <- subset(locs,
                   LATD == as.numeric(event$lat) & LOND == as.numeric(event$lng))
     if(nrow(rec) != 1) return("No location selected.")
-    #rec = rec[1:(ncol(rec)-3)]
+    rec = rec[1:(ncol(rec)-3)]
     paste(names(rec),": ", rec, "<br/>", sep="")
   }, ignoreNULL = FALSE)
 

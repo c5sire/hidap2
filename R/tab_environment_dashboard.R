@@ -14,18 +14,15 @@ tab_environment_dashboard <- function(){
                        #htmlOutput("rep_loc_docx"),
                        htmlOutput("rep_loc"))
 
-            ),
+            )
+            ,
             column(width = 4,
-                   tabBox(width = NULL, title = "Site", collapsible = TRUE,
+                   tabBox(width = NULL, title = "Site",
                       tabPanel("Info",
                           htmlOutput("site_desc")
-                      ),
-                      tabPanel("Genotypes",
-                          ""
-                      ),
-                      tabPanel("Fieldtrials",
-                          ""
-                      )
+                      ), tabPanel("Fieldtrials"
+                                  ),
+                          tabPanel("Genotypes")
                     ),
 
                    box(width = NULL,
