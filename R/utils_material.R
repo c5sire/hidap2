@@ -72,7 +72,8 @@ import_list_from_prior <- function(crop, year, name, fname){
 
 get_material_n <- function(fp){
   load(fp)
-  nrow(table_materials)
+  #nrow(table_materials)
+  table_materials$institutional_number
 }
 
 list_material_lists <- function(){
@@ -81,5 +82,6 @@ list_material_lists <- function(){
 
 get_material_total <- function(){
   out = lapply(list_material_lists(), get_material_n)
-  sum(unlist(out))
+  #sum(unlist(out))
+  length(unique(unlist(out)))
 }

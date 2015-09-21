@@ -240,9 +240,11 @@ shinyServer <- function(input, output, session) {
       input$phenotype_fb_choice)
 
     y <- input$hotFieldbook_select$select$c
+    if(is.null(y)) return(HTML(""))
+    print(y)
     y <- names(DF)[y]
     #print(y)
-    if(is.null(y)) return(HTML(""))
+
 
     report = paste0("reports/report_",input$fb_analysis,".Rmd")
 
