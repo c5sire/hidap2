@@ -14,6 +14,7 @@ source("R/tab_resource_dashboard.R")
 source("R/tab_resource_crop.R")
 source("R/tab_resource_program.R")
 source("R/tab_resource_material.R")
+source("R/tab_resource_site.R")
 
 source("R/tab_environment_dashboard.R")
 
@@ -71,7 +72,7 @@ dashboardPage(skin = "yellow",
         #
         # )
        # ,
-       menuSubItem("Locations", icon = icon("location-arrow"), tabName = "resource_location"),
+       menuSubItem("Sites", icon = icon("location-arrow"), tabName = "resource_site"),
        menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary")
        ),
     menuItem( "Sharing",
@@ -91,7 +92,8 @@ dashboardPage(skin = "yellow",
       tab_resource_dashboard(),
       tab_resource_crop(),
       tab_resource_program(),
-      tab_resource_material()
+      tab_resource_material(),
+      tab_resource_site()
 
     )
   )

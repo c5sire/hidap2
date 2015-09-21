@@ -1,7 +1,9 @@
 server_environment <- function(input, output, session, values){
 
-  locs <- "data/sites/Master-list-trial-sites.xlsx"
-  locs <- readxl::read_excel(locs,1)
+  #locs <- "data/sites/Master-list-trial-sites.xlsx"
+  #locs <- readxl::read_excel(locs,1)
+  locs <- get_site_table()
+  names(locs) <- toupper(names(locs))
 
   locs$LATD <- as.numeric(locs$LATD)
   locs$LOND <- as.numeric(locs$LOND)
@@ -64,7 +66,7 @@ server_environment <- function(input, output, session, values){
     rec <- subset(locs,
                   LATD == as.numeric(event$lat) & LOND == as.numeric(event$lng))
     if(nrow(rec) != 1) return("No location selected.")
-    rec = rec[1:(ncol(rec)-3)]
+    #rec = rec[1:(ncol(rec))]
     paste(names(rec),": ", rec, "<br/>", sep="")
   }, ignoreNULL = FALSE)
 

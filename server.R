@@ -11,6 +11,7 @@ source("R/utils_crop.R")
 source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
+source("R/utils_site.R")
 
 source("R/server_environment.R")
 
@@ -26,6 +27,7 @@ shinyServer <- function(input, output, session) {
   setFile_materials = function(x) values[["file_materials"]] = x
   setMap_msg = function(x) values[["map_msg"]] = x
   setMat_list_sel = function(x) values[["mat_list_sel"]]
+  setHot_sites = function(x) values[["hot_sites"]] = x
 
   observe({
     input$saveBtn
@@ -38,10 +40,9 @@ shinyServer <- function(input, output, session) {
     if (!is.null(values[["hot_program_stages"]])) {
       post_program_stage_table(values[["hot_program_stages"]])
     }
-    # if (!is.null(values[["hot_materials"]])) {
-    #   post_material_table(values[["hot_materials"]],
-    #                       input$mlist_crop, input$mlist_year, input$mlist_name)
-    # }
+    if (!is.null(values[["hot_sites"]])) {
+      post_program_stage_table(values[["hot_sites"]])
+    }
 
   })
 
@@ -102,36 +103,18 @@ shinyServer <- function(input, output, session) {
 
 
 
-  output$material_tree <- renderTree({
-    material_list_tree()
-  })
+  # output$material_tree <- renderTree({
+  #   material_list_tree()
+  # })
 
 
   shinyFileChoose(input, 'mlist_files', session = session,
                   roots = volumes , filetypes = c('', 'xlsx')
                   )
 
-  #reactiveMaterialList <- reactiveValues(mlist_file = NULL)
-
-
-  # output$mlist_fc <- renderPrint({
-  #   out <- as.character(parseFilePaths(volumes, input$mlist_files)$datapath)
-  #   #setFile_materials(out)
-  #   cat(out)
-  #   out
-  #   })
-
-  # output$selTxt <- renderText({
-  #   # tree <- input$material_tree
-  #   # if (is.null(tree)){
-  #   #   "None"
-  #   # } else{
-  #   paste0(input$mlist_crop,": ", input$mlist_year,"_",input$mlist_name)
-  #   #}
-  # })
 
   output$selectMList <- renderUI({
-    lbl <-paste0("Save modifications to this: ",input$mlist_crop,": ",
+    lbl <-paste0("Save: ",input$mlist_crop,"/",
                  input$mlist_year,"_",input$mlist_name)
 
     actionButton("saveMListButton", lbl)
@@ -158,10 +141,7 @@ shinyServer <- function(input, output, session) {
 
       fn <- file.path(fname_materials,input$mlist_crop,
                       paste0(input$mlist_year,"_",input$mlist_name))
-      #print(fn)
-      #save(table_materials, file = fn)
-
-    }
+     }
   })
 
 
@@ -170,16 +150,6 @@ shinyServer <- function(input, output, session) {
 
   output$hot_materials = renderRHandsontable({
     list_name <- input$mlist_name
-    # #list_name <- rv_fp()
-    # if (!is.null(input$hot_materials)) {
-    #   DF_materials = hot_to_r(input$hot_materials)
-    # } else {
-    #   DF_materials <- get_material_table(input$mlist_crop,
-    #                                      input$mlist_year,
-    #                                      list_name)
-    # }
-    #DF_materials = mlist_data()
-
     DF_materials <- get_material_table(input$mlist_crop,
                                        input$mlist_year,
                                        list_name)
@@ -190,6 +160,31 @@ shinyServer <- function(input, output, session) {
         hot_table(highlightCol = TRUE, highlightRow = TRUE)
     }
 
+  })
+
+  output$downloadMaterialListData <- downloadHandler(
+    filename = function() {
+      paste('germplasm_list-', input$mlist_crop,"_", input$mlist_year,"_",
+            input$mlist_name, "_",
+            Sys.Date(), '.csv', sep='')
+    },
+    content = function(con) {
+      write.csv( values[["hot_materials"]], con)
+    }
+  )
+
+
+  output$hot_sites = renderRHandsontable({
+    if (!is.null(input$hot_sites)) {
+      DF = hot_to_r(input$hot_sites)
+    } else {
+      DF = get_site_table()
+    }
+
+    setHot_sites(DF)
+    rhandsontable(DF) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
+    # %>% hot_context_menu(allowRowEdit = FALSE)
   })
 
 
