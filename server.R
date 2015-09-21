@@ -13,6 +13,7 @@ source("R/utils_program_stage.R")
 source("R/utils_material.R")
 source("R/utils_site.R")
 source("R/utils_dictionary.R")
+source("R/utils_fieldbook.R")
 
 source("R/server_environment.R")
 
