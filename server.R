@@ -151,8 +151,9 @@ shinyServer <- function(input, output, session) {
   })
 
   observeEvent(input$saveMListButton, {
+    table_materials = hot_to_r(input$hot_materials)
     if(!is.null(table_materials)){
-      post_material_table(hot_to_r(input$hot_materials),
+      post_material_table(table_materials,
         input$mlist_crop, input$mlist_year, input$mlist_name)
 
       fn <- file.path(fname_materials,input$mlist_crop,
