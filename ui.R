@@ -30,10 +30,10 @@ dashboardPage(skin = "yellow",
 
   dashboardSidebar(
     sidebarMenu(id = "menu",
-      menuItem("Summary",
-       menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
-          selected = TRUE)
-      ),
+      # menuItem("Summary",
+      #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
+      #     selected = TRUE)
+      # ),
       menuItem("Phenotype",
         # menuSubItem("Phenotype Dashboard", tabName = "dashboard_phenotype", icon = icon("dashboard"),
         #          selected = TRUE),
