@@ -48,7 +48,7 @@ server_environment <- function(input, output, session, values){
     if(file.exists(file_report)) {
       docx <-paste0("<a href='",file_report,"'>DOCX</a>")
     }
-    HTML(paste(pdf, docx))
+    #HTML(paste(pdf, docx))
   })
 
   output$dot_yield <- renderPlot({

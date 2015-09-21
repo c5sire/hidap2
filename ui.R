@@ -10,11 +10,16 @@ source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
 
+source("R/tab_phenotype_analysis.R")
+
+
 source("R/tab_resource_dashboard.R")
 source("R/tab_resource_crop.R")
 source("R/tab_resource_program.R")
 source("R/tab_resource_material.R")
 source("R/tab_resource_site.R")
+source("R/tab_resource_dictionary.R")
+source("R/tab_resource_module.R")
 
 source("R/tab_environment_dashboard.R")
 
@@ -38,7 +43,8 @@ dashboardPage(skin = "yellow",
         menuSubItem("Check fieldbook", icon = icon("check-square"), tabName = "fbCheck"),
         menuSubItem("Export fieldbook", icon = icon("file-excel-o"), tabName = "fbExport"),
         menuSubItem("Import images", icon = icon("photo"), tabName = "fbFotoImport"),
-        menuSubItem("Reports", icon = icon("book"), tabName = "fbReport"),
+        menuSubItem("Analysis", icon = icon("book"), tabName = "fieldbook_analysis",
+                    selected = TRUE),
         menuSubItem("Catalogues", icon = icon("book"), tabName = "fbCatalog")
       ),
       menuItem("Genotype",
@@ -50,8 +56,7 @@ dashboardPage(skin = "yellow",
       #  )
       ),
       menuItem("Environment",
-       menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"),
-                   selected = TRUE)
+       menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"))
       ),
       menuItem("Breeding program",
        menuSubItem("Program Dashboard", tabName = "dashboard_program", icon = icon("dashboard"))
@@ -62,8 +67,7 @@ dashboardPage(skin = "yellow",
                 ),
        menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
        menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
-       menuSubItem("Plant materials", icon = icon("star"), tabName = "resource_material",
-                   selected = TRUE),
+       menuSubItem("Plant materials", icon = icon("star"), tabName = "resource_material"),
         # conditionalPanel(
         #   "input.menu == 'resource_material'",
         #   selectInput("mlist_crop", "Choose a crop:", unique(get_crop_table()$crop_name) ),
@@ -73,7 +77,9 @@ dashboardPage(skin = "yellow",
         # )
        # ,
        menuSubItem("Sites", icon = icon("location-arrow"), tabName = "resource_site"),
-       menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary")
+       menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary"),
+       menuSubItem("Data module", icon = icon("book"), tabName = "resource_module")
+
        ),
     menuItem( "Sharing",
       menuSubItem("Sharing Dashboard", tabName = "dashboard_sharing", icon = icon("dashboard"))
@@ -87,13 +93,18 @@ dashboardPage(skin = "yellow",
   ),
   dashboardBody(
     tabItems(
+
+      tab_phenotype_analysis(),
+
       tab_environment_dashboard(),
 
       tab_resource_dashboard(),
       tab_resource_crop(),
       tab_resource_program(),
       tab_resource_material(),
-      tab_resource_site()
+      tab_resource_site(),
+      tab_resource_dictionary()#,
+      #tab_resource_module()
 
     )
   )

@@ -65,11 +65,21 @@ import_list_from_prior <- function(crop, year, name, fname){
 
 }
 
+# get_selected_tree_node <- function(tree) {
+#   unlist(get_selected(tree))
+# }
 
 
-get_selected_tree_node <- function(tree) {
-  unlist(get_selected(tree))
+get_material_n <- function(fp){
+  load(fp)
+  nrow(table_materials)
 }
 
+list_material_lists <- function(){
+  paste0(fname_materials, .Platform$file.sep, list.files(fname_materials, rec=T))
+}
 
-
+get_material_total <- function(){
+  out = lapply(list_material_lists(), get_material_n)
+  sum(unlist(out))
+}

@@ -37,7 +37,7 @@ get_site_table <- function(){
   table_sites
 }
 
-post_sites_table <- function(table_sites){
+post_site_table <- function(table_sites){
   save(table_sites, file = fname_sites)
 }
 

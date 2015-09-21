@@ -12,6 +12,7 @@ source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
 source("R/utils_site.R")
+source("R/utils_dictionary.R")
 
 source("R/server_environment.R")
 
@@ -28,6 +29,7 @@ shinyServer <- function(input, output, session) {
   setMap_msg = function(x) values[["map_msg"]] = x
   setMat_list_sel = function(x) values[["mat_list_sel"]]
   setHot_sites = function(x) values[["hot_sites"]] = x
+  #setHot_sites = function(x) values[["hot_sites"]] = x
 
   observe({
     input$saveBtn
@@ -41,7 +43,7 @@ shinyServer <- function(input, output, session) {
       post_program_stage_table(values[["hot_program_stages"]])
     }
     if (!is.null(values[["hot_sites"]])) {
-      post_program_stage_table(values[["hot_sites"]])
+      post_site_table(values[["hot_sites"]])
     }
 
   })
@@ -183,8 +185,80 @@ shinyServer <- function(input, output, session) {
 
     setHot_sites(DF)
     rhandsontable(DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
     # %>% hot_context_menu(allowRowEdit = FALSE)
+  })
+
+  output$hot_dictionary <- renderRHandsontable({
+    if (!is.null(input$hot_dictionary)) {
+      DF = hot_to_r(input$hot_dictionary)
+    } else {
+      DF = get_dictionary_table(input$dictionary_crop)
+    }
+    if(!is.null(DF)){
+      #setHot_sites(DF)
+      rhandsontable(DF) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
+    }
+  })
+
+  output$module_list <- renderUI({
+    selectInput("module_crop_module", "Select a module:",
+                choices = get_crop_modules(input$module_crop) )
+  })
+
+  output$module_var_list <- renderText({
+    fp <- file.path(fname_module, "PTBM")
+    load(fp)
+    x <- paste(list_variables[,2],":", list_variables[,1])
+    #paste(x, collapse = ",\n ")
+  })
+
+  output$fieldbook_list <- renderUI({
+    selectInput("phenotype_fb_choice", "Select a fieldbook:",
+                choices = get_fieldbook_list(input$fb_analysis_crop))
+  })
+
+  output$hotFieldbook <- renderRHandsontable({
+      DF = get_fieldbook_table(
+              input$fb_analysis_crop,
+              input$phenotype_fb_choice)
+
+    if(!is.null(DF)){
+      #setHot_sites(DF)
+      rhandsontable(DF,
+                    selectCallback = TRUE) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+        hot_cols( fixedColumnsLeft = 3)
+    }
+  })
+
+
+  output$fb_report <- renderUI({
+    DF = get_fieldbook_table(
+      input$fb_analysis_crop,
+      input$phenotype_fb_choice)
+
+    y <- input$hotFieldbook_select$select$c
+    y <- names(DF)[y]
+    #print(y)
+    if(is.null(y)) return(HTML(""))
+
+    report = paste0("reports/report_",input$fb_analysis,".Rmd")
+
+    fn <- rmarkdown::render(report,
+                            #output_format = "all",
+                            output_dir = "www/reports/",
+                            params = list(
+                              fieldbook = DF,
+                              independent = input$fb_def_geno,
+                              dependent = y))
+
+    report = paste0("www/reports/report_",input$fb_analysis,".html")
+    html <- readLines(report)
+    HTML(html)
+
+
   })
 
 
