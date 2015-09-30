@@ -4,20 +4,19 @@ library(shinyTree)
 library(shinyFiles)
 library(leaflet)
 
+library(fbsites)
+library(fbcrops)
+
 source("R/global.R") # global needs to be loaded first
-source("R/utils_crop.R")
 source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
 
 source("R/tab_phenotype_analysis.R")
 
-
 source("R/tab_resource_dashboard.R")
-source("R/tab_resource_crop.R")
 source("R/tab_resource_program.R")
 source("R/tab_resource_material.R")
-source("R/tab_resource_site.R")
 source("R/tab_resource_dictionary.R")
 source("R/tab_resource_module.R")
 
@@ -97,19 +96,16 @@ dashboardPage(skin = "yellow",
   ),
   dashboardBody(
     tabItems(
-
       tab_phenotype_analysis(),
-
       tab_environment_dashboard(),
 
       tab_resource_dashboard(),
-      tab_resource_crop(),
+      fbcrops::ui_crop(),
       tab_resource_program(),
       tab_resource_material(),
-      tab_resource_site(),
+      fbsites::ui_site(),
       tab_resource_dictionary()#,
       #tab_resource_module()
-
     )
   )
 )

@@ -5,62 +5,45 @@ library(shinyFiles)
 library(leaflet)
 library(rmarkdown)
 
+library(fbglobal)
+library(fbsites)
+library(fbcrops)
+
 source("R/global.R") # global needs to be loaded first
 source("R/utils.R")
-source("R/utils_crop.R")
 source("R/utils_program.R")
 source("R/utils_program_stage.R")
 source("R/utils_material.R")
-source("R/utils_site.R")
-source("R/utils_dictionary.R")
+
+#source("R/utils_dictionary.R")
 source("R/utils_fieldbook.R")
 
 source("R/server_environment.R")
 
 shinyServer <- function(input, output, session) {
-
-  volumes <- getVolumes()
+  fbsites::server_site(input, output, session)
+  fbcrops::server_crop(input, output, session)
 
   values = reactiveValues()
-  setHot_crops = function(x) values[["hot_crops"]] = x
   setHot_programs = function(x) values[["hot_programs"]] = x
   setHot_program_stages = function(x) values[["hot_program_stages"]] = x
   setHot_materials = function(x) values[["hot_materials"]] = x
   setFile_materials = function(x) values[["file_materials"]] = x
   setMap_msg = function(x) values[["map_msg"]] = x
   setMat_list_sel = function(x) values[["mat_list_sel"]]
-  setHot_sites = function(x) values[["hot_sites"]] = x
-  #setHot_sites = function(x) values[["hot_sites"]] = x
+
+  volumes <- getVolumes()
 
   observe({
     input$saveBtn
-    if (!is.null(values[["hot_crops"]])) {
-      post_crop_table(values[["hot_crops"]])
-    }
     if (!is.null(values[["hot_programs"]])) {
       post_program_table(values[["hot_programs"]])
     }
     if (!is.null(values[["hot_program_stages"]])) {
       post_program_stage_table(values[["hot_program_stages"]])
     }
-    if (!is.null(values[["hot_sites"]])) {
-      post_site_table(values[["hot_sites"]])
-    }
-
   })
 
-  output$hot_crops = renderRHandsontable({
-    if (!is.null(input$hot_crops)) {
-      DF = hot_to_r(input$hot_crops)
-    } else {
-      DF = get_crop_table()
-    }
-
-    setHot_crops(DF)
-    rhandsontable(DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
-      # %>% hot_context_menu(allowRowEdit = FALSE)
-  })
 
   output$hot_programs = renderRHandsontable({
     if (!is.null(input$hot_programs)) {
@@ -96,19 +79,6 @@ shinyServer <- function(input, output, session) {
   output$mlist_fc <- renderText({
     rv_fp_ml()
   })
-
-  # obs_ml <- observe({
-  #   roots = c(wd = ".")
-  #   fp <- parseFilePaths( roots, input$mlist_files)$datapath
-  #   fp
-  # })
-
-
-
-
-  # output$material_tree <- renderTree({
-  #   material_list_tree()
-  # })
 
 
   shinyFileChoose(input, 'mlist_files', session = session,
@@ -176,19 +146,6 @@ shinyServer <- function(input, output, session) {
     }
   )
 
-
-  output$hot_sites = renderRHandsontable({
-    if (!is.null(input$hot_sites)) {
-      DF = hot_to_r(input$hot_sites)
-    } else {
-      DF = get_site_table()
-    }
-
-    setHot_sites(DF)
-    rhandsontable(DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
-    # %>% hot_context_menu(allowRowEdit = FALSE)
-  })
 
   output$hot_dictionary <- renderRHandsontable({
     if (!is.null(input$hot_dictionary)) {
