@@ -29,6 +29,6 @@ fb$INSTN <- as.factor(fb$INSTN)
 
 ```
 
-Some ANOVA analysis ...
+Some ANOVA analysis to be done.
 
 

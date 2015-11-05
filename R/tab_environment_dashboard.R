@@ -20,9 +20,12 @@ tab_environment_dashboard <- function(){
                    tabBox(width = NULL, title = "Site",
                       tabPanel("Info",
                           htmlOutput("site_desc")
-                      ), tabPanel("Fieldtrials"
+                      ), tabPanel("Fieldtrials",
+                          htmlOutput("site_fieldtrials")
                                   ),
-                          tabPanel("Genotypes")
+                          tabPanel("Genotypes",
+                          htmlOutput("site_genotypes")
+                                   )
                     ),
 
                    box(width = NULL,

@@ -1,225 +1,305 @@
 library(shiny)
 library(rhandsontable)
-library(shinyTree)
+#library(shinyTree)
 library(shinyFiles)
-library(leaflet)
+#library(leaflet)
 library(rmarkdown)
 
-library(fbglobal)
-library(fbsites)
-library(fbcrops)
-
-source("R/global.R") # global needs to be loaded first
 source("R/utils.R")
-source("R/utils_program.R")
-source("R/utils_program_stage.R")
-source("R/utils_material.R")
-
-#source("R/utils_dictionary.R")
 source("R/utils_fieldbook.R")
-
 source("R/server_environment.R")
 
+
+
 shinyServer <- function(input, output, session) {
-  fbsites::server_site(input, output, session)
-  fbcrops::server_crop(input, output, session)
 
-  values = reactiveValues()
-  setHot_programs = function(x) values[["hot_programs"]] = x
-  setHot_program_stages = function(x) values[["hot_program_stages"]] = x
-  setHot_materials = function(x) values[["hot_materials"]] = x
-  setFile_materials = function(x) values[["file_materials"]] = x
+  values = shiny::reactiveValues()
+
+  fbsites::server_site(input, output, session, values = values)
+  fbcrops::server_crop(input, output, session, values = values)
+  fbprogram::server_program(input, output, session, values = values)
+  fbprstages::server_program_stages(input, output, session, values = values)
+  fbmaterials::server_material_list(input, output, session, values = values)
+  cropont::server_dictionary(input, output, session, values = values)
+  fbmodule::server_module(input, output, session, values = values)
+
   setMap_msg = function(x) values[["map_msg"]] = x
-  setMat_list_sel = function(x) values[["mat_list_sel"]]
 
-  volumes <- getVolumes()
+  # output$module_list <- renderUI({
+  #   selectInput("module_crop_module", "Select a module:",
+  #               choices = get_crop_modules(input$module_crop) )
+  # })
 
-  observe({
-    input$saveBtn
-    if (!is.null(values[["hot_programs"]])) {
-      post_program_table(values[["hot_programs"]])
-    }
-    if (!is.null(values[["hot_program_stages"]])) {
-      post_program_stage_table(values[["hot_program_stages"]])
-    }
-  })
-
-
-  output$hot_programs = renderRHandsontable({
-    if (!is.null(input$hot_programs)) {
-      DF_programs = hot_to_r(input$hot_programs)
-    } else {
-      DF_programs = get_program_table()
-    }
-
-    setHot_programs(DF_programs)
-    rhandsontable(DF_programs,   stretchH = "all") %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
-  })
-
-  output$hot_program_stages = renderRHandsontable({
-    if (!is.null(input$hot_program_stages)) {
-      DF_program_stages = hot_to_r(input$hot_program_stages)
-    } else {
-      DF_program_stages = get_program_stage_table()
-    }
-
-    setHot_program_stages(DF_program_stages)
-    rhandsontable(DF_program_stages,   stretchH = "all") %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
-  })
-
-  rv_fp_ml <- reactive({
-    roots = c(wd = ".")
-    fp <- parseFilePaths( roots, input$mlist_files)$datapath
-    fp <- stringr::str_replace(fp, "NA", "")
-   fp
-  })
-
-  output$mlist_fc <- renderText({
-    rv_fp_ml()
-  })
-
-
-  shinyFileChoose(input, 'mlist_files', session = session,
-                  roots = volumes , filetypes = c('', 'xlsx')
-                  )
-
-
-  output$selectMList <- renderUI({
-    lbl <-paste0("Save: ",input$mlist_crop,"/",
-                 input$mlist_year,"_",input$mlist_name)
-
-    actionButton("saveMListButton", lbl)
-
-  })
-
-  observeEvent(input$doListButton, {
-    if(input$mlist_choose_list_source == "List"){
-      fn = file.path(fname_material_list, input$mlist_lists)
-    } else {
-      fn = rv_fp_ml()
-    }
-
-    import_list_from_prior(input$mlist_crop, input$mlist_year, input$mlist_name,
-                           fn)
-
-  })
-
-  observeEvent(input$saveMListButton, {
-    table_materials = hot_to_r(input$hot_materials)
-    if(!is.null(table_materials)){
-      post_material_table(table_materials,
-        input$mlist_crop, input$mlist_year, input$mlist_name)
-
-      fn <- file.path(fname_materials,input$mlist_crop,
-                      paste0(input$mlist_year,"_",input$mlist_name))
-     }
-  })
-
-
-  #mlist_data <- reactiveFileReader(1000, session, rv_fp_ml(), load)
-
-
-  output$hot_materials = renderRHandsontable({
-    list_name <- input$mlist_name
-    DF_materials <- get_material_table(input$mlist_crop,
-                                       input$mlist_year,
-                                       list_name)
-    setHot_materials(DF_materials)
-
-    if(!is.null(DF_materials)){
-      rhandsontable(DF_materials,   stretchH = "all", limit = 2) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE)
-    }
-
-  })
-
-  output$downloadMaterialListData <- downloadHandler(
-    filename = function() {
-      paste('germplasm_list-', input$mlist_crop,"_", input$mlist_year,"_",
-            input$mlist_name, "_",
-            Sys.Date(), '.csv', sep='')
-    },
-    content = function(con) {
-      write.csv( values[["hot_materials"]], con)
-    }
-  )
-
-
-  output$hot_dictionary <- renderRHandsontable({
-    if (!is.null(input$hot_dictionary)) {
-      DF = hot_to_r(input$hot_dictionary)
-    } else {
-      DF = get_dictionary_table(input$dictionary_crop)
-    }
-    if(!is.null(DF)){
-      #setHot_sites(DF)
-      rhandsontable(DF) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE, limit = 2)
-    }
-  })
-
-  output$module_list <- renderUI({
-    selectInput("module_crop_module", "Select a module:",
-                choices = get_crop_modules(input$module_crop) )
-  })
-
-  output$module_var_list <- renderText({
-    fp <- file.path(fname_module, "PTBM")
-    load(fp)
-    x <- paste(list_variables[,2],":", list_variables[,1])
-    #paste(x, collapse = ",\n ")
-  })
+  # output$module_var_list <- renderText({
+  #   fp <- file.path(fname_module, "PTBM")
+  #   load(fp)
+  #   x <- paste(list_variables[,2],":", list_variables[,1])
+  #   paste(x, collapse = ",\n ")
+  # })
 
   output$fieldbook_list <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
     selectInput("phenotype_fb_choice", "Select a fieldbook:",
-                choices = get_fieldbook_list(input$fb_analysis_crop))
+                choices = fbmaterials::get_fieldbook_list(input$fb_analysis_crop,
+                                                        TRUE))
   })
 
   output$hotFieldbook <- renderRHandsontable({
-      DF = get_fieldbook_table(
-              input$fb_analysis_crop,
-              input$phenotype_fb_choice)
+    #try({
+    #if(exists(input[["fb_analysis_crop"]])) {
+    #exists_fb <- fbmaterials::exists_fieldbook(input[["fieldbook_list"]])
+    #if(!exists_fb) return("")
+    #print(" check HoT fb")
+    try({
+      #if(!is.null(input[["phenotype_fb_choice"]])) {
+        DF = fbmaterials::get_fieldbook_data(
+          input$phenotype_fb_choice)
 
-    if(!is.null(DF)){
-      #setHot_sites(DF)
-      rhandsontable(DF,
-                    selectCallback = TRUE) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_cols( fixedColumnsLeft = 3)
+        if(!is.null(DF)){
+          #setHot_sites(DF)
+          rhandsontable(DF,
+                        selectCallback = TRUE) %>%
+            hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+            hot_cols( fixedColumnsLeft = 6)
+        }
+
+      #}
+
+    })
+    #}
+    #}, silent = TRUE)
+   } )
+
+
+  output$fb_def_reps <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+      tf <- fbmaterials::get_trial_factors(input$phenotype_fb_choice)
+      if(length(tf) > 0) {
+        ti <- tf[stringr::str_sub(tf, 1,1 ) == "R"]
+        return(selectInput("def_rep","Define replication:", tf, ti))
+      }
+    }
+    ""
+  })
+
+  output$fb_def_block <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+      tf <- fbmaterials::get_trial_factors(input$phenotype_fb_choice)
+      if(length(tf) > 0) {
+        ti <- tf[stringr::str_sub(tf, 1,1 ) == "B"]
+        tf <- c(tf, "")
+        return(selectInput("def_block","Define block:", tf, ti))
+      }
+    }
+    ""
+  })
+
+  output$fb_def_genotype <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+      tf <- fbmaterials::get_trial_factors(input$phenotype_fb_choice)
+      if(length(tf) > 0) {
+        ti <- tf[stringr::str_sub(tf, 1,1 ) %in% c("G", "I", "C")]
+        return(selectInput("def_genotype","Define genotype:", tf, ti))
+      }
+    }
+    ""
+  })
+
+  output$fb_def_variables <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+      tf <- fbmaterials::get_trial_variables(input$phenotype_fb_choice)
+      if(length(tf) > 0) {
+        #ti <- tf[stringr::str_sub(tf, 1,1 ) %in% c("G", "I", "C")]
+        chc <- as.list(tf)
+        names(chc) = tf
+        selected = names(chc)[(length(chc) - 3):length(chc)]
+        #print(chc)
+        return(selectizeInput("def_variables",choices = chc,
+                              selected = selected,
+                              label = "Variables",
+                              multiple = TRUE))
+      }
+    }
+    ""
+  })
+
+
+
+  shiny::observeEvent(input$butDoPhAnalysis, ({
+    #if(exists(input[["fb_analysis_crop"]])) {
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    #print("1")
+    if(!exists_fb) return("")
+    #print("2")
+    #if(is.null(input$horFieldbook)) return("")
+    #print("3")
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+     # print("4")
+
+
+      DF <- fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      #print("4A")
+      # y <- input$hotFieldbook_select$select$c
+      # if(is.null(y)) return(HTML(""))
+      # #print(y)
+      # y <- names(DF)[y]
+
+      y <- input$def_variables
+      #print("1")
+      if(input$fb_analysis == "descriptive"){
+        report = paste0("report_",input$fb_analysis,".Rmd")
+        report_dir = file.path("inst", "rmd")
+      }
+      if(input$fb_analysis == "aov"){
+
+        report =  "rcbd2_withchild.Rmd"
+        report_dir = system.file("rmd", package = "pepa")
+
+        #y = y[1]
+      }
+      wd = getwd()
+      result_dir  = file.path(wd, "www", "reports")
+      #print(attr(DF, "meta"))
+      # print(report_dir)
+      # print(wd)
+      # print(result_dir)
+      author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
+      withProgress(message = "Creating report ...",
+                   detail = "This may take a while ...", value = 0,{
+        try({
+          devtools::in_dir(report_dir, {
+            rmarkdown::render(report,
+                              output_format = c("pdf_document", "word_document",
+                                                "html_document"),
+                              output_dir = file.path(wd, "www"),
+                              params = list(
+                                meta = attr(DF, "meta"),
+                                data = DF,
+                                rep  = input$def_rep,
+                                treat = input$def_genotype,
+                                trait = y,
+                                maxp = 0.1,
+                                author = author))
+          }) # in_dir
+          incProgress(1/3)
+        }) # try
+
+      try({
+          # stmp = paste0("_", Sys.getenv("USERNAME"),
+          #               format(Sys.time(), "_%Y%b%d_%Y%H%M.html"))
+          # print(paste("HTML", report))
+          # #report_html = stringr::str_replace(report, ".Rmd", stmp)
+          # if(file.exists(report_html)) unlink(report_html)
+          # #paste0(report_html)
+          # report_html <- paste0("report_", report_html)
+          # print(paste(report, report_dir, report_html))
+        report_html = stringr::str_replace(report, ".Rmd", ".html")
+      })
+      output$fb_report <- renderUI("")
+      # try({
+      #
+      #     devtools::in_dir(report_dir, {
+      #       rmarkdown::render(file.path(report_dir), report,
+      #                       output_format = "html_document",
+      #                       runtime = "shiny",
+      #                       output_file = report_html,
+      #                       output_dir = file.path(wd, "www"),
+      #                       params = list(
+      #                         data = DF,
+      #                         rep  = input$def_rep,
+      #                         treat = input$def_genotype,
+      #                         trait = y,
+      #                         maxp = 0.1,
+      #                         author = author))
+      #     })
+      #     incProgress(2/3)
+      #   })
+       #print("4")
+      #print(getwd())
+
+      #report = file.path(result_dir, report_html)
+      report = file.path(wd, "www", report_html)
+      print(report)
+      html <- readLines(report)
+      incProgress(3/3)
+      })
+      output$fb_report <- renderUI(HTML(html))
+
     }
   })
 
+  )
 
-  output$fb_report <- renderUI({
-    DF = get_fieldbook_table(
-      input$fb_analysis_crop,
-      input$phenotype_fb_choice)
+  output$fb_fieldmap_title <- renderText({
+    out  = ""
+  if (!is.null(input[["phenotype_fb_choice"]])) {
+    DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+    reps = unlist(input[["def_rep"]])
+    #print(reps)
 
-    y <- input$hotFieldbook_select$select$c
-    if(is.null(y)) return(HTML(""))
-    print(y)
-    y <- names(DF)[y]
-    #print(y)
-
-
-    report = paste0("reports/report_",input$fb_analysis,".Rmd")
-
-    fn <- rmarkdown::render(report,
-                            #output_format = "all",
-                            output_dir = "www/reports/",
-                            params = list(
-                              fieldbook = DF,
-                              independent = input$fb_def_geno,
-                              dependent = y))
-
-    report = paste0("www/reports/report_",input$fb_analysis,".html")
-    html <- readLines(report)
-    HTML(html)
-
-
+    if(length(unique(DF[, reps])) <= 1) {
+      out = HTML("Only one replication.")
+    }
+  }
+    out
   })
+
+
+  output$fb_fieldmap <- d3heatmap::renderD3heatmap({
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+      DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+      ci = input$hotFieldbook_select$select$c
+      #print(ci)
+      trt = names(DF)[ncol(DF)]
+      if (!is.null(ci)) trt = names(DF)[ci]
+      #print(trt)
+      fm <- fbmaterials::fb_to_map(DF, variable = trt)
+      amap = fm[["map"]]
+      anot = fm[["notes"]]
+      d3heatmap::d3heatmap(x = amap, cellnote = anot,
+                           Rowv = FALSE, Colv = FALSE,
+                           dendrogram = "none")
+}
+})
+
+
+
+
+  # output$fb_report <- renderUI({
+  #   if(!is.null(input[["phenotype_fb_choice"]])) {
+  #   DF = fbmaterials::get_fieldbook_data(
+  #     input$fb_phenotype_fb_choice)
+  #
+  #   y <- input$hotFieldbook_select$select$c
+  #   if(is.null(y)) return(HTML(""))
+  #   #print(y)
+  #   y <- names(DF)[y]
+  #
+  #   report = paste0("reports/report_",input$fb_analysis,".Rmd")
+  #
+  #   fn <- rmarkdown::render(report,
+  #                           #output_format = "all",
+  #                           output_dir = "www/reports/",
+  #                           params = list(
+  #                             fieldbook = DF,
+  #                             independent = input$fb_def_geno,
+  #                             dependent = y))
+  #
+  #   report = paste0("www/reports/report_",input$fb_analysis,".html")
+  #   html <- readLines(report)
+  #   HTML(html)
+  #   }
+  # })
 
 
   server_environment(input, output, session, values)

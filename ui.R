@@ -2,95 +2,129 @@ library(shinydashboard)
 library(rhandsontable)
 library(shinyTree)
 library(shinyFiles)
+library(shinyBS)
 library(leaflet)
 
-library(fbsites)
-library(fbcrops)
+# library(fbglobal)
+# library(fbsites)
+# library(fbcrops)
+# library(fbprogram)
+# library(fbprstages)
+# library(fbmaterials)
 
-source("R/global.R") # global needs to be loaded first
-source("R/utils_program.R")
-source("R/utils_program_stage.R")
-source("R/utils_material.R")
+#source("R/global.R") # global needs to be loaded first
+#source("R/utils_program.R")
+#source("R/utils_program_stage.R")
+#source("R/utils_material.R")
 
-source("R/tab_phenotype_analysis.R")
+#source("R/tab_phenotype_analysis.R")
 
 source("R/tab_resource_dashboard.R")
-source("R/tab_resource_program.R")
-source("R/tab_resource_material.R")
-source("R/tab_resource_dictionary.R")
-source("R/tab_resource_module.R")
+#source("R/tab_resource_program.R")
+#source("R/tab_resource_material.R")
+#source("R/tab_resource_dictionary.R")
+#source("R/tab_resource_module.R")
 
 source("R/tab_environment_dashboard.R")
+source("R/tab_phenotype_analysis.R")
 
 
 dashboardPage(skin = "yellow",
 
-  dashboardHeader(title = "HIDAP4RTB"),
+  dashboardHeader(title = "HIDAP4RTB",
+      dropdownMenuOutput("messageMenu")
 
-  dashboardSidebar(
+  ),
+
+  dashboardSidebar(width = 300,
     sidebarMenu(id = "menu",
       # menuItem("Summary",
       #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
       #     selected = TRUE)
       # ),
-      menuItem("Phenotype",
-        # menuSubItem("Phenotype Dashboard", tabName = "dashboard_phenotype", icon = icon("dashboard"),
-        #          selected = TRUE),
-        # menuSubItem("New fieldbook", icon = icon("file"), tabName = "fbDesign"),
-        # menuSubItem("Import fieldbook", icon = icon("file-excel-o"), tabName = "fbImport"),
-        #
-        # menuSubItem("Check fieldbook", icon = icon("check-square"), tabName = "fbCheck"),
-        # menuSubItem("Export fieldbook", icon = icon("file-excel-o"), tabName = "fbExport"),
-        # menuSubItem("Import images", icon = icon("photo"), tabName = "fbFotoImport"),
+      menuItem("Phenotype" ,
+        menuSubItem("Phenotype Dashboard", tabName = "dashboard_phenotype", icon = icon("dashboard"),
+                 selected = TRUE),
         menuSubItem("Analysis", icon = icon("book"), tabName = "fieldbook_analysis",
-                    selected = TRUE)
+                    selected = TRUE),
+        conditionalPanel(
+          "input.menu == 'fieldbook_analysis'",
+          selectInput("fb_analysis_crop", "Select a crop:",
+                      choices = fbcrops::get_crop_table()$crop_name),
+          uiOutput("fieldbook_list"),
+          uiOutput("fb_def_reps"),
+          uiOutput("fb_def_block"),
+          uiOutput("fb_def_genotype"),
+          uiOutput("fb_def_variables"),
+          selectInput("fb_analysis", "Select analysis:",
+                      choices = c("Descriptive"="descriptive","ANOVA"="aov")),
+          HTML("<center>"),
+          shiny::actionButton("butDoPhAnalysis", "Analyze!", inline = TRUE),
+          HTML("</center>")
+        ),
+
+        menuSubItem("New fieldbook", icon = icon("file"), tabName = "fbDesign"),
+        menuSubItem("Import fieldbook", icon = icon("file-excel-o"), tabName = "fbImport"),
+
+        menuSubItem("Check fieldbook", icon = icon("check-square"), tabName = "fbCheck"),
+        menuSubItem("Export fieldbook", icon = icon("file-excel-o"), tabName = "fbExport")
+ #       menuSubItem("Import images", icon = icon("photo"), tabName = "fbFotoImport"),
+
+
+
         # ,
         # menuSubItem("Catalogues", icon = icon("book"), tabName = "fbCatalog")
       ),
-      # menuItem("Genotype",
-      #  menuSubItem("Genotype Dashboard", tabName = "dashboard_genotype", icon = icon("dashboard"))
-      # ,
-      #  conditionalPanel(
-      #    "input.menu == 'dashboard_genotype'",
-      #    selectInput("period", "Period", 1:10)
-      #  )
-      #),
+      menuItem("Genotype",
+       menuSubItem("Genotype Dashboard", tabName = "genotype_dashboard", icon = icon("dashboard"))
+      ,
+       conditionalPanel(
+         "input.menu == 'dashboard_genotype'",
+         selectInput("period", "Period", 1:10)
+       )
+      ),
       menuItem("Environment",
        menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"))
       ),
-      # menuItem("Breeding program",
-      #  menuSubItem("Program Dashboard", tabName = "dashboard_program", icon = icon("dashboard"))
-      # ),
+      menuItem("Integration",
+       menuSubItem("MET", tabName = "integration_MET", icon = icon("dashboard")),
+       #menuSubItem("QTL mapping", tabName = "integration_qtl_mapping", icon = icon("dashboard")),
+       menuSubItem("QTL analyses", tabName = "integration_qtl", icon = icon("dashboard")),
+       menuSubItem("Genomic selection", tabName = "integration_gs", icon = icon("dashboard")),
+       menuSubItem("Breeding program", tabName = "integration_breeding", icon = icon("dashboard"))
+
+      ),
       menuItem("Resources",
-       menuSubItem("Resources Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard"
-                #selected = TRUE
+       menuSubItem("Resources Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard",
+                selected = TRUE
                 ),
        menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
        menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
-       menuSubItem("Plant materials", icon = icon("star"), tabName = "resource_material"),
-        # conditionalPanel(
-        #   "input.menu == 'resource_material'",
-        #   selectInput("mlist_crop", "Choose a crop:", unique(get_crop_table()$crop_name) ),
-        #   selectInput("mlist_year", "Choose a year:", 2000:2050 ),
-        #   textInput("mlist_name", "Choose a list name:", "A unique name")
-        #
-        # )
-       # ,
+       menuSubItem("Breeding program stage", icon = icon("crop"), tabName = "resource_program_stage"),
+       menuSubItem("Plant materials", icon = icon("star"),
+                   tabName = "resource_material_list"),
+          fbmaterials::ui_material_list_params(),
        menuSubItem("Sites", icon = icon("location-arrow"), tabName = "resource_site"),
-       menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary")
-       # ,
-       # menuSubItem("Data module", icon = icon("book"), tabName = "resource_module")
+       menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary"),
+        cropont::ui_dictionary_params(),
+       menuSubItem("Modules for dictionaries", icon = icon("book"),
+                   tabName = "resource_modules"),
+        fbmodule::ui_module_params()
 
-       )
-    #   ,
-    # menuItem( "Sharing",
-    #   menuSubItem("Sharing Dashboard", tabName = "dashboard_sharing", icon = icon("dashboard"))
-    # )
-    # ,
-    # menuItem("Help",
-    #    menuSubItem("Documentation", tabName = "dashboard_help", icon = icon("dashboard")),
-    #    menuSubItem("Tasks", icon = icon("th"), tabName = "widgets2")
-    # )
+    )
+      ,
+    menuItem( "Sharing",
+      menuSubItem("Sharing Dashboard", tabName = "sharing_dashboard", icon = icon("dashboard")),
+      menuSubItem("Index data citations", tabName = "sharing_citations", icon = icon("dashboard")),
+      menuSubItem("Data deposit", tabName = "sharing_deposit", icon = icon("dashboard")),
+      menuSubItem("Social networks", tabName = "sharing_social", icon = icon("dashboard"))
+    )
+    ,
+    menuItem("Help",
+       menuSubItem("Documentation", tabName = "help_documentation", icon = icon("dashboard")),
+       menuSubItem("Tasks", tabName = "help_tasks", icon = icon("dashboard")),
+       menuSubItem("Tutorials", tabName = "help_tutorials", icon = icon("dashboard"))
+    )
     )
 
   ),
@@ -101,11 +135,13 @@ dashboardPage(skin = "yellow",
 
       tab_resource_dashboard(),
       fbcrops::ui_crop(),
-      tab_resource_program(),
-      tab_resource_material(),
+      fbprogram::ui_program(),
+      fbprstages::ui_program_stage(),
+      fbmaterials::ui_material_list(),
       fbsites::ui_site(),
-      tab_resource_dictionary()#,
-      #tab_resource_module()
+      cropont::ui_dictionary(),
+      fbmodule::ui_module()
+
     )
   )
 )
