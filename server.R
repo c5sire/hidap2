@@ -1,3 +1,4 @@
+
 library(shiny)
 library(rhandsontable)
 #library(shinyTree)
@@ -8,7 +9,6 @@ library(rmarkdown)
 source("R/utils.R")
 source("R/utils_fieldbook.R")
 source("R/server_environment.R")
-
 
 
 shinyServer <- function(input, output, session) {
@@ -24,6 +24,32 @@ shinyServer <- function(input, output, session) {
   fbmodule::server_module(input, output, session, values = values)
 
   setMap_msg = function(x) values[["map_msg"]] = x
+
+
+  output$fb_fieldmap_check <- d3heatmap::renderD3heatmap({
+
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+      DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+      ci = input$hotFieldbook_select$select$c
+      #print(ci)
+      trt = names(DF)[ncol(DF)]
+      if (!is.null(ci)) trt = names(DF)[ci]
+      #print(trt)
+      fm <- fbmaterials::fb_to_map(DF, variable = trt)
+      amap = fm[["map"]]
+      anot = fm[["notes"]]
+      # print(head(amap))
+      # print(head(anot))
+      d3heatmap::d3heatmap(x = amap,
+                             cellnote = anot,
+                                 colors = "Blues",
+                           Rowv = FALSE, Colv = FALSE,
+                           dendrogram = "none")
+    }
+
+  })
+
+
 
   # output$module_list <- renderUI({
   #   selectInput("module_crop_module", "Select a module:",
@@ -169,7 +195,7 @@ shinyServer <- function(input, output, session) {
       }
       wd = getwd()
       result_dir  = file.path(wd, "www", "reports")
-      #print(attr(DF, "meta"))
+      print(attr(DF, "meta"))
       # print(report_dir)
       # print(wd)
       # print(result_dir)
@@ -178,6 +204,7 @@ shinyServer <- function(input, output, session) {
                    detail = "This may take a while ...", value = 0,{
         try({
           devtools::in_dir(report_dir, {
+            print("X")
             rmarkdown::render(report,
                               output_format = c("pdf_document", "word_document",
                                                 "html_document"),
@@ -190,44 +217,15 @@ shinyServer <- function(input, output, session) {
                                 trait = y,
                                 maxp = 0.1,
                                 author = author))
+            print("Y")
           }) # in_dir
           incProgress(1/3)
         }) # try
 
       try({
-          # stmp = paste0("_", Sys.getenv("USERNAME"),
-          #               format(Sys.time(), "_%Y%b%d_%Y%H%M.html"))
-          # print(paste("HTML", report))
-          # #report_html = stringr::str_replace(report, ".Rmd", stmp)
-          # if(file.exists(report_html)) unlink(report_html)
-          # #paste0(report_html)
-          # report_html <- paste0("report_", report_html)
-          # print(paste(report, report_dir, report_html))
-        report_html = stringr::str_replace(report, ".Rmd", ".html")
+         report_html = stringr::str_replace(report, ".Rmd", ".html")
       })
       output$fb_report <- renderUI("")
-      # try({
-      #
-      #     devtools::in_dir(report_dir, {
-      #       rmarkdown::render(file.path(report_dir), report,
-      #                       output_format = "html_document",
-      #                       runtime = "shiny",
-      #                       output_file = report_html,
-      #                       output_dir = file.path(wd, "www"),
-      #                       params = list(
-      #                         data = DF,
-      #                         rep  = input$def_rep,
-      #                         treat = input$def_genotype,
-      #                         trait = y,
-      #                         maxp = 0.1,
-      #                         author = author))
-      #     })
-      #     incProgress(2/3)
-      #   })
-       #print("4")
-      #print(getwd())
-
-      #report = file.path(result_dir, report_html)
       report = file.path(wd, "www", report_html)
       print(report)
       html <- readLines(report)
@@ -245,32 +243,27 @@ shinyServer <- function(input, output, session) {
   if (!is.null(input[["phenotype_fb_choice"]])) {
     DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
     reps = unlist(input[["def_rep"]])
-    #print(reps)
-
+      ci = input$hotFieldbook_select$select$c
+      trt = names(DF)[ncol(DF)]
+      if (!is.null(ci)) trt = names(DF)[ci]
+    out = paste("Displaying spatial variation of trait variable:",  trt)
     if(length(unique(DF[, reps])) <= 1) {
-      out = HTML("Only one replication.")
+      out = "Only one replication."
     }
   }
-    out
+    HTML(out)
+  })
+
+  output$fb_fieldbook_title <- renderText({
+    out  = ""
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+      out = input$phenotype_fb_choice
+    }
+    HTML(out)
   })
 
 
-  output$fb_fieldmap <- d3heatmap::renderD3heatmap({
-    if (!is.null(input[["phenotype_fb_choice"]])) {
-      DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
-      ci = input$hotFieldbook_select$select$c
-      #print(ci)
-      trt = names(DF)[ncol(DF)]
-      if (!is.null(ci)) trt = names(DF)[ci]
-      #print(trt)
-      fm <- fbmaterials::fb_to_map(DF, variable = trt)
-      amap = fm[["map"]]
-      anot = fm[["notes"]]
-      d3heatmap::d3heatmap(x = amap, cellnote = anot,
-                           Rowv = FALSE, Colv = FALSE,
-                           dendrogram = "none")
-}
-})
+
 
 
 
@@ -300,6 +293,90 @@ shinyServer <- function(input, output, session) {
   #   HTML(html)
   #   }
   # })
+
+
+
+  setHot_cross_marker = function(x) values[["hot_cross_marker"]] = x
+
+  output$hot_cross_marker = rhandsontable::renderRHandsontable({
+    shiny::withProgress(message = 'Loading table', {
+      #list_name <- input$module_name
+      #print(input$module_crop)
+      DF_cross_marker <- fbqtl::get_cross_marker_table(crop = "potato",
+                                                       name = "data.loc.rds" )
+      #print(DF_cross_marker)
+      if(!is.null(DF_cross_marker)){
+        setHot_cross_marker(DF_cross_marker)
+        rh <- rhandsontable::rhandsontable(DF_cross_marker,   stretchH = "all")
+        rhandsontable::hot_table(rh, highlightCol = TRUE, highlightRow = TRUE)
+      } else {
+        NULL
+      }
+    })
+  })
+
+
+  library(qtlcharts)
+  data(geneExpr)
+  data(grav)
+  library(qtl)
+
+
+  output$qtl_output = qtlcharts::iplotCorr_render({
+    iplotCorr(geneExpr$expr, geneExpr$genotype, reorder=TRUE,
+              chartOpts=list(cortitle="Correlation matrix",
+                             scattitle="Scatterplot"))
+  })
+
+  output$lod_output = qtlcharts::iplotScanone_render({
+    data(hyper)
+    hyper <- calc.genoprob(hyper, step=1)
+    out <- scanone(hyper)
+
+    # iplotScanone with no effects
+    iplotScanone(out, chr=c(1, 4, 6, 7, 15))
+
+
+    # iplotScanone with CIs
+    iplotScanone(out, hyper, chr=c(1, 4, 6, 7, 15))
+
+  })
+
+  output$qtl_map_output = qtlcharts::iplotScanone_render({
+    data(hyper)
+    map <- pull.map(hyper)[1:15]
+
+    iplotMap(map, shift=TRUE)
+
+  })
+
+  output$qtl_time_output = qtlcharts::iplotMScanone_render({
+    data(grav)
+    library(qtl)
+    grav <- calc.genoprob(grav, step=1)
+    grav <- reduce2grid(grav)
+
+    # we're going to subset the phenotypes
+    phecol <- seq(1, nphe(grav), by=5)
+
+    # the times were saved as an attributed
+    times <- attr(grav, "time")[phecol]
+
+    # genome scan
+    out <- scanone(grav, phe=phecol, method="hk")
+
+
+    # plot with qualitative labels on y-axis
+    iplotMScanone(out)
+
+  })
+
+  output$rf_output = qtlcharts::iplotRF_render({
+    data(fake.f2)
+    fake.f2 <- est.rf(fake.f2)
+    iplotRF(fake.f2)
+  })
+
 
 
   server_environment(input, output, session, values)

@@ -1,7 +1,7 @@
 ---
-title: "Descriptive report: trial `r meta$title`"
-author: "International Potato Center"
-date: "September 18, 2015"
+title: "Descriptive report: trial `r params$meta$title`"
+author: '`r params$author`'
+date: '`r format(Sys.time(), "%B %d, %Y, %H:%Mh")`'
 output: 
   html_document:
     theme: united
@@ -43,18 +43,7 @@ Summary of traits:
 
 ```{r, echo=FALSE, comment = NA, results = 'asis'}
 DF <- summary(fb[, tr]) 
-#knitr::kable(DF, align = c("l","l","l","l"), padding = 8)
-#print(xtable(DF,  align = c("l", "l","l","l","l") ), type = "html")
 pander::pandoc.table(DF, justify = "llll")
-```
-
-```{r, echo=FALSE, results="asis"}
-#tab <- xtable(summary(tbl)$coef, digits=c(0, 2, 2, 1, 2))
-#print(tab, type="html")
-```
-
-```{r, echo=FALSE}
-#hist(fb[[dp[1]]], main = dp, xlab = dp)
 ```
 
 

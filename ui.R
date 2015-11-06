@@ -42,11 +42,10 @@ dashboardPage(skin = "yellow",
       #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
       #     selected = TRUE)
       # ),
-      menuItem("Phenotype" ,
-        menuSubItem("Phenotype Dashboard", tabName = "dashboard_phenotype", icon = icon("dashboard"),
-                 selected = TRUE),
-        menuSubItem("Analysis", icon = icon("book"), tabName = "fieldbook_analysis",
-                    selected = TRUE),
+       menuItem("Phenotype" ,
+        menuSubItem("Phenotype Dashboard", tabName = "dashboard_phenotype", icon = icon("dashboard")
+                 ),
+        menuSubItem("Analysis", icon = icon("book"), tabName = "fieldbook_analysis"),
         conditionalPanel(
           "input.menu == 'fieldbook_analysis'",
           selectInput("fb_analysis_crop", "Select a crop:",
@@ -76,7 +75,7 @@ dashboardPage(skin = "yellow",
         # menuSubItem("Catalogues", icon = icon("book"), tabName = "fbCatalog")
       ),
       menuItem("Genotype",
-       menuSubItem("Genotype Dashboard", tabName = "genotype_dashboard", icon = icon("dashboard"))
+       menuSubItem("Genotype cross marker", tabName = "genotype_cross_marker", icon = icon("dashboard"))
       ,
        conditionalPanel(
          "input.menu == 'dashboard_genotype'",
@@ -94,25 +93,28 @@ dashboardPage(skin = "yellow",
        menuSubItem("Breeding program", tabName = "integration_breeding", icon = icon("dashboard"))
 
       ),
-      menuItem("Resources",
-       menuSubItem("Resources Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard",
-                selected = TRUE
-                ),
-       menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
-       menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
-       menuSubItem("Breeding program stage", icon = icon("crop"), tabName = "resource_program_stage"),
-       menuSubItem("Plant materials", icon = icon("star"),
-                   tabName = "resource_material_list"),
-          fbmaterials::ui_material_list_params(),
-       menuSubItem("Sites", icon = icon("location-arrow"), tabName = "resource_site"),
-       menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary"),
-        cropont::ui_dictionary_params(),
-       menuSubItem("Modules for dictionaries", icon = icon("book"),
-                   tabName = "resource_modules"),
-        fbmodule::ui_module_params()
 
-    )
-      ,
+ menuItem("Supporting information",
+          menuSubItem("Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard"
+          ),
+          menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
+          menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
+          menuSubItem("Breeding program stage", icon = icon("crop"), tabName = "resource_program_stage"),
+          menuSubItem("Plant materials", icon = icon("star"),
+                      tabName = "resource_material_list"),
+          fbmaterials::ui_material_list_params(),
+          menuSubItem("Sites", icon = icon("location-arrow"), tabName = "resource_site"),
+          menuSubItem("Data dictionary", icon = icon("book"), tabName = "resource_dictionary"),
+          cropont::ui_dictionary_params(),
+          menuSubItem("Modules for dictionaries", icon = icon("book"),
+                      tabName = "resource_modules"),
+          fbmodule::ui_module_params()
+
+ )
+ ,
+
+
+
     menuItem( "Sharing",
       menuSubItem("Sharing Dashboard", tabName = "sharing_dashboard", icon = icon("dashboard")),
       menuSubItem("Index data citations", tabName = "sharing_citations", icon = icon("dashboard")),
@@ -130,18 +132,54 @@ dashboardPage(skin = "yellow",
   ),
   dashboardBody(
     tabItems(
-      tab_phenotype_analysis(),
+
+
+      shinydashboard::tabItem(tabName = "genotype_cross_marker",
+      shiny::fluidRow(
+        shinydashboard::box(width = 12,
+                            title = "Cross marker scores",
+                            rhandsontable::rHandsontableOutput("hot_cross_marker", height = 600)
+        ),
+        shiny::fluidRow(
+          shinydashboard::box(width = 12, title = "Report")
+        )
+      )
+      )
+      ,
+
       tab_environment_dashboard(),
 
-      tab_resource_dashboard(),
-      fbcrops::ui_crop(),
-      fbprogram::ui_program(),
-      fbprstages::ui_program_stage(),
-      fbmaterials::ui_material_list(),
-      fbsites::ui_site(),
-      cropont::ui_dictionary(),
-      fbmodule::ui_module()
-
+      shinydashboard::tabItem(tabName = "integration_qtl",
+      shiny::fluidRow(
+        shinydashboard::tabBox(id = "qtl_tab", width = 12,
+           shiny::tabPanel("Map",
+                           qtlcharts::iplotMap_output('qtl_map_output')
+           ),
+            shiny::tabPanel("Interactive LOD curve",
+                               qtlcharts::iplotScanone_output('lod_output')
+                               ),
+            shiny::tabPanel("Gene correlation",
+                            qtlcharts::iplotCorr_output('qtl_output')
+            ),
+            shiny::tabPanel("RF",
+                           qtlcharts::iplotRF_output('rf_output')
+            ),
+            shiny::tabPanel("QTL effects over time",
+                           qtlcharts::iplotMScanone_output('qtl_time_output')
+           )
+        )
+      )
+      ),
+      #
+      # tab_resource_dashboard(),
+      # fbcrops::ui_crop(),
+      # fbprogram::ui_program(),
+      # fbprstages::ui_program_stage(),
+      # fbmaterials::ui_material_list(),
+      # fbsites::ui_site(),
+      # cropont::ui_dictionary(),
+      # fbmodule::ui_module()
+      tab_phenotype_analysis()
     )
   )
 )
