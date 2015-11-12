@@ -9,12 +9,17 @@ tab_phenotype_analysis <- function(){
           ),
           fluidRow(
             tabBox(width = 12,
+                   tabPanel(title = "Reports",
+                            htmlOutput("fb_report")
+
+                   ),
+
                    tabPanel(title = "Fieldmap",
                             textOutput("fb_fieldmap_title"),
                             d3heatmap::d3heatmapOutput("fb_fieldmap_check")
                    ),
-                  tabPanel(title = "Report",
-                           htmlOutput("fb_report")
+                  tabPanel(title = "Correlations (interactive)",
+                           qtlcharts::iplotCorr_output('vcor_output')
                   )
 
             )

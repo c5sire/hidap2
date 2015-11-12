@@ -63,12 +63,13 @@ shinyServer <- function(input, output, session) {
   #   paste(x, collapse = ",\n ")
   # })
 
+
+
+
   output$fieldbook_list <- renderUI({
     exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
     if(!exists_fb) return("")
-    selectInput("phenotype_fb_choice", "Select a fieldbook:",
-                choices = fbmaterials::get_fieldbook_list(input$fb_analysis_crop,
-                                                        TRUE))
+    selectInput("phenotype_fb_choice", "Select a fieldbook:",choices = get_fb_list())
   })
 
   output$hotFieldbook <- renderRHandsontable({
@@ -268,31 +269,31 @@ shinyServer <- function(input, output, session) {
 
 
 
-  # output$fb_report <- renderUI({
-  #   if(!is.null(input[["phenotype_fb_choice"]])) {
-  #   DF = fbmaterials::get_fieldbook_data(
-  #     input$fb_phenotype_fb_choice)
-  #
-  #   y <- input$hotFieldbook_select$select$c
-  #   if(is.null(y)) return(HTML(""))
-  #   #print(y)
-  #   y <- names(DF)[y]
-  #
-  #   report = paste0("reports/report_",input$fb_analysis,".Rmd")
-  #
-  #   fn <- rmarkdown::render(report,
-  #                           #output_format = "all",
-  #                           output_dir = "www/reports/",
-  #                           params = list(
-  #                             fieldbook = DF,
-  #                             independent = input$fb_def_geno,
-  #                             dependent = y))
-  #
-  #   report = paste0("www/reports/report_",input$fb_analysis,".html")
-  #   html <- readLines(report)
-  #   HTML(html)
-  #   }
-  # })
+  output$fb_report <- renderUI({
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+    DF = fbmaterials::get_fieldbook_data(
+      input$fb_phenotype_fb_choice)
+
+    y <- input$hotFieldbook_select$select$c
+    if(is.null(y)) return(HTML(""))
+    #print(y)
+    y <- names(DF)[y]
+
+    report = paste0("reports/report_",input$fb_analysis,".Rmd")
+
+    fn <- rmarkdown::render(report,
+                            #output_format = "all",
+                            output_dir = "www/reports/",
+                            params = list(
+                              fieldbook = DF,
+                              independent = input$fb_def_geno,
+                              dependent = y))
+
+    report = paste0("www/reports/report_",input$fb_analysis,".html")
+    html <- readLines(report)
+    HTML(html)
+    }
+  })
 
 
 
@@ -377,9 +378,85 @@ shinyServer <- function(input, output, session) {
     iplotRF(fake.f2)
   })
 
+  output$vcor_output = qtlcharts::iplotCorr_render({
+    shiny::withProgress(message = 'Loading table', {
+    DF = fbmaterials::get_fieldbook_data(
+      input$phenotype_fb_choice)
+    treat <- input$def_genotype
+    trait <- input$def_variables
+    DF = DF[, c(treat, trait)]
 
+    DF[, treat] <- as.factor(DF[, treat])
+
+    # exclude the response variable and empty variable for RF imputation
+    datas <- names(DF)[!names(DF) %in% c(treat, "PED1")] # TODO replace "PED1" by a search
+    x <- DF[, datas]
+
+    y <- DF[, treat]
+    if (any(is.na(x))){
+      DF <- randomForest::rfImpute(x = x, y = y )
+      #data <- cbind(y, data)
+
+    }
+    names(DF)[1] <- treat
+
+
+    #DF = dplyr::summarise_each(DF, funs(mean))
+    DF = agricolae::tapply.stat(DF, DF[, "CODE"])
+    #print(head(DF))
+    #corDF = cor(DF[, -c(1:2)])
+    DF = DF[, -c(2)]
+    names(DF)[1] = "Genotype"
+    row.names(DF) = DF$Genotype
+    DF = DF[, -c(1)]
+
+    # iplotCorr(DF,  reorder=TRUE,
+    #           chartOpts=list(cortitle="Correlation matrix",
+    #                          scattitle="Scatterplot"))
+
+    iplotCorr(DF)
+    })
+  })
 
   server_environment(input, output, session, values)
+
+  # get fieldbooks in
+
+  volumes <- getVolumes(c("(E:)", "Page File (F:)"))
+  shinyFileChoose(input, 'fb_file', roots = volumes, session = session)
+
+
+  get_fb_list <- reactive({
+    fbl <- values[["ph_fb_list"]]
+    #print(fbl)
+    if(is.null(fbl)) {
+      fbl <- fbmaterials::get_fieldbook_list(input$fb_analysis_crop, TRUE)
+    }
+    #print(fbl)
+    fbl
+  })
+
+
+  # shiny::observe({
+  #   add_to_fb_list <- function(ids){
+  #     fbl <- get_fb_list()
+  #     if(!is.null(ids)){
+  #     ids <- parseFilePaths(volumes, input$fb_file)$name
+  #     ids <- as.character(ids)
+  #     print(print(paste("set ", str(ids))))
+  #     input$fb_analysis_crop
+  #     if(!ids %in% fbl ){
+  #         fbl <- c(fbl, ids)
+  #         #print(fbl)
+  #         values[["ph_fb_list"]] <- fbl
+  #       }
+  #
+  #     }
+  #   }
+  #
+  #   add_to_fb_list( input$fb_file)
+  # })
+  #
 
 }
 

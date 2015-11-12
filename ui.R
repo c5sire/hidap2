@@ -64,6 +64,12 @@ dashboardPage(skin = "yellow",
 
         menuSubItem("New fieldbook", icon = icon("file"), tabName = "fbDesign"),
         menuSubItem("Import fieldbook", icon = icon("file-excel-o"), tabName = "fbImport"),
+        conditionalPanel(
+          "input.menu == 'fbImport'",
+          HTML("<center>"),
+          shinyFiles::shinyFilesButton('fb_file', 'File select', 'Please select a file', FALSE),
+          HTML("</center>")
+        ),
 
         menuSubItem("Check fieldbook", icon = icon("check-square"), tabName = "fbCheck"),
         menuSubItem("Export fieldbook", icon = icon("file-excel-o"), tabName = "fbExport")
@@ -95,7 +101,8 @@ dashboardPage(skin = "yellow",
       ),
 
  menuItem("Supporting information",
-          menuSubItem("Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard"
+          menuSubItem("Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard",
+            selected = TRUE
           ),
           menuSubItem("Crops", icon = icon("leaf"), tabName = "resource_crop"),
           menuSubItem("Breeding programs", icon = icon("crop"), tabName = "resource_program"),
@@ -171,14 +178,14 @@ dashboardPage(skin = "yellow",
       )
       ),
       #
-      # tab_resource_dashboard(),
-      # fbcrops::ui_crop(),
-      # fbprogram::ui_program(),
-      # fbprstages::ui_program_stage(),
-      # fbmaterials::ui_material_list(),
-      # fbsites::ui_site(),
-      # cropont::ui_dictionary(),
-      # fbmodule::ui_module()
+      tab_resource_dashboard(),
+      fbcrops::ui_crop(),
+      fbprogram::ui_program(),
+      fbprstages::ui_program_stage(),
+      fbmaterials::ui_material_list(),
+      fbsites::ui_site(),
+      cropont::ui_dictionary(),
+      fbmodule::ui_module(),
       tab_phenotype_analysis()
     )
   )
