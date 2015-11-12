@@ -1,18 +1,29 @@
 tab_phenotype_analysis <- function(){
   tabItem(tabName = "fieldbook_analysis",
      fluidRow(
-            box(width = 12,
-                title = "Table",
-                textOutput("fb_fieldbook_title"),
-                rHandsontableOutput("hotFieldbook", height = 300)
+            tabBox(width = 12, #collapsible = TRUE,
+                title = "Field trial",
+                tabPanel("Fieldbook",{
+                  textOutput("fb_fieldbook_title")
+                  rHandsontableOutput("hotFieldbook", height = 400)
+                }),
+                tabPanel("Minimal",{
+                  rHandsontableOutput("hotMinimal", height = 400)
+                })
             )
+
+
+            # tabBox(width = 12, collapsible = TRUE,
+            #     title = "Installation",
+            #     tabPanel(
+            #       rHandsontableOutput("hotInstallation", height = 400)
+            #     )
+            #
+            # )
           ),
           fluidRow(
             tabBox(width = 12,
-                   tabPanel(title = "Reports",
-                            htmlOutput("fb_report")
 
-                   ),
 
                    tabPanel(title = "Fieldmap",
                             textOutput("fb_fieldmap_title"),
@@ -20,6 +31,10 @@ tab_phenotype_analysis <- function(){
                    ),
                   tabPanel(title = "Correlations (interactive)",
                            qtlcharts::iplotCorr_output('vcor_output')
+                  ),
+                  tabPanel(title = "Reports",
+                           htmlOutput("fb_report")
+
                   )
 
             )

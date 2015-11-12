@@ -27,22 +27,28 @@ shinyServer <- function(input, output, session) {
 
 
   output$fb_fieldmap_check <- d3heatmap::renderD3heatmap({
-
+    #print("ok")
     if (!is.null(input[["phenotype_fb_choice"]])) {
       DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+      #print(head(DF))
       ci = input$hotFieldbook_select$select$c
       #print(ci)
       trt = names(DF)[ncol(DF)]
       if (!is.null(ci)) trt = names(DF)[ci]
       #print(trt)
-      fm <- fbmaterials::fb_to_map(DF, variable = trt)
+      fm <- fbmaterials::fb_to_map(DF, variable = trt,
+                                   rep = input[["def_rep"]],
+                                   # blk = input[["def_block"]],
+                                   plt = input[["def_plot"]]
+      )
+      print(head(fm))
       amap = fm[["map"]]
       anot = fm[["notes"]]
-      # print(head(amap))
+      print(head(amap))
       # print(head(anot))
       d3heatmap::d3heatmap(x = amap,
-                             cellnote = anot,
-                                 colors = "Blues",
+                           cellnote = anot,
+                           colors = "Blues",
                            Rowv = FALSE, Colv = FALSE,
                            dendrogram = "none")
     }
@@ -69,34 +75,29 @@ shinyServer <- function(input, output, session) {
   output$fieldbook_list <- renderUI({
     exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
     if(!exists_fb) return("")
-    selectInput("phenotype_fb_choice", "Select a fieldbook:",choices = get_fb_list())
+    selectInput("phenotype_fb_choice", "Select a fieldbook:",choices = get_fb_list(), width = 400)
   })
 
   output$hotFieldbook <- renderRHandsontable({
-    #try({
-    #if(exists(input[["fb_analysis_crop"]])) {
-    #exists_fb <- fbmaterials::exists_fieldbook(input[["fieldbook_list"]])
-    #if(!exists_fb) return("")
-    #print(" check HoT fb")
     try({
       #if(!is.null(input[["phenotype_fb_choice"]])) {
-        DF = fbmaterials::get_fieldbook_data(
-          input$phenotype_fb_choice)
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
 
-        if(!is.null(DF)){
-          #setHot_sites(DF)
-          rhandsontable(DF,
-                        selectCallback = TRUE) %>%
-            hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-            hot_cols( fixedColumnsLeft = 6)
-        }
+      if(!is.null(DF)){
+        #setHot_sites(DF)
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 6)
+      }
 
       #}
 
     })
     #}
     #}, silent = TRUE)
-   } )
+  } )
 
 
   output$fb_def_reps <- renderUI({
@@ -112,13 +113,30 @@ shinyServer <- function(input, output, session) {
     ""
   })
 
+  output$fb_def_plot <- renderUI({
+    exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
+    if(!exists_fb) return("")
+    if(!is.null(input[["phenotype_fb_choice"]])) {
+      tf <- fbmaterials::get_trial_factors(input$phenotype_fb_choice)
+      if(length(tf) > 0) {
+        ti <- tf[stringr::str_sub(tf, 1,2 ) == "PL"]
+        tf <- c(tf, "")
+        return(selectInput("def_plot","Define plot:", tf, ti))
+      }
+    }
+    ""
+  })
+
+
   output$fb_def_block <- renderUI({
     exists_fb <- fbmaterials::exists_fieldbook(input[["fb_analysis_crop"]])
     if(!exists_fb) return("")
     if(!is.null(input[["phenotype_fb_choice"]])) {
       tf <- fbmaterials::get_trial_factors(input$phenotype_fb_choice)
       if(length(tf) > 0) {
+
         ti <- tf[stringr::str_sub(tf, 1,1 ) == "B"]
+        if(length(ti) == 0) return(NULL)
         tf <- c(tf, "")
         return(selectInput("def_block","Define block:", tf, ti))
       }
@@ -170,7 +188,7 @@ shinyServer <- function(input, output, session) {
     #if(is.null(input$horFieldbook)) return("")
     #print("3")
     if (!is.null(input[["phenotype_fb_choice"]])) {
-     # print("4")
+      # print("4")
 
 
       DF <- fbmaterials::get_fieldbook_data(
@@ -203,35 +221,35 @@ shinyServer <- function(input, output, session) {
       author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
       withProgress(message = "Creating report ...",
                    detail = "This may take a while ...", value = 0,{
-        try({
-          devtools::in_dir(report_dir, {
-            print("X")
-            rmarkdown::render(report,
-                              output_format = c("pdf_document", "word_document",
-                                                "html_document"),
-                              output_dir = file.path(wd, "www"),
-                              params = list(
-                                meta = attr(DF, "meta"),
-                                data = DF,
-                                rep  = input$def_rep,
-                                treat = input$def_genotype,
-                                trait = y,
-                                maxp = 0.1,
-                                author = author))
-            print("Y")
-          }) # in_dir
-          incProgress(1/3)
-        }) # try
+                     try({
+                       devtools::in_dir(report_dir, {
+                         print("X")
+                         rmarkdown::render(report,
+                                           output_format = c("pdf_document", "word_document",
+                                                             "html_document"),
+                                           output_dir = file.path(wd, "www"),
+                                           params = list(
+                                             meta = attr(DF, "meta"),
+                                             data = DF,
+                                             rep  = input$def_rep,
+                                             treat = input$def_genotype,
+                                             trait = y,
+                                             maxp = 0.1,
+                                             author = author))
+                         print("Y")
+                       }) # in_dir
+                       incProgress(1/3)
+                     }) # try
 
-      try({
-         report_html = stringr::str_replace(report, ".Rmd", ".html")
-      })
-      output$fb_report <- renderUI("")
-      report = file.path(wd, "www", report_html)
-      print(report)
-      html <- readLines(report)
-      incProgress(3/3)
-      })
+                     try({
+                       report_html = stringr::str_replace(report, ".Rmd", ".html")
+                     })
+                     output$fb_report <- renderUI("")
+                     report = file.path(wd, "www", report_html)
+                     print(report)
+                     html <- readLines(report)
+                     incProgress(3/3)
+                   })
       output$fb_report <- renderUI(HTML(html))
 
     }
@@ -241,17 +259,17 @@ shinyServer <- function(input, output, session) {
 
   output$fb_fieldmap_title <- renderText({
     out  = ""
-  if (!is.null(input[["phenotype_fb_choice"]])) {
-    DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
-    reps = unlist(input[["def_rep"]])
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+      DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+      reps = unlist(input[["def_rep"]])
       ci = input$hotFieldbook_select$select$c
       trt = names(DF)[ncol(DF)]
       if (!is.null(ci)) trt = names(DF)[ci]
-    out = paste("Displaying spatial variation of trait variable:",  trt)
-    if(length(unique(DF[, reps])) <= 1) {
-      out = "Only one replication."
+      out = paste("Displaying spatial variation of trait variable:",  trt)
+      if(length(unique(DF[, reps])) <= 1) {
+        out = "Only one replication."
+      }
     }
-  }
     HTML(out)
   })
 
@@ -271,27 +289,27 @@ shinyServer <- function(input, output, session) {
 
   output$fb_report <- renderUI({
     if(!is.null(input[["phenotype_fb_choice"]])) {
-    DF = fbmaterials::get_fieldbook_data(
-      input$fb_phenotype_fb_choice)
+      DF = fbmaterials::get_fieldbook_data(
+        input$fb_phenotype_fb_choice)
 
-    y <- input$hotFieldbook_select$select$c
-    if(is.null(y)) return(HTML(""))
-    #print(y)
-    y <- names(DF)[y]
+      y <- input$hotFieldbook_select$select$c
+      if(is.null(y)) return(HTML(""))
+      #print(y)
+      y <- names(DF)[y]
 
-    report = paste0("reports/report_",input$fb_analysis,".Rmd")
+      report = paste0("reports/report_",input$fb_analysis,".Rmd")
 
-    fn <- rmarkdown::render(report,
-                            #output_format = "all",
-                            output_dir = "www/reports/",
-                            params = list(
-                              fieldbook = DF,
-                              independent = input$fb_def_geno,
-                              dependent = y))
+      fn <- rmarkdown::render(report,
+                              #output_format = "all",
+                              output_dir = "www/reports/",
+                              params = list(
+                                fieldbook = DF,
+                                independent = input$fb_def_geno,
+                                dependent = y))
 
-    report = paste0("www/reports/report_",input$fb_analysis,".html")
-    html <- readLines(report)
-    HTML(html)
+      report = paste0("www/reports/report_",input$fb_analysis,".html")
+      html <- readLines(report)
+      HTML(html)
     }
   })
 
@@ -380,41 +398,44 @@ shinyServer <- function(input, output, session) {
 
   output$vcor_output = qtlcharts::iplotCorr_render({
     shiny::withProgress(message = 'Loading table', {
-    DF = fbmaterials::get_fieldbook_data(
-      input$phenotype_fb_choice)
-    treat <- input$def_genotype
-    trait <- input$def_variables
-    DF = DF[, c(treat, trait)]
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      treat <- input$def_genotype
+      trait <- input$def_variables
+      DF = DF[, c(treat, trait)]
 
-    DF[, treat] <- as.factor(DF[, treat])
+      DF[, treat] <- as.factor(DF[, treat])
 
-    # exclude the response variable and empty variable for RF imputation
-    datas <- names(DF)[!names(DF) %in% c(treat, "PED1")] # TODO replace "PED1" by a search
-    x <- DF[, datas]
+      # exclude the response variable and empty variable for RF imputation
+      datas <- names(DF)[!names(DF) %in% c(treat, "PED1")] # TODO replace "PED1" by a search
+      x <- DF[, datas]
+      for(i in 1:ncol(x)){
+        x[, i] <- as.numeric(x[, i])
+      }
+      y <- DF[, treat]
+      if (any(is.na(x))){
+        DF <- randomForest::rfImpute(x = x, y = y )
+        #data <- cbind(y, data)
 
-    y <- DF[, treat]
-    if (any(is.na(x))){
-      DF <- randomForest::rfImpute(x = x, y = y )
-      #data <- cbind(y, data)
-
-    }
-    names(DF)[1] <- treat
+      }
+      names(DF)[1] <- treat
 
 
-    #DF = dplyr::summarise_each(DF, funs(mean))
-    DF = agricolae::tapply.stat(DF, DF[, "CODE"])
-    #print(head(DF))
-    #corDF = cor(DF[, -c(1:2)])
-    DF = DF[, -c(2)]
-    names(DF)[1] = "Genotype"
-    row.names(DF) = DF$Genotype
-    DF = DF[, -c(1)]
+      #DF = dplyr::summarise_each(DF, funs(mean))
 
-    # iplotCorr(DF,  reorder=TRUE,
-    #           chartOpts=list(cortitle="Correlation matrix",
-    #                          scattitle="Scatterplot"))
+      DF = agricolae::tapply.stat(DF, DF[, treat])
+      #print(head(DF))
+      #corDF = cor(DF[, -c(1:2)])
+      DF = DF[, -c(2)]
+      names(DF)[1] = "Genotype"
+      row.names(DF) = DF$Genotype
+      DF = DF[, -c(1)]
 
-    iplotCorr(DF)
+      # iplotCorr(DF,  reorder=TRUE,
+      #           chartOpts=list(cortitle="Correlation matrix",
+      #                          scattitle="Scatterplot"))
+
+      iplotCorr(DF)
     })
   })
 
@@ -423,8 +444,26 @@ shinyServer <- function(input, output, session) {
   # get fieldbooks in
 
   volumes <- getVolumes(c("(E:)", "Page File (F:)"))
-  shinyFileChoose(input, 'fb_file', roots = volumes, session = session)
+  shinyFileChoose(input, 'fb_file', roots = volumes, session = session,
+                  filetypes = c("xls", "xlsx"))
 
+  output$fb_file_sel <- renderPrint({
+    if (!is.null(input[["fb_file"]])) {
+      fp <- shinyFiles::parseFilePaths( volumes, input$fb_file)
+      fp <- as.character(fp$datapath[1])
+
+      try({
+        withProgress({
+        #print(fp)
+        ok = dc2hd(fp)
+        #update list display
+        # TODO
+
+        basename(fp)
+        }, message = paste("Importing file", basename(fp)))
+      }, silent = TRUE)
+    }
+  })
 
   get_fb_list <- reactive({
     fbl <- values[["ph_fb_list"]]
@@ -436,27 +475,110 @@ shinyServer <- function(input, output, session) {
     fbl
   })
 
+  dc2hd <- function(file_path){
+    # check tabs
+    capture.output({
+    sheets <- readxl::excel_sheets(file_path)
+    }, file = file.path(tempdir(), "tmp.txt"))
+    min_sh <- c("Fieldbook", "Minimal", "Installation", "Material List",
+                "Crop_management", "Var List")
+    is_dc <- function(min_sh, sheets){
+      all(min_sh %in% sheets)
+    }
+    ok = FALSE
+    if(is_dc(min_sh, sheets)){
+      try({
+        # read fieldbook
+        capture.output({
+        fb <- readxl::read_excel(file_path, "Fieldbook")
+        names(fb) <- stringr::str_trim(names(fb), "both")
+        fbv <- fb
+        #print("3")
+        for(i in 4:ncol(fbv)){
+          for(j in 1:nrow(fbv)){
+            #if(i != 5){
+            vv = fbv[j, i] %>% stringr::str_trim("both")
+            if(vv %in% c(".", "?", "-", "*")) fbv[j, i] = NA
+            #}
+          }
+        }
+        for(i in 1:3){
+          #if(is.factor(fbv[, i])){
+          fbv[, i] <- as.factor(fbv[, i])
+          #}
+        }
+        fb <- fbv
+        fb <- fb[with(fb, order(PLOT)), ]
 
-  # shiny::observe({
-  #   add_to_fb_list <- function(ids){
-  #     fbl <- get_fb_list()
-  #     if(!is.null(ids)){
-  #     ids <- parseFilePaths(volumes, input$fb_file)$name
-  #     ids <- as.character(ids)
-  #     print(print(paste("set ", str(ids))))
-  #     input$fb_analysis_crop
-  #     if(!ids %in% fbl ){
-  #         fbl <- c(fbl, ids)
-  #         #print(fbl)
-  #         values[["ph_fb_list"]] <- fbl
-  #       }
-  #
-  #     }
-  #   }
-  #
-  #   add_to_fb_list( input$fb_file)
-  # })
-  #
+        n <- length(levels(fb$PLOT))
+        fb <- fb[1:n, ]
+
+        row.names(fb) = 1:n
+
+
+        # read minimal meta & attach
+        mn <- readxl::read_excel(file_path, "Minimal")
+        nt <- readxl::read_excel(file_path, "Installation")
+        ml <- readxl::read_excel(file_path, "Material List")
+        cm <- readxl::read_excel(file_path, "Crop_management")
+        vl <- readxl::read_excel(file_path, "Var List")
+
+        attr(fb, "Minimal") <- mn
+        attr(fb, "Installation") <- nt
+        attr(fb, "MaterialList") <- ml
+        attr(fb, "CropManagement") <- cm
+        attr(fb, "VariableList") <- vl
+
+        # get minimal data
+        old_name = basename(file_path)
+        trial_type = "NN"
+        title = stringr::str_trim(
+          stringr::str_replace(old_name, "\\.xls[x]{0,1}", "" )
+        )
+        year <- as.integer(stringr::str_extract(
+          mn[mn$Factor == "Begin date", "Value"], "[0-9]{4}")
+        )
+        country <- toupper(mn[mn$Factor == "Country", "Value"])
+        iso2 <- toupper( stringr::str_sub(country, 1, 2) )
+        site <- mn[mn$Factor == "Locality", "Value"]
+        contact <- mn[mn$Factor == "Leader", "Value"]
+        materials <- unique(fb$INSTN)
+        variables <- names(fb)[-c(1:3)]
+        crop_sh <- stringr::str_sub(title,1, 2)
+        crop <- switch(crop_sh,
+                       "PT" = "potato",
+                       "SP" = "sweetpotato")
+
+        meta <- list(crop = crop,
+                     old_name = old_name,
+                     title = title,
+                     year = year,
+                     country = country,
+                     iso2 = iso2,
+                     contact = contact,
+                     materials = materials,
+                     variables = variables)
+        attr(fb, "meta") = meta
+
+        # save to target path
+        dir_out <- fbglobal::fname_fieldbooks(crop)
+        if(!dir.exists(dir_out)){
+          dir.create(dir_out, recursive = TRUE)
+        }
+        f_out <- file.path(dir_out, paste0(title, ".rda") )
+        saveRDS(fb, f_out )
+        # get material list
+        # save material list apart
+
+        ok = TRUE
+        }, file = file.path(tempdir(), "tmp.txt"))
+      })
+
+    }
+    ok
+  }
+
+
 
 }
 
