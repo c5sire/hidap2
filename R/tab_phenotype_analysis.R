@@ -2,24 +2,36 @@ tab_phenotype_analysis <- function(){
   tabItem(tabName = "fieldbook_analysis",
      fluidRow(
             tabBox(width = 12, #collapsible = TRUE,
-                title = "Field trial",
+                #title = "Field trial",
+                title = textOutput("fb_fieldbook_title"),
                 tabPanel("Fieldbook",{
-                  textOutput("fb_fieldbook_title")
+
                   rHandsontableOutput("hotFieldbook", height = 400)
                 }),
                 tabPanel("Minimal",{
                   rHandsontableOutput("hotMinimal", height = 400)
+                }),
+                tabPanel("Installation",{
+                  rHandsontableOutput("hotInstallation", height = 400)
+                }),
+                tabPanel("Material List",{
+                  rHandsontableOutput("hotMaterialList", height = 400)
+                }),
+                tabPanel("Crop Management",{
+                  rHandsontableOutput("hotCropManagement", height = 400)
+                }),
+                tabPanel("Variable List",{
+                  rHandsontableOutput("hotVariableList", height = 400)
+                }),
+                tabPanel("Soil Analysis",{
+                  rHandsontableOutput("hotSoilAnalysis", height = 400)
+                }),
+                tabPanel("Weather Data",{
+                  rHandsontableOutput("hotWeatherData", height = 400)
                 })
             )
 
 
-            # tabBox(width = 12, collapsible = TRUE,
-            #     title = "Installation",
-            #     tabPanel(
-            #       rHandsontableOutput("hotInstallation", height = 400)
-            #     )
-            #
-            # )
           ),
           fluidRow(
             tabBox(width = 12,

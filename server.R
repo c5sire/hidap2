@@ -25,6 +25,16 @@ shinyServer <- function(input, output, session) {
 
   setMap_msg = function(x) values[["map_msg"]] = x
 
+  get_fb_list <- reactive({
+    fbl <- values[["ph_fb_list"]]
+    #print(fbl)
+    if(is.null(fbl)) {
+      fbl <- fbmaterials::get_fieldbook_list(input$fb_analysis_crop, TRUE)
+    }
+    #print(fbl)
+    fbl
+  })
+
 
   output$fb_fieldmap_check <- d3heatmap::renderD3heatmap({
     #print("ok")
@@ -41,10 +51,10 @@ shinyServer <- function(input, output, session) {
                                    # blk = input[["def_block"]],
                                    plt = input[["def_plot"]]
       )
-      print(head(fm))
+      #print(head(fm))
       amap = fm[["map"]]
       anot = fm[["notes"]]
-      print(head(amap))
+      #print(head(amap))
       # print(head(anot))
       d3heatmap::d3heatmap(x = amap,
                            cellnote = anot,
@@ -78,9 +88,10 @@ shinyServer <- function(input, output, session) {
     selectInput("phenotype_fb_choice", "Select a fieldbook:",choices = get_fb_list(), width = 400)
   })
 
+
+  # Field trial loading
   output$hotFieldbook <- renderRHandsontable({
     try({
-      #if(!is.null(input[["phenotype_fb_choice"]])) {
       DF = fbmaterials::get_fieldbook_data(
         input$phenotype_fb_choice)
 
@@ -91,12 +102,106 @@ shinyServer <- function(input, output, session) {
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
           hot_cols( fixedColumnsLeft = 6)
       }
-
-      #}
-
     })
-    #}
-    #}, silent = TRUE)
+  } )
+
+  output$hotMinimal <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "Minimal")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+  output$hotInstallation <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "Installation")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+
+  output$hotCropManagement <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "CropManagement")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+  output$hotMaterialList <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "MaterialList")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+  output$hotVariableList <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "VariableList")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+  output$hotWeatherData <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "WeatherData")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
+  } )
+
+  output$hotSoilAnalysis <- renderRHandsontable({
+    try({
+      DF = fbmaterials::get_fieldbook_data(
+        input$phenotype_fb_choice)
+      DF = attr(DF, "SoilAnalysis")
+      if(!is.null(DF)){
+        rhandsontable(DF,
+                      selectCallback = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 1)
+      }
+    })
   } )
 
 
@@ -458,6 +563,7 @@ shinyServer <- function(input, output, session) {
         ok = dc2hd(fp)
         #update list display
         # TODO
+        values[["ph_fb_list"]] <- NULL
 
         basename(fp)
         }, message = paste("Importing file", basename(fp)))
@@ -465,15 +571,6 @@ shinyServer <- function(input, output, session) {
     }
   })
 
-  get_fb_list <- reactive({
-    fbl <- values[["ph_fb_list"]]
-    #print(fbl)
-    if(is.null(fbl)) {
-      fbl <- fbmaterials::get_fieldbook_list(input$fb_analysis_crop, TRUE)
-    }
-    #print(fbl)
-    fbl
-  })
 
   dc2hd <- function(file_path){
     # check tabs
@@ -481,7 +578,7 @@ shinyServer <- function(input, output, session) {
     sheets <- readxl::excel_sheets(file_path)
     }, file = file.path(tempdir(), "tmp.txt"))
     min_sh <- c("Fieldbook", "Minimal", "Installation", "Material List",
-                "Crop_management", "Var List")
+                "Crop_management", "Var List", "Soil_analysis", "Weather_data")
     is_dc <- function(min_sh, sheets){
       all(min_sh %in% sheets)
     }
@@ -522,12 +619,16 @@ shinyServer <- function(input, output, session) {
         ml <- readxl::read_excel(file_path, "Material List")
         cm <- readxl::read_excel(file_path, "Crop_management")
         vl <- readxl::read_excel(file_path, "Var List")
+        sa <- readxl::read_excel(file_path, "Soil_analysis")
+        wd <- readxl::read_excel(file_path, "Weather_data")
 
         attr(fb, "Minimal") <- mn
         attr(fb, "Installation") <- nt
         attr(fb, "MaterialList") <- ml
         attr(fb, "CropManagement") <- cm
         attr(fb, "VariableList") <- vl
+        attr(fb, "SoilAnalysis") <- sa
+        attr(fb, "WeatherData") <- wd
 
         # get minimal data
         old_name = basename(file_path)
