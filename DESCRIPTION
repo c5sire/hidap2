@@ -1,0 +1,31 @@
+Package: hidap
+Title: High Productivity Data Analysis platform for Plant breeding
+Version: 0.0.1
+Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
+           person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
+           person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
+           person("Luka", "Wanjohi", email = "l.wanjohi@cgiar.org", role = c("ctr")),
+           person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
+           person("Awais", "Khan", email = "awais.khan@cgiar.org", role = c("ctr"))
+  )
+Description: Supports plant breeding activities.
+Depends:
+    R (>= 3.2.2)
+License: GPL-3
+LazyData: true
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown,
+    fbglobal,
+    readxl,
+    stringr,
+    shiny,
+    shinydashboard,
+    rhandsontable,
+    shinyFiles,
+    shinyBS,
+    fbcrops,
+    shinyjs
+VignetteBuilder: knitr
+RoxygenNote: 5.0.0
