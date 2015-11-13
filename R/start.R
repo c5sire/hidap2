@@ -5,5 +5,6 @@
 #' @author Reinhard Simon
 #' @export
 start <- function(){
-  shiny::runApp("inst/app")
+  fp = system.file("app", package = "hidap")
+  shiny::runApp(fp)
 }

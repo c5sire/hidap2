@@ -14,10 +14,22 @@ Depends:
 License: GPL-3
 LazyData: true
 Suggests:
+    agricolae,
+    st4gi,
+    pepa,
     testthat,
     knitr,
     rmarkdown,
     fbglobal,
+    cropont,
+    fbmaterials,
+    fbcrops,
+    fbprogram,
+    fbprstages,
+    fbsites,
+    fbmodule,
+    fbqtl,
+    fbreports,
     readxl,
     stringr,
     shiny,
@@ -26,6 +38,9 @@ Suggests:
     shinyFiles,
     shinyBS,
     fbcrops,
-    shinyjs
+    shinyjs,
+    qtlcharts,
+    qtl,
+    leaflet
 VignetteBuilder: knitr
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

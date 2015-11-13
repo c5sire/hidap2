@@ -5,11 +5,13 @@ library(rhandsontable)
 library(shinyFiles)
 #library(leaflet)
 library(rmarkdown)
+library(fbsites)
 
 source("R/utils.R")
 source("R/utils_fieldbook.R")
 source("R/server_environment.R")
 
+#print(fbglobal::get_base_dir())
 
 shinyServer <- function(input, output, session) {
 
