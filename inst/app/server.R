@@ -316,13 +316,15 @@ shinyServer <- function(input, output, session) {
 
         report =  "rcbd2_withchild.Rmd"
         report_dir = system.file("rmd", package = "pepa")
+        #report_dir = system.file("app/www/reports", package = "hidap")
 
         #y = y[1]
       }
       wd = getwd()
-      result_dir  = file.path(wd, "www", "reports")
-      print(attr(DF, "meta"))
-      # print(report_dir)
+      #result_dir  = file.path(wd, "www", "reports")
+      result_dir  =  system.file("app/www/reports", package = "hidap")
+      #print(attr(DF, "meta"))
+      # print(paste("report dir: ", report_dir))
       # print(wd)
       # print(result_dir)
       author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
