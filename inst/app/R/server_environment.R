@@ -55,7 +55,8 @@ server_environment <- function(input, output, session, values){
     n = nrow(locsInBounds())
     if(n<1) return("no locations in view!")
     report = paste0("report_",input$fb_analysis,".Rmd")
-    report = file.path("inst", "rmd", "report_location.Rmd")
+    #report = file.path("inst", "rmd", "report_location.Rmd")
+    report = file.path(system.file("rmd", package = "hidap"), "report_location.Rmd")
 
     fn <- rmarkdown::render(report,
                             #output_format = "all",

@@ -788,6 +788,9 @@ shinyServer <- function(input, output, session) {
         for(i in 1:length(ix)){
           pl <- dp[dp[, 1] == names(fb)[ix[i]], 2]
           fb[, ix[i]] <- round(fb[, ix[i]], pl )
+          if(pl == 0) {
+            fb[, ix[i]] <- as.integer(fb[, ix[i]])
+          }
         }
 
 
