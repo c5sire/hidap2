@@ -807,8 +807,8 @@ shinyServer <- function(input, output, session) {
         saveRDS(fb, f_out )
         # get material list
         # save material list apart
-        # values[["ml_list_crop_year"]] <-
-        #   extract_material_list(fb, values[["ml_list_crop_year"]])
+        values[["ml_list_crop_year"]] <-
+           extract_material_list(fb, values[["ml_list_crop_year"]])
 
         ok = TRUE
         }, file = file.path(tempdir(), "tmp.txt"))
