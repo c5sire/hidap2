@@ -6,6 +6,8 @@ library(shinyFiles)
 #library(leaflet)
 library(rmarkdown)
 library(fbsites)
+library(ggplot2)
+library(plotly)
 
 source("R/utils.R")
 source("R/utils_fieldbook.R")
@@ -48,7 +50,8 @@ shinyServer <- function(input, output, session) {
       trt = names(DF)[ncol(DF)]
       if (!is.null(ci)) trt = names(DF)[ci]
       #print(trt)
-      fm <- fbmaterials::fb_to_map(DF, variable = trt,
+      fm <- fbmaterials::fb_to_map(DF, gt = input[["def_genotype"]],
+                                   variable = trt,
                                    rep = input[["def_rep"]],
                                    # blk = input[["def_block"]],
                                    plt = input[["def_plot"]]
@@ -98,11 +101,92 @@ shinyServer <- function(input, output, session) {
         input$phenotype_fb_choice)
 
       if(!is.null(DF)){
-        #setHot_sites(DF)
-        rhandsontable(DF,
-                      selectCallback = TRUE) %>%
+      #   #setHot_sites(DF)
+      #   # from Omar
+        #   crop_fieldbook <- input$fb_analysis_crop
+        #
+        # if(crop_fieldbook=="potato"){
+        #   fp <- system.file("app_fbcheck\\table_dictionary_potato.rda",
+        #                     package = "fbcheck")
+        #   load(fp)
+        #   datadict <- potato_ontology
+        # }
+        #
+        # if(crop_fieldbook=="sweetpotato"){
+        #   fp <- system.file("app_fbcheck\\table_dictionary_sweetpotato.rda",
+        #                     package = "fbcheck")
+        #   load(fp)
+        #   datadict <- sweetpotato_ontology
+        # }
+        #
+        # #if(!is.null(input[["fb_analysis_crop"]])){
+        #
+        #   #datadict = fbglobal::fname_dictionary(crop_fieldbook)
+        #   #datadict = cropont::get_dictionary_table(crop_fieldbook)
+        #   fb_trait = fbmaterials::get_trial_variables(input$phenotype_fb_choice)
+        #   #print(head(datadict[,1:10]))
+        #   #print(fb_trait)
+        # #}
+
+        rh = rhandsontable(DF,
+                      selectCallback = TRUE,
+                      readOnly = FALSE,useTypes = TRUE) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
           hot_cols( fixedColumnsLeft = 6)
+
+        # from here onwards color check
+        # nt <- length(fb_trait)
+        # out_temp <- list()
+        # renderer_trait <-  list()
+        # out_temp[[1]] <- rhandsontable::rhandsontable(DF,
+        #                                               readOnly = FALSE,
+        #                                               selectCallback = TRUE,
+        #                                               useTypes = TRUE)
+        #
+        #
+        # #out_temp[[1]] <- DF #rhandsontable::rhandsontable(data = fieldbook_dashboard,readOnly = FALSE,useTypes = TRUE) #%>%
+        # for(i in 1:nt){
+        #     renderer_trait[[i]] <- fbcheck::render_trait(fb_trait[i], datadict)
+        #     #print(renderer_trait[[i]])
+        #     j <- i+1
+        #     #print(j)
+        #      out_temp[[j]] <- rhandsontable::hot_col(hot = out_temp[[i]],
+        #                                              col = fb_trait[i],
+        #                               allowInvalid = TRUE,
+        #                               copyable = TRUE,
+        #                               renderer = renderer_trait[[i]])
+        # }
+        #
+        # out_temp
+        #
+        # k <- nt+1
+        # out_temp  %>%
+        rh %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_cols( fixedColumnsLeft = 4)
+
+
+        #str(out_temp) %>% print
+      #   k <- nt+1
+      #
+      #   out_temp[[k]] %>%
+      #     hot_context_menu(
+      #       customOpts = list(
+      #         csv = list(name = "Download to CSV",
+      #                    callback = htmlwidgets::JS(
+      #                      "function (key, options) {
+      #                      var csv = csvString(this);
+      #                      var link = document.createElement('a');
+      #                      link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+      #                      encodeURIComponent(csv));
+      #                      link.setAttribute('download', 'data.csv');
+      #                      document.body.appendChild(link);
+      #                      link.click();
+      #                      document.body.removeChild(link);
+      # }"))))
+
+
+
       }
     })
   } )
@@ -345,7 +429,7 @@ shinyServer <- function(input, output, session) {
                                              trait = y,
                                              maxp = 0.1,
                                              author = author))
-                         print("Y")
+                         #print("Y")
                        }) # in_dir
                        incProgress(1/3)
                      }) # try
@@ -817,6 +901,25 @@ shinyServer <- function(input, output, session) {
     }
     ok
   }
+
+  output$fb_histogram_check <- renderPlot({
+    if (!is.null(input[["phenotype_fb_choice"]])) {
+      DF <- fbmaterials::get_fieldbook_data(  input[["phenotype_fb_choice"]])
+      #DF = input$hotFieldbook
+      #print(head(DF))
+      ci = input$hotFieldbook_select$select$c
+      print(ci)
+      trt = names(DF)[ncol(DF)]
+
+      if (is.null(ci)) {
+        trt = names(DF)[ci]
+        ci = ncol(DF)
+      }
+      print(trt)
+      ggplot(DF, aes(x = as.symbol(trt)))  + geom_histogram()
+
+    }
+  })
 
 
 

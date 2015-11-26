@@ -41,6 +41,9 @@ tab_phenotype_analysis <- function(){
                             textOutput("fb_fieldmap_title"),
                             d3heatmap::d3heatmapOutput("fb_fieldmap_check")
                    ),
+                   # tabPanel(title = "Trait histogram",
+                   #          plotOutput("fb_histogram_check")
+                   # ),
                   tabPanel(title = "Correlations (interactive)",
                            qtlcharts::iplotCorr_output('vcor_output')
                   ),
