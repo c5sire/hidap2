@@ -26,8 +26,9 @@ shinyServer <- function(input, output, session) {
   fbmaterials::server_material_list(input, output, session, values = values)
   cropont::server_dictionary(input, output, session, values = values)
   fbmodule::server_module(input, output, session, values = values)
+  fbdesign::server_design(input, output, session, values = values)
 
-  setMap_msg = function(x) values[["map_msg"]] = x
+  #setMap_msg = function(x) values[["map_msg"]] = x
 
   get_fb_list <- reactive({
     fbl <- values[["ph_fb_list"]]

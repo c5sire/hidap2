@@ -42,6 +42,7 @@ Suggests:
     qtlcharts,
     qtl,
     leaflet,
-    pander
+    pander,
+    fbdesign
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

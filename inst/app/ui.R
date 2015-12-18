@@ -64,7 +64,10 @@ dashboardPage(skin = "yellow",
           HTML("</center>")
         ),
 
-        menuSubItem("New fieldbook", icon = icon("file"), tabName = "fbDesign"),
+        menuSubItem("New fieldbok", icon = shiny::icon("star"),
+                     tabName = "phenotype_fieldbook_design")
+        ,
+        fbdesign::ui_fieldbook_params(),
         menuSubItem("Import fieldbook", icon = icon("file-excel-o"), tabName = "fbImport"),
         conditionalPanel(
           "input.menu == 'fbImport'",
@@ -189,6 +192,7 @@ dashboardPage(skin = "yellow",
       fbsites::ui_site(),
       cropont::ui_dictionary(),
       fbmodule::ui_module(),
+      fbdesign::ui_fieldbook(),
       tab_phenotype_analysis()
     )
   )
