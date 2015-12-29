@@ -1,4 +1,14 @@
 
+# add hidap repository to local path
+options(repos = c(hidap = "https://c5sire.github.io/hd", getOption("repos")))
+
+# set HIDAP_HOME environment variable
+# Sys.setenv(HIDAP_HOME = "D:/HIDAP/")
+
+# set local library for hidap libs
+.libPaths("D:/HIDAP/libs")
+
+
 library(shiny)
 library(rhandsontable)
 #library(shinyTree)
@@ -12,6 +22,8 @@ library(plotly)
 source("R/utils.R")
 source("R/utils_fieldbook.R")
 source("R/server_environment.R")
+
+
 
 #print(fbglobal::get_base_dir())
 
@@ -922,6 +934,49 @@ shinyServer <- function(input, output, session) {
     }
   })
 
+
+  shiny::observeEvent(input$butDoMETAnalysis, ({
+      DF <- readxl::read_excel("D:/HIDAP/potato-combine/combine_example/combine4met.xlsx")
+      report = "met.Rmd"
+      report_dir = system.file("rmd", package = "pepa")
+      wd = getwd()
+      result_dir  =  system.file("app/www/reports", package = "hidap")
+      author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
+      withProgress(message = "Creating report ...",
+                   detail = "This may take a while ...", value = 0,{
+                     try({
+                       devtools::in_dir(report_dir, {
+                         print("X")
+                         rmarkdown::render(report,
+                                           output_format = c("html_document"),
+                                           output_dir = file.path(wd, "www"),
+                                           params = list(
+                                             traits = c("MTWP", "MTYA", "NMTP", "NPE", "NPH"),
+                                             geno = "INSTN",
+                                             env = "ENV",
+                                             rep = "REP",
+                                             data = DF,
+                                             maxp = .1,
+                                             author = author))
+                         #print("Y")
+                       }) # in_dir
+                       incProgress(1/3)
+                     }) # try
+
+                     try({
+                       report_html = stringr::str_replace(report, ".Rmd", ".html")
+                     })
+                     output$fb_report <- renderUI("")
+                       report = file.path(wd, "www", report_html)
+                     print(report)
+                     html <- readLines(report)
+                     incProgress(3/3)
+                   })
+      output$fb_report <- renderUI(HTML(html))
+
+
+  })
+  )
 
 
 }

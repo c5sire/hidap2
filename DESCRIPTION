@@ -1,6 +1,6 @@
 Package: hidap
 Title: High Productivity Data Analysis platform for Plant breeding
-Version: 0.0.5
+Version: 0.0.9
 Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
@@ -21,6 +21,7 @@ Suggests:
     knitr,
     rmarkdown,
     fbglobal,
+    d3heatmap,
     cropont,
     fbmaterials,
     fbcrops,
@@ -43,6 +44,7 @@ Suggests:
     qtl,
     leaflet,
     pander,
-    fbdesign
+    fbdesign,
+    plotly
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
