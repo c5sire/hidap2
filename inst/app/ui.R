@@ -1,11 +1,25 @@
-# add hidap repository to local path
-options(repos = c(hidap = "https://c5sire.github.io/hd", getOption("repos")))
+# # add hidap repository to local path
+# options(repos = c(hidap = "https://c5sire.github.io/hd", getOption("repos")))
+#
+# # set HIDAP_HOME environment variable
+# Sys.setenv(HIDAP_HOME = "D:/HIDAP/")
+#
+# # set local library for hidap libs
+# .libPaths("D:/HIDAP/libs")
 
-# set HIDAP_HOME environment variable
-Sys.setenv(HIDAP_HOME = "D:/HIDAP/")
 
-# set local library for hidap libs
-.libPaths("D:/HIDAP/libs")
+
+library(shinydashboard)
+library(shiny)
+library(data.table)
+library(rhandsontable)
+library(traittools)
+library(sbformula)
+library(openxlsx)
+library(shinyFiles)
+library(date)
+library(agricolae)
+library(doBy)
 
 
 library(shinydashboard)
@@ -159,7 +173,7 @@ dashboardPage(skin = "yellow",
   dashboardBody(
     tabItems(
 
-
+      fbcheck::fbcheck_ui(name="fbCheck"),
       shinydashboard::tabItem(tabName = "genotype_cross_marker",
       shiny::fluidRow(
         shinydashboard::box(width = 12,
