@@ -8,6 +8,8 @@ Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
            person("Awais", "Khan", email = "awais.khan@cgiar.org", role = c("ctr"))
   )
+Author: Reinhard Simon <r.simon@cgiar.org>
+Maintainer: Reinhard Simon <r.simon@cgiar.org>
 Description: Supports plant breeding activities.
 Depends:
     R (>= 3.2.2)
@@ -38,13 +40,16 @@ Suggests:
     rhandsontable,
     shinyFiles,
     shinyBS,
-    fbcrops,
     shinyjs,
     qtlcharts,
     qtl,
     leaflet,
     pander,
     fbdesign,
-    plotly
+    plotly,
+    traittools,
+    fbcheck,
+    fbimport,
+    sbformula
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
