@@ -1,3 +1,26 @@
+#
+# # add hidap repository to local path
+# options(repos = c(hidap = "https://c5sire.github.io/hd", getOption("repos")))
+#
+# # set HIDAP_HOME environment variable
+# # Sys.setenv(HIDAP_HOME = "D:/HIDAP/")
+#
+# # set local library for hidap libs
+# .libPaths("D:/HIDAP/libs")
+
+library(shinydashboard)
+library(shiny)
+library(data.table)
+library(rhandsontable)
+library(traittools)
+library(sbformula)
+library(openxlsx)
+library(shinyFiles)
+library(date)
+library(agricolae)
+library(doBy)
+
+
 
 library(shiny)
 library(rhandsontable)
@@ -20,6 +43,8 @@ library(data.table)
 library(doBy)
 
 
+
+
 #print(fbglobal::get_base_dir())
 
 shinyServer <- function(input, output, session) {
@@ -34,9 +59,13 @@ shinyServer <- function(input, output, session) {
   cropont::server_dictionary(input, output, session, values = values)
   fbmodule::server_module(input, output, session, values = values)
   fbdesign::server_design(input, output, session, values = values)
+<<<<<<< HEAD
   fbcollect::srv_dataSource(input, output, session, values = values)
   fbcheck::fbcheck_server(input, output, session, values = values)
 
+=======
+  fbcheck::fbcheck_server(input,output,session,values=values)
+>>>>>>> 9d42f7c29784481388114ff327dce917a27e6a59
   #setMap_msg = function(x) values[["map_msg"]] = x
 
   get_fb_list <- reactive({

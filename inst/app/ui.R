@@ -1,3 +1,27 @@
+# # add hidap repository to local path
+# options(repos = c(hidap = "https://c5sire.github.io/hd", getOption("repos")))
+#
+# # set HIDAP_HOME environment variable
+# Sys.setenv(HIDAP_HOME = "D:/HIDAP/")
+#
+# # set local library for hidap libs
+# .libPaths("D:/HIDAP/libs")
+
+
+
+library(shinydashboard)
+library(shiny)
+library(data.table)
+library(rhandsontable)
+library(traittools)
+library(sbformula)
+library(openxlsx)
+library(shinyFiles)
+library(date)
+library(agricolae)
+library(doBy)
+
+
 library(shinydashboard)
 library(rhandsontable)
 library(shinyTree)
@@ -86,17 +110,18 @@ dashboardPage(skin = "yellow",
       menuItem("Environment",
        menuSubItem("Environment Dashboard", tabName = "dashboard_environment", icon = icon("dashboard"))
       ),
-      # menuItem("Integration",
-      #  menuSubItem("MET", tabName = "integration_MET", icon = icon("dashboard")),
-      #  HTML("<center>"),
-      #  shiny::actionButton("butDoMETAnalysis", "Analyze MET!", inline = TRUE),
-      #  HTML("</center>"),
-      #  #menuSubItem("QTL mapping", tabName = "integration_qtl_mapping", icon = icon("dashboard")),
-      #  menuSubItem("QTL analyses", tabName = "integration_qtl", icon = icon("dashboard")),
-      #  menuSubItem("Genomic selection", tabName = "integration_gs", icon = icon("dashboard")),
-      #  menuSubItem("Breeding program", tabName = "integration_breeding", icon = icon("dashboard"))
-      #
-      # ),
+
+      menuItem("Integration",
+       menuSubItem("MET", tabName = "integration_MET", icon = icon("dashboard")),
+       HTML("<center>"),
+       shiny::actionButton("butDoMETAnalysis", "Analyze MET!", inline = TRUE),
+       HTML("</center>"),
+       #menuSubItem("QTL mapping", tabName = "integration_qtl_mapping", icon = icon("dashboard")),
+       menuSubItem("QTL analyses", tabName = "integration_qtl", icon = icon("dashboard")),
+       menuSubItem("Genomic selection", tabName = "integration_gs", icon = icon("dashboard")),
+       menuSubItem("Breeding program", tabName = "integration_breeding", icon = icon("dashboard"))
+
+      ),
 
  menuItem("Supporting information",
           menuSubItem("Dashboard", icon = icon("dashboard"), tabName = "resource_dashboard"
@@ -136,6 +161,7 @@ dashboardPage(skin = "yellow",
     tabItems(
       tabItem(tabName = "dashboard",
               h2("Hight Interactive Data Analysis Platform for clonal plant breeding"),
+
 
               br(),
 

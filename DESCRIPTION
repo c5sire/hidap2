@@ -1,6 +1,6 @@
 Package: hidap
 Title: High Productivity Data Analysis platform for Plant breeding
-Version: 0.0.5
+Version: 0.0.9.9001
 Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
@@ -8,12 +8,14 @@ Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("ctr")),
            person("Awais", "Khan", email = "awais.khan@cgiar.org", role = c("ctr"))
   )
+Author: Reinhard Simon <r.simon@cgiar.org>
+Maintainer: Reinhard Simon <r.simon@cgiar.org>
 Description: Supports plant breeding activities.
 Depends:
     R (>= 3.2.2)
 License: GPL-3
 LazyData: true
-Suggests:
+Imports:
     agricolae,
     st4gi,
     pepa,
@@ -21,6 +23,7 @@ Suggests:
     knitr,
     rmarkdown,
     fbglobal,
+    d3heatmap,
     cropont,
     fbmaterials,
     fbcrops,
@@ -37,12 +40,17 @@ Suggests:
     rhandsontable,
     shinyFiles,
     shinyBS,
-    fbcrops,
     shinyjs,
     qtlcharts,
     qtl,
     leaflet,
     pander,
-    fbdesign
+    fbdesign,
+    plotly,
+    traittools,
+    fbcheck,
+    fbimport,
+    sbformula
+Remotes: HIDAP/cropont
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
