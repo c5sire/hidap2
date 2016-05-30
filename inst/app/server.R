@@ -1,7 +1,7 @@
 
 library(shiny)
 library(rhandsontable)
-#library(shinyTree)
+library(shinyTree)
 library(shinyFiles)
 #library(leaflet)
 library(rmarkdown)
@@ -12,6 +12,13 @@ library(plotly)
 source("R/utils.R")
 source("R/utils_fieldbook.R")
 source("R/server_environment.R")
+library(brapi)
+library(stringr)
+library(traittools)
+library(sbformula)
+library(data.table)
+library(doBy)
+
 
 #print(fbglobal::get_base_dir())
 
@@ -27,6 +34,8 @@ shinyServer <- function(input, output, session) {
   cropont::server_dictionary(input, output, session, values = values)
   fbmodule::server_module(input, output, session, values = values)
   fbdesign::server_design(input, output, session, values = values)
+  fbcollect::srv_dataSource(input, output, session, values = values)
+  fbcheck::fbcheck_server(input, output, session, values = values)
 
   #setMap_msg = function(x) values[["map_msg"]] = x
 
@@ -412,7 +421,7 @@ shinyServer <- function(input, output, session) {
       # print(paste("report dir: ", report_dir))
       # print(wd)
       # print(result_dir)
-      author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
+      author =  paste0(Sys.getenv("USER"), " using HIDAP")
       withProgress(message = "Creating report ...",
                    detail = "This may take a while ...", value = 0,{
                      try({
@@ -922,6 +931,49 @@ shinyServer <- function(input, output, session) {
     }
   })
 
+
+  shiny::observeEvent(input$butDoMETAnalysis, ({
+      DF <- readxl::read_excel("D:/HIDAP/potato-combine/combine_example/combine4met.xlsx")
+      report = "met.Rmd"
+      report_dir = system.file("rmd", package = "pepa")
+      wd = getwd()
+      result_dir  =  system.file("app/www/reports", package = "hidap")
+      author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
+      withProgress(message = "Creating report ...",
+                   detail = "This may take a while ...", value = 0,{
+                     try({
+                       devtools::in_dir(report_dir, {
+                         print("X")
+                         rmarkdown::render(report,
+                                           output_format = c("html_document"),
+                                           output_dir = file.path(wd, "www"),
+                                           params = list(
+                                             traits = c("MTWP", "MTYA", "NMTP", "NPE", "NPH"),
+                                             geno = "INSTN",
+                                             env = "ENV",
+                                             rep = "REP",
+                                             data = DF,
+                                             maxp = .1,
+                                             author = author))
+                         #print("Y")
+                       }) # in_dir
+                       incProgress(1/3)
+                     }) # try
+
+                     try({
+                       report_html = stringr::str_replace(report, ".Rmd", ".html")
+                     })
+                     output$fb_report <- renderUI("")
+                       report = file.path(wd, "www", report_html)
+                     print(report)
+                     html <- readLines(report)
+                     incProgress(3/3)
+                   })
+      output$fb_report <- renderUI(HTML(html))
+
+
+  })
+  )
 
 
 }
