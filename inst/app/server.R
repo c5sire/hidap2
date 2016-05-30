@@ -41,6 +41,7 @@ library(traittools)
 library(sbformula)
 library(data.table)
 library(doBy)
+#library(fbimport)
 
 
 
@@ -59,13 +60,10 @@ shinyServer <- function(input, output, session) {
   cropont::server_dictionary(input, output, session, values = values)
   fbmodule::server_module(input, output, session, values = values)
   fbdesign::server_design(input, output, session, values = values)
-<<<<<<< HEAD
+
   fbcollect::srv_dataSource(input, output, session, values = values)
   fbcheck::fbcheck_server(input, output, session, values = values)
 
-=======
-  fbcheck::fbcheck_server(input,output,session,values=values)
->>>>>>> 9d42f7c29784481388114ff327dce917a27e6a59
   #setMap_msg = function(x) values[["map_msg"]] = x
 
   get_fb_list <- reactive({

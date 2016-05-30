@@ -49,7 +49,6 @@ Imports:
     plotly,
     traittools,
     fbcheck,
-    fbimport,
     sbformula
 Remotes: HIDAP/cropont
 VignetteBuilder: knitr
