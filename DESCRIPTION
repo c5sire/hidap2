@@ -31,14 +31,13 @@ Imports:
     fbprstages,
     fbsites,
     fbmodule,
-    fbqtl,
-    fbreports,
     readxl,
     stringr,
     shiny,
     shinydashboard,
     rhandsontable,
     shinyFiles,
+    shinyTree,
     shinyBS,
     shinyjs,
     qtlcharts,
@@ -49,7 +48,9 @@ Imports:
     plotly,
     traittools,
     fbcheck,
-    sbformula
+    sbformula,
+    fbcollect,
+    brapi
 Remotes: HIDAP/cropont
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
