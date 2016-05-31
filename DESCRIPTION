@@ -45,9 +45,9 @@ Imports:
     pander,
     fbdesign,
     plotly,
+    sbformula,
     traittools,
     fbcheck,
-    sbformula,
     brapi,
     fbcollect
 Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
