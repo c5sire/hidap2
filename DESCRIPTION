@@ -31,8 +31,6 @@ Imports:
     fbprstages,
     fbsites,
     fbmodule,
-    fbqtl,
-    fbreports,
     readxl,
     stringr,
     shiny,
@@ -50,6 +48,6 @@ Imports:
     traittools,
     fbcheck,
     sbformula
-Remotes: HIDAP/cropont
+Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
