@@ -49,7 +49,8 @@ Imports:
     traittools,
     fbcheck,
     brapi,
-    fbcollect
+    fbcollect,
+    shinyTree
 Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
   c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/sbformula, omarbenites/fbcheck,
   omarbenites/sbformula, c5sire/fbcollect
