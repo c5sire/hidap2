@@ -46,11 +46,14 @@ Imports:
     pander,
     fbdesign,
     plotly,
+    sbformula,
     traittools,
     fbcheck,
-    sbformula,
+    brapi,
     fbcollect,
-    brapi
-Remotes: HIDAP/cropont
+    shinyTree
+Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
+  c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/sbformula, omarbenites/fbcheck,
+  omarbenites/sbformula, c5sire/fbcollect
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
