@@ -50,6 +50,8 @@ Imports:
     sbformula,
     brapi,
     fbcollect
-Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials
+Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
+  c5sire/fbprstages, c5sire/fbsites, c5sire, fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/fbcheck,
+  omarbenites/sbformula
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
