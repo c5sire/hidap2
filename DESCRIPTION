@@ -47,7 +47,9 @@ Imports:
     plotly,
     traittools,
     fbcheck,
-    sbformula
+    sbformula,
+    brapi,
+    fbcollect
 Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
