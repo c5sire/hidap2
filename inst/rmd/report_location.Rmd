@@ -1,7 +1,7 @@
 ---
 title: "location_report"
-author: "Reinhard Simon"
-date: "September 18, 2015"
+author: HIDAP
+date: '`r format(Sys.time(), "%B %d, %Y, %H:%Mh")`'
 output: 
   html_document:
     theme: united
