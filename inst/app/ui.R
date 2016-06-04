@@ -181,6 +181,7 @@ dashboardPage(skin = "yellow",
               tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)"),
 
               br(),
+              tags$div(style = "horizontal-align: middle;", img(src="gt4sp.png", width = 100)),
               br(),
               br()
       ),
