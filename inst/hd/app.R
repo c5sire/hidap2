@@ -1,5 +1,12 @@
 library(brapi)
 library(brapps)
+library(shinyFiles)
+library(DT)
+library(agricolae)
+library(dplyr)
+library(fbmet)
+library(fbhelp)
+library(fbdesign)
 library(shinydashboard)
 library(d3heatmap)
 library(shinyURL)
@@ -8,6 +15,7 @@ library(leaflet)
 library(dplyr)
 library(withr)
 library(DT)
+
 
 
 brapi_host = "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu"
@@ -48,6 +56,9 @@ ui <- dashboardPage(skin = "yellow",
                                   #          menuSubItem("Data checks", tabName = "dashboard_check")
                                   # ) ,
                                   menuItem("Phenotype", icon = icon("leaf"),
+                                           menuSubItem("Design",
+                                                       tabName = "dsg_dashboard", icon = icon("calculator"))
+                                           ,
                                            menuSubItem("Analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator"))
                                            ,
@@ -145,6 +156,9 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
+                        tabItem(tabName = "dsg_dashboard",
+                                fbdesign::ui_design()
+                        ),
                         tabItem(tabName = "phe_dashboard",
                                 fluidRow(
                                   column(width = 12,
@@ -225,6 +239,8 @@ sv <- function(input, output, session) ({
   brapps::fieldbook_analysis(input, output, session, values)
 
   brapps::locations(input, output, session, values)
+
+  fbdesign::sv_design(input, output, session, values)
 
 
 })
