@@ -42,11 +42,11 @@ ui <- dashboardPage(skin = "yellow",
                                   #     selected = TRUE)
                                   # ),
                                   menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "green"),
-                                  menuItem("Data tools", icon= icon("folder-open"),
-                                           #menuSubItem("Data sources", tabName = "dashboard_source"),
-                                           #menuSubItem("Data import", tabName = "dashboard_import"),
-                                           menuSubItem("Data checks", tabName = "dashboard_check")
-                                  ) ,
+                                  # menuItem("Data tools", icon= icon("folder-open"),
+                                  #          #menuSubItem("Data sources", tabName = "dashboard_source"),
+                                  #          #menuSubItem("Data import", tabName = "dashboard_import"),
+                                  #          menuSubItem("Data checks", tabName = "dashboard_check")
+                                  # ) ,
                                   menuItem("Phenotype", icon = icon("leaf"),
                                            menuSubItem("Analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator"))
@@ -79,7 +79,7 @@ ui <- dashboardPage(skin = "yellow",
                                 br(),
                                 br(),
 
-                                "HIDAP v1.0 build 3 [30/4/2016]",
+                                "HIDAP v1.0 [07/06/2016]",
                                 p(class = "text-muted", style="text-align:justify",
                                   paste("HIDAP is a tool designed to help breeders of clonal plants (likw potato and sweetpotato) carry out field trial planning, documentation, analysis and reporting")
                                 ),
