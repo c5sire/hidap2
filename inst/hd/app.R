@@ -42,7 +42,7 @@ ui <- dashboardPage(skin = "yellow",
                                   #     selected = TRUE)
                                   # ),
                                   menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "green"),
-                                  menuItem("Data tools",
+                                  menuItem("Data tools", icon= icon("folder-open"),
                                            #menuSubItem("Data sources", tabName = "dashboard_source"),
                                            #menuSubItem("Data import", tabName = "dashboard_import"),
                                            menuSubItem("Data checks", tabName = "dashboard_check")
