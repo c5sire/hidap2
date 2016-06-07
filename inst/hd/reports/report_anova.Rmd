@@ -27,6 +27,7 @@ params:
 
 ```{r, echo = FALSE}
 library(knitr)
+library(st4gi)
 #library(rmdformats)
 
 
@@ -37,6 +38,8 @@ data <- params$data
 maxp <- params$maxp
 meta <- params$meta
 host <- params$host
+
+geno <- treat
 
 ```
 <!--
