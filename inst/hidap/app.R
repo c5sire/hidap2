@@ -59,8 +59,8 @@ ui <- dashboardPage(skin = "yellow",
 
                                            menuSubItem("Analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator"))
-                                           ,
-                                           uiOutput("fbList")
+
+
                                            #numericInput("fbaInput", "Fieldbook ID", 142, 1, 9999)
 
 
@@ -159,6 +159,7 @@ ui <- dashboardPage(skin = "yellow",
                                   column(width = 12,
                                          box(width = NULL, collapsible = TRUE,
                                              title = "Fieldbook",
+                                             uiOutput("fbList"),
                                              DT::dataTableOutput("hotFieldbook")
                                              #locationsUI("location")
                                          )
@@ -232,6 +233,7 @@ sv <- function(input, output, session) ({
 
   values <- shiny::reactiveValues(crop = "sweetpotato", mode = "brapi")
 
+  try({
   brapi_con("sweetpotato", "http://sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
             80, "rsimon16",
             "sweetpotato")
@@ -243,7 +245,7 @@ sv <- function(input, output, session) ({
   brapps::locations(input, output, session, values)
 
   fbdesign::sv_design(input, output, session, values)
-
+  })
 
 })
 
