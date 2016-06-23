@@ -16,24 +16,24 @@ library(dplyr)
 library(withr)
 library(DT)
 
-
-
-brapi_host = "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu"
-#globalVariables(c("values", "crop", "mode"))
-
-get_plain_host <- function(){
-  host = stringr::str_split(Sys.getenv("BRAPI_DB") , ":80")[[1]][1]
-  if(host == "") host = brapi_host
-  if(stringr::str_detect(host, "@")){
-    if(stringr::str_detect(host, "http://")) {
-      host = stringr::str_replace(host, "http://", "")
-    }
-    host = stringr::str_replace(host, "[^.]{3,8}:[^.]{4,8}@", "")
-  }
-  host
-}
-
-host = get_plain_host()
+#
+#
+# brapi_host = "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu"
+# #globalVariables(c("values", "crop", "mode"))
+#
+# get_plain_host <- function(){
+#   host = stringr::str_split(Sys.getenv("BRAPI_DB") , ":80")[[1]][1]
+#   if(host == "") host = brapi_host
+#   if(stringr::str_detect(host, "@")){
+#     if(stringr::str_detect(host, "http://")) {
+#       host = stringr::str_replace(host, "http://", "")
+#     }
+#     host = stringr::str_replace(host, "[^.]{3,8}:[^.]{4,8}@", "")
+#   }
+#   host
+# }
+#
+# host = get_plain_host()
 
 ui <- dashboardPage(skin = "yellow",
 
@@ -70,10 +70,10 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                   ,
 
-                                  #HTML("<div style='display:none'>"),
-                                  #shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
-                                  shinyURL.ui("URL", tinyURL = F)
-                                  #HTML("</div>")
+                                  HTML("<div style='display:none'>"),
+                                  shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
+                                  #shinyURL.ui("URL", tinyURL = F)
+                                  HTML("</div>")
 
 
 
@@ -237,7 +237,7 @@ sv <- function(input, output, session) ({
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
   try({
-  brapi_con("sweetpotato", "http://sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
+  brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
             80, "rsimon16",
             "sweetpotato")
 
