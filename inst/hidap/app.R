@@ -68,6 +68,13 @@ ui <- dashboardPage(skin = "yellow",
 
                                   menuItem("Environment", tabName = "env_dashboard", icon = icon("globe")
                                   )
+                                  ,
+
+                                  #HTML("<div style='display:none'>"),
+                                  #shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
+                                  shinyURL.ui("URL", tinyURL = F)
+                                  #HTML("</div>")
+
 
 
 
@@ -78,7 +85,7 @@ ui <- dashboardPage(skin = "yellow",
                       #tags$head(tags$style(HTML(mycss))),
                       tabItems(
                         tabItem(tabName = "dashboard",
-                                h2("Hight Interactive Data Analysis Platform for clonal plant breeding"),
+                                h2("Highly Interactive Data Analysis Platform for Clonal Plant Breeding"),
 
 
                                 br(),
@@ -201,12 +208,8 @@ ui <- dashboardPage(skin = "yellow",
                                                          actionButton("fbRepoDo", "Create report!"),
                                                          HTML("<center>"),
                                                          uiOutput("fbRep"),
-                                                         HTML("</center>"),
+                                                         HTML("</center>")
 
-                                                         HTML("<div style='display:none'>"),
-                                                         shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
-                                                         #shinyURL.ui("URL", tinyURL = F)
-                                                         HTML("</div>")
 
 
 
@@ -231,7 +234,7 @@ ui <- dashboardPage(skin = "yellow",
 
 sv <- function(input, output, session) ({
 
-  values <- shiny::reactiveValues(crop = "sweetpotato", mode = "brapi")
+  values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
   try({
   brapi_con("sweetpotato", "http://sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
@@ -244,7 +247,7 @@ sv <- function(input, output, session) ({
 
   brapps::locations(input, output, session, values)
 
-  fbdesign::sv_design(input, output, session, values)
+  #fbdesign::server_design(input, output, session, values)
   })
 
 })
