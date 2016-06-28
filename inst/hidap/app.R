@@ -51,7 +51,7 @@ ui <- dashboardPage(skin = "yellow",
                                   #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
                                   #     selected = TRUE)
                                   # ),
-                                  menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "green"),
+                                  #menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "green"),
                                   # menuItem("Data tools", icon= icon("folder-open"),
                                   #          #menuSubItem("Data sources", tabName = "dashboard_source"),
                                   #          #menuSubItem("Data import", tabName = "dashboard_import"),
@@ -71,6 +71,10 @@ ui <- dashboardPage(skin = "yellow",
                                   menuItem("Environment", tabName = "env_dashboard", icon = icon("globe")
                                   )
                                   ,
+                                  menuItem("About", tabName = "about_dashboard", icon = icon("dashboard"),
+                                           selected = TRUE,
+                                           badgeLabel = "new", badgeColor = "green"),
+
 
                                   HTML("<div style='display:none'>"),
                                   shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
@@ -86,7 +90,7 @@ ui <- dashboardPage(skin = "yellow",
                     dashboardBody(
                       #tags$head(tags$style(HTML(mycss))),
                       tabItems(
-                        tabItem(tabName = "dashboard",
+                        tabItem(tabName = "about_dashboard",
                                 h2("Highly Interactive Data Analysis Platform for Clonal Plant Breeding"),
 
 
@@ -178,16 +182,32 @@ ui <- dashboardPage(skin = "yellow",
                                 ,
                                 fluidRow(
                                   column(width = 12,
-                                         tabBox(width = NULL, selected = "Map", id = "tabAnalysis",
+                                         tabBox(width = NULL, #selected = "Map",
+                                                id = "tabAnalysis",
+                                                tabPanel("Density",
+                                                         uiOutput("phDensUI")
+                                                         ,
+                                                         div(id = "plot-container",
+                                                             plotOutput('phDens_output', height = 400)
+                                                         )
+                                                ),
                                                 tabPanel("Correlation",
                                                          uiOutput("fbCorrVarsUI"),
                                                          #tags$img(src = "www/35.gif"),
-                                                         div(id = "plot-container",
-
-
-                                                             qtlcharts::iplotCorr_output('vcor_output', height = 400)
-                                                         )
+                                                         #div(id = "plot-container",
+                                                             qtlcharts::iplotCorr_output('vcor_output', height = 900)
+                                                         #)
                                                 ),
+
+                                                tabPanel("Heatmap",
+                                                         uiOutput("phHeatCorrVarsUI"),
+                                                         d3heatmap::d3heatmapOutput('phHeat_output', height = 1400)
+                                                ),
+                                                tabPanel("Dendrogram",
+                                                         uiOutput("phDendCorrVarsUI"),
+                                                         plotOutput('phDend_output', height = 1400)
+                                                ),
+
                                                 tabPanel("Map",
                                                          d3heatmap::d3heatmapOutput("fieldbook_heatmap")
                                                 )
