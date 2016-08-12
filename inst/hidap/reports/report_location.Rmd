@@ -1,15 +1,10 @@
 ---
-title: "location_report"
-author: HIDAP
+title: "Location report"
+author: "Reinhard Simon"
 date: '`r format(Sys.time(), "%B %d, %Y, %H:%Mh")`'
 output: 
   html_document:
     theme: united
-  pdf_document:
-    toc: true
-    highlight: zenburn
-  word_document:
-    highlight: "tango"
 params: 
   locs: "no data"
 ---
@@ -18,17 +13,20 @@ params:
 
 ```{r, echo=FALSE}
 locs = params$locs
+
+locs = locs[!is.na(locs$lat), ]
+
 n = nrow(locs)
 ```
 
 There are a total of **`r n`** locations in your view. 
-Latitude range is **`r min(locs$LATD)` to `r max(locs$LATD)`**.
+Latitude range is **`r min(locs$lat)` to `r max(locs$lat)`**.
 
 
 You can also embed plots, for example:
 
 ```{r, echo=FALSE}
-data <- locsInBounds()$ELEV
+data <- locs$altitude
     n = length(data)
     data <- as.numeric(data)
     if(n < 1) return("no data")

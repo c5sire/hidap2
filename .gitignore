@@ -4,3 +4,6 @@
 packrat/lib*/
 packrat
 xxdata
+brapi_session.rda
+xdata
+.DS_Store

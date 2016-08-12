@@ -46,11 +46,12 @@ tab_phenotype_analysis <- function(){
                    # ),
                   tabPanel(title = "Correlations (interactive)",
                            qtlcharts::iplotCorr_output('vcor_output')
-                  ),
-                  tabPanel(title = "Reports",
-                           htmlOutput("fb_report")
-
                   )
+                  # ,
+                  # tabPanel(title = "Reports",
+                  #          htmlOutput("fb_report")
+                  #
+                  # )
 
             )
           )

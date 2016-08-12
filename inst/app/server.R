@@ -24,7 +24,7 @@ library(doBy)
 
 library(shiny)
 library(rhandsontable)
-#library(shinyTree)
+library(shinyTree)
 library(shinyFiles)
 #library(leaflet)
 library(rmarkdown)
@@ -35,6 +35,14 @@ library(plotly)
 source("R/utils.R")
 source("R/utils_fieldbook.R")
 source("R/server_environment.R")
+library(brapi)
+library(stringr)
+library(traittools)
+library(sbformula)
+library(data.table)
+library(doBy)
+#library(fbimport)
+
 
 
 
@@ -52,7 +60,10 @@ shinyServer <- function(input, output, session) {
   cropont::server_dictionary(input, output, session, values = values)
   fbmodule::server_module(input, output, session, values = values)
   fbdesign::server_design(input, output, session, values = values)
-  fbcheck::fbcheck_server(input,output,session,values=values)
+
+  fbcollect::srv_dataSource(input, output, session, values = values)
+  fbcheck::fbcheck_server(input, output, session, values = values)
+
   #setMap_msg = function(x) values[["map_msg"]] = x
 
   get_fb_list <- reactive({
@@ -127,32 +138,6 @@ shinyServer <- function(input, output, session) {
         input$phenotype_fb_choice)
 
       if(!is.null(DF)){
-      #   #setHot_sites(DF)
-      #   # from Omar
-        #   crop_fieldbook <- input$fb_analysis_crop
-        #
-        # if(crop_fieldbook=="potato"){
-        #   fp <- system.file("app_fbcheck\\table_dictionary_potato.rda",
-        #                     package = "fbcheck")
-        #   load(fp)
-        #   datadict <- potato_ontology
-        # }
-        #
-        # if(crop_fieldbook=="sweetpotato"){
-        #   fp <- system.file("app_fbcheck\\table_dictionary_sweetpotato.rda",
-        #                     package = "fbcheck")
-        #   load(fp)
-        #   datadict <- sweetpotato_ontology
-        # }
-        #
-        # #if(!is.null(input[["fb_analysis_crop"]])){
-        #
-        #   #datadict = fbglobal::fname_dictionary(crop_fieldbook)
-        #   #datadict = cropont::get_dictionary_table(crop_fieldbook)
-        #   fb_trait = fbmaterials::get_trial_variables(input$phenotype_fb_choice)
-        #   #print(head(datadict[,1:10]))
-        #   #print(fb_trait)
-        # #}
 
         rh = rhandsontable(DF,
                       selectCallback = TRUE,
@@ -437,7 +422,7 @@ shinyServer <- function(input, output, session) {
       # print(paste("report dir: ", report_dir))
       # print(wd)
       # print(result_dir)
-      author =  paste0(Sys.getenv("USERNAME"), " using HIDAP")
+      author =  paste0(Sys.getenv("USER"), " using HIDAP")
       withProgress(message = "Creating report ...",
                    detail = "This may take a while ...", value = 0,{
                      try({
