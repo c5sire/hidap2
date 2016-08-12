@@ -55,7 +55,7 @@ ui <- dashboardPage(skin = "yellow",
                                   # menuItem("Data tools", icon= icon("folder-open"),
                                   #          #menuSubItem("Data sources", tabName = "dashboard_source"),
                                   #          #menuSubItem("Data import", tabName = "dashboard_import"),
-                                  #          menuSubItem("Data checks", tabName = "dashboard_check")
+                                  #           menuSubItem("Data checks", tabName = "dashboard_check")
                                   # ) ,
                                   menuItem("Phenotype", icon = icon("leaf"),
 
