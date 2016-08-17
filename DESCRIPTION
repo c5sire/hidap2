@@ -25,7 +25,7 @@ Imports:
     DBI,
     devtools,
     gdata,
-    hhtpuv,
+    httpuv,
     magrittr,
     munsell,
     raster,
