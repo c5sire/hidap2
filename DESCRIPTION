@@ -86,7 +86,8 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials, 
   c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/fbanalysis,
   omarbenites/sbformula,
   omarbenites/fbcheck,
-   c5sire/fbcollect, c5sire/brapi, c5sire/brapps, c5sire/shinyFiles,
+   c5sire/shinyFiles,
+   c5sire/fbcollect, c5sire/brapi, c5sire/brapps,
   rstudio/leaflet
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
