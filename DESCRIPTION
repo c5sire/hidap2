@@ -97,7 +97,7 @@ Imports:
     shinyURL,
     shinysky,
     V8,
-    fbanalysis
+    fbanalysis,
     fbmlist,
     fbopenbooks,
     rmarkdown
