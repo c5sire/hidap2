@@ -17,6 +17,7 @@ License: GPL-3
 LazyData: true
 Imports:
     agricolae,
+    foreign,
     AlgDesign,
     assertthat,
     base64enc,
@@ -35,6 +36,7 @@ Imports:
     knitr,
     rmarkdown,
     fbglobal,
+    data.table,
     d3heatmap,
     cropont,
     fbmaterials,
@@ -63,6 +65,8 @@ Imports:
     fbcheck,
     brapi,
     brapps,
+    countrycode,
+    RMySQL,
     fbcollect,
     prettyunits,
     tibble,
@@ -81,15 +85,27 @@ Imports:
     gmodels,
     gtools,
     sp,
+    spsurvey,
     stringi,
-    shinyURL
-Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
-  c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/fbanalysis,
+    shinyURL,
+    shinySky,
+    fmlist,
+    fbopenbooks
+Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi,
+reyzaguirre/pepa, c5sire/fbprogram,
+  c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule,
+  omarbenites/fbdesign,
+  omarbenites/traittools,
+  omarbenites/fbanalysis,
   omarbenites/sbformula,
   omarbenites/fbcheck,
+  omarbenites/shinySky,
+  omarbenites/fmlist,
+  omarbenites/fbopenbooks,
   aoles/shinyURL,
    c5sire/shinyFiles,
    rstudio/leaflet,
-   c5sire/fbcollect, c5sire/brapi, c5sire/brapps
+   rstudio/DT,
+   c5sire/fbcollect, c5sire/brapi, c5sire/brapps, c5sire/fbhelp, c5sire/fbmet
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
