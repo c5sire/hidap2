@@ -47,7 +47,7 @@ ui <- dashboardPage(skin = "yellow",
                     ),
 
                     dashboardSidebar(
-                      div(style="margin-right: auto;",img(src = "Logo1.png", width = "230")),
+                      #div(style="margin-right: auto;",img(src = "Logo1.png", width = "230")),
                       sidebarMenu(id = "menu",
                                   # menuItem("Summary",
                                   #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
@@ -137,11 +137,13 @@ ui <- dashboardPage(skin = "yellow",
                                 p(class = "text-muted", style="text-align:justify",
                                   paste("HIDAP is a tool designed to help breeders of clonal plants (likw potato and sweetpotato) carry out field trial planning, documentation, analysis and reporting")
                                 ),
+                                #div(style="margin-right: auto;",img(src = "Logo1.png", width = "230"))
+                                tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)",
+                                         img(src = "Logo1.png", width = "230"),
+                                         img(src="gt4sp.png", width = 100)),
 
-                                tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)"),
-
-                                br(),
-                                tags$div(style = "horizontal-align: middle;", img(src="gt4sp.png", width = 100)),
+                                #br(),
+                                #tags$div(style = "horizontal-align: middle;", img(src="gt4sp.png", width = 100)),
                                 br(),
                                 br()
                         ),
