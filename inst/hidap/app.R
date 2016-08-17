@@ -319,7 +319,7 @@ sv <- function(input, output, session) ({
 
   fbcheck::fbcheck_server(input, output, session, values)
 
-  fbmlist::server_mangerlist(input, output, session, values)
+  fbmlist::server_managerlist(input, output, session, values)
 
   fbmlist::server_generate(input, output, session, values)
 

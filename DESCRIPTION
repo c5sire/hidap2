@@ -89,10 +89,15 @@ Imports:
     Formula,
     acepack,
     latticeExtra,
+    gridExtra,
+    chron,
+    rgeos,
     spsurvey,
     stringi,
     shinyURL,
     shinysky,
+    V8,
+    fbanalysis
     fbmlist,
     fbopenbooks,
     rmarkdown
