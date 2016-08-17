@@ -63,6 +63,7 @@ Imports:
     fbcheck,
     brapi,
     fbcollect,
+    prettyunits,
     tibble,
     xtable
 Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, c5sire/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
