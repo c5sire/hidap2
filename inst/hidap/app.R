@@ -7,6 +7,7 @@ library(dplyr)
 #library(fbmet)
 #library(fbhelp)
 #library(fbdesign)
+library(rhandsontable)
 library(shinydashboard)
 library(d3heatmap)
 library(shinyURL)
@@ -16,6 +17,7 @@ library(dplyr)
 library(withr)
 library(DT)
 library(st4gi)
+library(tibble)
 
 
 #
@@ -58,6 +60,9 @@ ui <- dashboardPage(skin = "yellow",
                                   #           menuSubItem("Data checks", tabName = "dashboard_check")
                                   # ) ,
                                   menuItem("Phenotype", icon = icon("leaf"),
+
+                                           menuSubItem("Pre-processing", icon = icon("location-arrow"),
+                                                       tabName = "phe_preprocess"),
 
                                            menuSubItem("Analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator"))
@@ -167,6 +172,11 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
+                        tabItem(tabName = "phe_preprocess",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbcheck::fbcheck_ui(name = "phe_preprocess"))
+                                ))),
                         tabItem(tabName = "phe_dashboard",
                                 fluidRow(
                                   column(width = 12,
@@ -264,6 +274,8 @@ sv <- function(input, output, session) ({
             "sweetpotato")
 
   shinyURL.server()
+
+  fbcheck::fbcheck_server(input, output, session, values)
 
   brapps::fieldbook_analysis(input, output, session, values)
 
