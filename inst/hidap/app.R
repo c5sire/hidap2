@@ -59,14 +59,41 @@ ui <- dashboardPage(skin = "yellow",
                                   #          #menuSubItem("Data import", tabName = "dashboard_import"),
                                   #           menuSubItem("Data checks", tabName = "dashboard_check")
                                   # ) ,
+                                  menuItem("Material management", icon = icon("list"),
+                                           menuSubItem("Manage lists", icon = icon("list-ol"),
+                                                       tabName = "mlt_new"),
+
+                                           menuSubItem("Clone list", icon = icon("paste"),
+                                                       tabName = "mlt_clone"),
+
+                                           menuSubItem("Family list", icon = icon("list"),
+                                                       tabName = "mlt_family")
+
+
+                                           ),
+
                                   menuItem("Phenotype", icon = icon("leaf"),
 
-                                           menuSubItem("Pre-processing", icon = icon("location-arrow"),
-                                                       tabName = "phe_preprocess"),
+                                           menuSubItem("New fieldbook", icon = icon("file"),
+                                                       tabName = "phe_fb_new"),
 
-                                           menuSubItem("Analysis",
+                                           menuSubItem("Open fieldbook", icon = icon("file-o"),
+                                                       tabName = "phe_fb_open"),
+
+                                           menuSubItem("Check fieldbook", icon = icon("eraser"),
+                                                       tabName = "phe_fb_check"),
+
+                                           menuSubItem("Single trial analysis",
+                                                       tabName = "phe_dashboard", icon = icon("calculator")),
+
+                                           menuSubItem("Multi-Environment trial analysis",
+                                                       tabName = "phe_met", icon = icon("calculator")),
+
+                                           menuSubItem("ELston index",
+                                                       tabName = "phe_elston", icon = icon("calculator")),
+
+                                           menuSubItem("Pesek Baker index",
                                                        tabName = "phe_dashboard", icon = icon("calculator"))
-
 
                                            #numericInput("fbaInput", "Fieldbook ID", 142, 1, 9999)
 
@@ -172,7 +199,7 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
-                        tabItem(tabName = "phe_preprocess",
+                        tabItem(tabName = "phe_fb_check",
                                 fluidRow((
                                   column(width = 12,
                                          fbcheck::fbcheck_ui(name = "phe_preprocess"))
