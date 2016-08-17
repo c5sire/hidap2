@@ -1,3 +1,6 @@
+library(shinysky)
+library(data.table)
+library(shinyTree)
 library(brapi)
 library(brapps)
 library(shinyFiles)
@@ -19,25 +22,20 @@ library(DT)
 library(st4gi)
 library(tibble)
 
+library(fbcheck)
+library(fbmlist)
+library(countrycode)
+library(shinyjs)
+library(DBI)
+library(RMySQL)
+library(spsurvey)
+library(foreign)
+library(tools)
+library(stringr)
+library(shinyBS)
+library(fbopenbooks)
+library(fbanalysis)
 
-#
-#
-# brapi_host = "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu"
-# #globalVariables(c("values", "crop", "mode"))
-#
-# get_plain_host <- function(){
-#   host = stringr::str_split(Sys.getenv("BRAPI_DB") , ":80")[[1]][1]
-#   if(host == "") host = brapi_host
-#   if(stringr::str_detect(host, "@")){
-#     if(stringr::str_detect(host, "http://")) {
-#       host = stringr::str_replace(host, "http://", "")
-#     }
-#     host = stringr::str_replace(host, "[^.]{3,8}:[^.]{4,8}@", "")
-#   }
-#   host
-# }
-#
-# host = get_plain_host()
 
 ui <- dashboardPage(skin = "yellow",
 
@@ -49,25 +47,15 @@ ui <- dashboardPage(skin = "yellow",
                     dashboardSidebar(
                       #div(style="margin-right: auto;",img(src = "Logo1.png", width = "230")),
                       sidebarMenu(id = "menu",
-                                  # menuItem("Summary",
-                                  #  menuSubItem("Summary Dashboard", tabName = "dashboard_summary", icon = icon("dashboard"),
-                                  #     selected = TRUE)
-                                  # ),
-                                  #menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"), badgeLabel = "new", badgeColor = "green"),
-                                  # menuItem("Data tools", icon= icon("folder-open"),
-                                  #          #menuSubItem("Data sources", tabName = "dashboard_source"),
-                                  #          #menuSubItem("Data import", tabName = "dashboard_import"),
-                                  #           menuSubItem("Data checks", tabName = "dashboard_check")
-                                  # ) ,
                                   menuItem("Material management", icon = icon("list"),
                                            menuSubItem("Manage lists", icon = icon("list-ol"),
-                                                       tabName = "mlt_new"),
+                                                       tabName = "phe_ml_manager"),
 
                                            menuSubItem("Clone list", icon = icon("paste"),
-                                                       tabName = "mlt_clone"),
+                                                       tabName = "phe_ml_clone"),
 
                                            menuSubItem("Family list", icon = icon("list"),
-                                                       tabName = "mlt_family")
+                                                       tabName = "phe_ml_family")
 
 
                                            ),
@@ -206,6 +194,31 @@ ui <- dashboardPage(skin = "yellow",
                                   column(width = 12,
                                          fbcheck::fbcheck_ui(name = "phe_preprocess"))
                                 ))),
+                        tabItem(tabName = "phe_ml_clone",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbmlist::generate_ui("phe_ml_clone"))
+                                ))),
+                        tabItem(tabName = "phe_ml_manager",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbmlist::managerlist_ui(name = "phe_ml_manager"))
+                                ))),
+                        tabItem(tabName = "phe_ml_family",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbmlist::createlist_ui(name = "phe_ml_family"))
+                                ))),
+
+
+                        tabItem(tabName = "phe_fb_open",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbopenbooks::fbopenbooks_ui(name = "phe_fb_open"))
+                                ))),
+
+
+
                         tabItem(tabName = "phe_dashboard",
                                 fluidRow(
                                   column(width = 12,
@@ -305,6 +318,16 @@ sv <- function(input, output, session) ({
   shinyURL.server()
 
   fbcheck::fbcheck_server(input, output, session, values)
+
+  fbmlist::server_mangerlist(input, output, session, values)
+
+  fbmlist::server_generate(input, output, session, values)
+
+  fbmlist::server_createlist(input, output, session, values)
+
+
+  fbopenbooks::fbopenbooks_server(input, output, session, values)
+
 
   brapps::fieldbook_analysis(input, output, session, values)
 
