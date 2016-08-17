@@ -87,6 +87,7 @@ Imports:
     sp,
     Hmisc,
     Formula,
+    acepack,
     spsurvey,
     stringi,
     shinyURL,
