@@ -78,8 +78,8 @@ Imports:
     coda,
     LearnBayes,
     gmodels
-Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, c5sire/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
-  c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/sbformula,
+Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, reyzaguirre/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
+  c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/fbanalysis,
   omarbenites/fbcheck,
   omarbenites/sbformula, c5sire/fbcollect, c5sire/brapi, c5sire/brapps, c5sire/shinyFiles,
   rstudio/leaflet
