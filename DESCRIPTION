@@ -17,6 +17,18 @@ License: GPL-3
 LazyData: true
 Imports:
     agricolae,
+    AlgDesign,
+    assertthat,
+    base64enc,
+    bitops,
+    curl,
+    DBI,
+    devtools,
+    gdata,
+    hhtpuv,
+    magrittr,
+    munsell,
+    raster,
     st4gi,
     pepa,
     testthat,
@@ -50,10 +62,13 @@ Imports:
     traittools,
     fbcheck,
     brapi,
-    fbcollect
+    fbcollect,
+    tibble,
+    xtable
 Remotes: c5sire/cropont, c5sire/shinyFiles, c5sire/fbmaterials, c5sire/st4gi, reyzaguirre/pepa, c5sire/fbprogram,
   c5sire/fbprstages, c5sire/fbsites, c5sire/fbmodule, c5sire/fbdesign, omarbenites/traittools, omarbenites/sbformula,
   omarbenites/fbcheck,
-  omarbenites/sbformula, c5sire/fbcollect
+  omarbenites/sbformula, c5sire/fbcollect, c5sire/brapi, c5sire/brapps,
+  rstudio/leaflet
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
