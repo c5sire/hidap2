@@ -74,7 +74,7 @@ ui <- dashboardPage(skin = "yellow",
                                            menuSubItem("Single trial analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator")),
 
-                                           menuSubItem("Multi-Environment trial analysis",
+                                           menuSubItem("MET analysis",
                                                        tabName = "phe_met", icon = icon("calculator")),
 
                                            menuSubItem("ELston index",
@@ -217,6 +217,12 @@ ui <- dashboardPage(skin = "yellow",
                                          fbopenbooks::fbopenbooks_ui(name = "phe_fb_open"))
                                 ))),
 
+                        tabItem(tabName = "phe_met",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbmet::met_ui("phe_met"))
+                                ))),
+
 
 
                         tabItem(tabName = "phe_dashboard",
@@ -334,6 +340,9 @@ sv <- function(input, output, session) ({
   brapps::locations(input, output, session, values)
 
   #fbdesign::server_design(input, output, session, values)
+
+  fbmet::met_sv(input, output, session, values)
+
   })
 
 })
