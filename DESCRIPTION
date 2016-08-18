@@ -90,6 +90,7 @@ Imports:
     acepack,
     latticeExtra,
     gridExtra,
+    lazyeval,
     chron,
     rgeos,
     spsurvey,

@@ -97,7 +97,7 @@ ui <- dashboardPage(skin = "yellow",
 
 
                                   HTML("<div style='display:none'>"),
-                                  shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
+                                  #shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
                                   #shinyURL.ui("URL", tinyURL = F)
                                   HTML("</div>")
 
@@ -315,7 +315,7 @@ sv <- function(input, output, session) ({
             80, "rsimon16",
             "sweetpotato")
 
-  shinyURL.server()
+  #shinyURL.server()
 
   fbcheck::fbcheck_server(input, output, session, values)
 
