@@ -74,8 +74,14 @@ ui <- dashboardPage(skin = "yellow",
                                            menuSubItem("Single trial analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator")),
 
+                                           menuSubItem("Single trial report",
+                                                       tabName = "phe_set_report", icon = icon("calculator")),
+
                                            menuSubItem("MET analysis",
                                                        tabName = "phe_met", icon = icon("calculator")),
+
+                                           menuSubItem("MET report",
+                                                       tabName = "phe_set", icon = icon("calculator")),
 
                                            menuSubItem("ELston index",
                                                        tabName = "phe_elston", icon = icon("calculator")),
@@ -189,6 +195,16 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
+                        tabItem(tabName = "phe_fb_new",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbdesign::ui_fieldbook(name = "phe_fb_new"))
+                                ))),
+                        tabItem(tabName = "phe_fb_open",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbopenbooks::fbopenbooks_ui(name = "phe_fb_new"))
+                                ))),
                         tabItem(tabName = "phe_fb_check",
                                 fluidRow((
                                   column(width = 12,
@@ -211,11 +227,6 @@ ui <- dashboardPage(skin = "yellow",
                                 ))),
 
 
-                        tabItem(tabName = "phe_fb_open",
-                                fluidRow((
-                                  column(width = 12,
-                                         fbopenbooks::fbopenbooks_ui(name = "phe_fb_open"))
-                                ))),
 
                         tabItem(tabName = "phe_met",
                                 fluidRow((
@@ -223,6 +234,28 @@ ui <- dashboardPage(skin = "yellow",
                                          fbmet::met_ui("phe_met"))
                                 ))),
 
+                        tabItem(tabName = "phe_set_report",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::single_ui("phe_set"))
+                                ))),
+
+                        tabItem(tabName = "phe_met_report",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::met_ui("phe_met"))
+                                ))),
+
+                        tabItem(tabName = "phe_elston",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::elston_ui("phe_elston"))
+                                ))),
+                        tabItem(tabName = "phe_pesek",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::pbaker_ui("phe_pbaker"))
+                                ))),
 
 
                         tabItem(tabName = "phe_dashboard",
@@ -332,7 +365,19 @@ sv <- function(input, output, session) ({
   fbmlist::server_createlist(input, output, session, values)
 
 
+  fbdesign::server_design(input, output, session, values)
+
+  fbdesign::server_design_big(input, output, session, values)
+
   fbopenbooks::fbopenbooks_server(input, output, session, values)
+
+  fbanalysis::single_server(input, output, session, values)
+
+  fbanalysis::met_server(input, output, session, values)
+
+  fbanalysis::elston_server(input, output, session, values)
+
+  fbanalysis::pbaker_server(input, output, session, values)
 
 
   brapps::fieldbook_analysis(input, output, session, values)
