@@ -103,7 +103,8 @@ Imports:
     fbanalysis,
     fbmlist,
     fbopenbooks,
-    rmarkdown
+    rmarkdown,
+    yaml
 Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   c5sire/fbhelp,
   c5sire/fbmet,
