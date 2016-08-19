@@ -41,6 +41,8 @@ library(shinyBS)
 library(fbdesign)
 library(fbopenbooks)
 library(fbanalysis)
+library(traittools)
+library(sbformula)
 
 
 ui <- dashboardPage(skin = "yellow",
