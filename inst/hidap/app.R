@@ -78,16 +78,16 @@ ui <- dashboardPage(skin = "yellow",
                                            #             tabName = "phe_set_report", icon = icon("calculator")),
 
                                            menuSubItem("MET analysis",
-                                                       tabName = "phe_met", icon = icon("calculator"))#,
+                                                       tabName = "phe_met", icon = icon("calculator")),
 
                                            # menuSubItem("MET report",
                                            #             tabName = "phe_set", icon = icon("calculator"))#,
 
-                                           # menuSubItem("ELston index",
-                                           #             tabName = "phe_elston", icon = icon("calculator")),
-                                           #
-                                           # menuSubItem("Pesek Baker index",
-                                           #             tabName = "phe_dashboard", icon = icon("calculator"))
+                                           menuSubItem("ELston index",
+                                                       tabName = "phe_elston", icon = icon("calculator")),
+
+                                           menuSubItem("Pesek Baker index",
+                                                       tabName = "phe_pesek", icon = icon("calculator"))
 
                                            #numericInput("fbaInput", "Fieldbook ID", 142, 1, 9999)
 
@@ -246,16 +246,16 @@ ui <- dashboardPage(skin = "yellow",
                         #                  fbanalysis::met_ui("phe_met"))
                         #         ))),
                         #
-                        # tabItem(tabName = "phe_elston",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbanalysis::elston_ui("phe_elston"))
-                        #         ))),
-                        # tabItem(tabName = "phe_pesek",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbanalysis::pbaker_ui("phe_pbaker"))
-                        #         ))),
+                        tabItem(tabName = "phe_elston",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::elston_ui("phe_elston"))
+                                ))),
+                        tabItem(tabName = "phe_pesek",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::pbaker_ui("phe_pbaker"))
+                                ))),
 
 
                         tabItem(tabName = "phe_dashboard",
