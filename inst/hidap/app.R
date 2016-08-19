@@ -263,7 +263,14 @@ ui <- dashboardPage(skin = "yellow",
                                   column(width = 12,
                                          box(width = NULL, collapsible = TRUE,
                                              title = "Fieldbook",
-                                             uiOutput("fbList"),
+                                             shinyFiles::shinyFilesButton('fbaInput', 'File select',
+                                                                          'Please select a fieldbook file', FALSE
+                                             ),
+                                             br(),
+                                             uiOutput("ui_set_plt"),
+                                             uiOutput("ui_set_rep"),
+                                             uiOutput("ui_set_gen"),
+                                             br(),
                                              DT::dataTableOutput("hotFieldbook")
                                              #locationsUI("location")
                                          )
@@ -323,13 +330,7 @@ ui <- dashboardPage(skin = "yellow",
                                                          uiOutput("fbRep"),
                                                          HTML("</center>")
 
-
-
-
-
                                                 )
-
-
 
                                          )
                                   )
