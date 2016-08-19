@@ -62,32 +62,32 @@ ui <- dashboardPage(skin = "yellow",
 
                                   menuItem("Phenotype", icon = icon("leaf"),
 
-                                           menuSubItem("New fieldbook", icon = icon("file"),
-                                                       tabName = "phe_fb_new"),
+                                           # menuSubItem("New fieldbook", icon = icon("file"),
+                                           #             tabName = "phe_fb_new"),
 
-                                           menuSubItem("Open fieldbook", icon = icon("file-o"),
-                                                       tabName = "phe_fb_open"),
-
-                                           menuSubItem("Check fieldbook", icon = icon("eraser"),
-                                                       tabName = "phe_fb_check"),
+                                           # menuSubItem("Open fieldbook", icon = icon("file-o"),
+                                           #             tabName = "phe_fb_open"),
+                                           #
+                                           # menuSubItem("Check fieldbook", icon = icon("eraser"),
+                                           #             tabName = "phe_fb_check"),
 
                                            menuSubItem("Single trial analysis",
                                                        tabName = "phe_dashboard", icon = icon("calculator")),
 
-                                           menuSubItem("Single trial report",
-                                                       tabName = "phe_set_report", icon = icon("calculator")),
+                                           # menuSubItem("Single trial report",
+                                           #             tabName = "phe_set_report", icon = icon("calculator")),
 
                                            menuSubItem("MET analysis",
-                                                       tabName = "phe_met", icon = icon("calculator")),
+                                                       tabName = "phe_met", icon = icon("calculator"))#,
 
-                                           menuSubItem("MET report",
-                                                       tabName = "phe_set", icon = icon("calculator")),
+                                           # menuSubItem("MET report",
+                                           #             tabName = "phe_set", icon = icon("calculator"))#,
 
-                                           menuSubItem("ELston index",
-                                                       tabName = "phe_elston", icon = icon("calculator")),
-
-                                           menuSubItem("Pesek Baker index",
-                                                       tabName = "phe_dashboard", icon = icon("calculator"))
+                                           # menuSubItem("ELston index",
+                                           #             tabName = "phe_elston", icon = icon("calculator")),
+                                           #
+                                           # menuSubItem("Pesek Baker index",
+                                           #             tabName = "phe_dashboard", icon = icon("calculator"))
 
                                            #numericInput("fbaInput", "Fieldbook ID", 142, 1, 9999)
 
