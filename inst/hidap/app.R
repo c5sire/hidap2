@@ -195,11 +195,11 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
-                        tabItem(tabName = "phe_fb_new",
-                                fluidRow((
-                                  column(width = 12,
-                                         fbdesign::ui_fieldbook(name = "phe_fb_new"))
-                                ))),
+                        # tabItem(tabName = "phe_fb_new",
+                        #         fluidRow((
+                        #           column(width = 12,
+                        #                  fbdesign::ui_fieldbook(name = "phe_fb_new"))
+                        #         ))),
                         tabItem(tabName = "phe_fb_open",
                                 fluidRow((
                                   column(width = 12,
