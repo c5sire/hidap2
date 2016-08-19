@@ -43,6 +43,7 @@ library(fbopenbooks)
 library(fbanalysis)
 library(traittools)
 library(sbformula)
+library(pepa)
 
 
 ui <- dashboardPage(skin = "yellow",
