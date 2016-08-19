@@ -17,6 +17,7 @@ License: GPL-3
 LazyData: true
 Imports:
     agricolae,
+    openxlsx,
     foreign,
     AlgDesign,
     assertthat,
@@ -123,6 +124,7 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   omarbenites/fbcheck,
   omarbenites/shinysky,
   omarbenites/fbmlist,
+  omarbenites/openxlsx,
   omarbenites/fbopenbooks,
   aoles/shinyURL,
    rstudio/leaflet,
