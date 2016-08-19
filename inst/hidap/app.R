@@ -195,21 +195,21 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
-                        # tabItem(tabName = "phe_fb_new",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbdesign::ui_fieldbook(name = "phe_fb_new"))
-                        #         ))),
+                        tabItem(tabName = "phe_fb_new",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbdesign::ui_fieldbook(name = "phe_fb_new"))
+                                ))),
                         # tabItem(tabName = "phe_fb_open",
                         #         fluidRow((
                         #           column(width = 12,
                         #                  fbopenbooks::fbopenbooks_ui(name = "phe_fb_new"))
                         #         ))),
-                        # tabItem(tabName = "phe_fb_check",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbcheck::fbcheck_ui(name = "phe_preprocess"))
-                        #         ))),
+                        tabItem(tabName = "phe_fb_check",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbcheck::fbcheck_ui(name = "phe_preprocess"))
+                                ))),
                         tabItem(tabName = "phe_ml_clone",
                                 fluidRow((
                                   column(width = 12,
@@ -234,11 +234,11 @@ ui <- dashboardPage(skin = "yellow",
                                          fbmet::met_ui("phe_met"))
                                 ))),
 
-                        # tabItem(tabName = "phe_set_report",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbanalysis::single_ui("phe_set"))
-                        #         ))),
+                        tabItem(tabName = "phe_set_report",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::single_ui("phe_set"))
+                                ))),
                         #
                         # tabItem(tabName = "phe_met_report",
                         #         fluidRow((
