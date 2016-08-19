@@ -21,6 +21,11 @@ library(withr)
 library(DT)
 library(st4gi)
 library(tibble)
+library(knitr)
+library(readxl)
+library(countrycode)
+library(fbsites)
+library(fbmlist)
 
 library(fbcheck)
 library(fbmlist)
@@ -33,6 +38,7 @@ library(foreign)
 library(tools)
 library(stringr)
 library(shinyBS)
+library(fbdesign)
 library(fbopenbooks)
 library(fbanalysis)
 
@@ -87,7 +93,10 @@ ui <- dashboardPage(skin = "yellow",
                                                        tabName = "phe_elston", icon = icon("calculator")),
 
                                            menuSubItem("Pesek Baker index",
-                                                       tabName = "phe_pesek", icon = icon("calculator"))
+                                                       tabName = "phe_pesek", icon = icon("calculator")),
+
+                                           menuSubItem("Selection response",
+                                                       tabName = "phe_rts", icon = icon("calculator"))
 
                                            #numericInput("fbaInput", "Fieldbook ID", 142, 1, 9999)
 
@@ -195,11 +204,11 @@ ui <- dashboardPage(skin = "yellow",
                                   )
                                 )
                         ),
-                        # tabItem(tabName = "phe_fb_new",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbdesign::ui_fieldbook(name = "phe_fb_new"))
-                        #         ))),
+                        tabItem(tabName = "phe_fb_new",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbdesign::ui_fieldbook(name = "phe_fb_new"))
+                                ))),
                         tabItem(tabName = "phe_fb_open",
                                 fluidRow((
                                   column(width = 12,
@@ -255,6 +264,12 @@ ui <- dashboardPage(skin = "yellow",
                                 fluidRow((
                                   column(width = 12,
                                          fbanalysis::pbaker_ui("phe_pbaker"))
+                                ))),
+
+                        tabItem(tabName = "phe_rts",
+                                fluidRow((
+                                  column(width = 12,
+                                         brapps::rts_ui("phe_rts"))
                                 ))),
 
 
@@ -389,6 +404,8 @@ sv <- function(input, output, session) ({
   #fbdesign::server_design(input, output, session, values)
 
   fbmet::met_sv(input, output, session, values)
+
+  brapps::rts_sv(input, output, session, values)
 
   })
 
