@@ -127,7 +127,11 @@ ui <- dashboardPage(skin = "yellow",
 
 ),
                     dashboardBody(
+                      #includeCSS(path = "www/bootstrap.min.css"),
                       #tags$head(tags$style(HTML(mycss))),
+                      tags$head(
+                        tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+                      ),
                       tabItems(
                         tabItem(tabName = "about_dashboard",
                                 h2("Highly Interactive Data Analysis Platform for Clonal Plant Breeding"),
