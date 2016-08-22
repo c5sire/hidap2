@@ -62,7 +62,6 @@ Imports:
     shinyjs,
     qtlcharts,
     qtl,
-
     pander,
     fbdesign,
     plotly,
