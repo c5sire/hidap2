@@ -127,6 +127,7 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   omarbenites/openxlsx,
   omarbenites/fbopenbooks,
   aoles/shinyURL,
+   rstudio/d3heatmap,
    rstudio/leaflet,
    rstudio/DT,
    c5sire/fbcollect, c5sire/brapi, c5sire/brapps
