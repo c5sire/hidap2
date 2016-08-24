@@ -250,7 +250,7 @@ ui <- dashboardPage(skin = "yellow",
                         tabItem(tabName = "phe_met",
                                 fluidRow((
                                   column(width = 12,
-                                         fbmet::met_ui("phe_met"))
+                                         fbmet::met_ui("Multi-Environment Trial Explorer"))
                                 ))),
 
                         tabItem(tabName = "phe_set_report",
@@ -258,13 +258,7 @@ ui <- dashboardPage(skin = "yellow",
                                   column(width = 12,
                                          fbanalysis::single_ui("phe_set"))
                                 ))),
-                        #
-                        # tabItem(tabName = "phe_met_report",
-                        #         fluidRow((
-                        #           column(width = 12,
-                        #                  fbanalysis::met_ui("phe_met"))
-                        #         ))),
-                        #
+
                         tabItem(tabName = "phe_elston",
                                 fluidRow((
                                   column(width = 12,
@@ -284,84 +278,7 @@ ui <- dashboardPage(skin = "yellow",
 
 
                         tabItem(tabName = "phe_dashboard",
-                                fluidRow(
-                                  column(width = 12,
-                                         box(width = NULL, collapsible = TRUE,
-                                             title = "Fieldbook",
-                                             uiOutput("fbList")
-                                             # shinyFiles::shinyFilesButton('fbaInput', 'File select',
-                                             #                              'Please select a fieldbook file', FALSE
-                                             # ),
-                                             # br(),
-                                             # uiOutput("ui_set_plt"),
-                                             # uiOutput("ui_set_rep"),
-                                             # uiOutput("ui_set_gen"),
-                                             # br(),
-                                             # DT::dataTableOutput("hotFieldbook")
-                                             #locationsUI("location")
-                                         )
-                                  )
-
-                                )
-                                ,
-                                fluidRow(
-                                  column(width = 12,
-                                         tabBox(width = NULL, #selected = "Map",
-                                                id = "tabAnalysis",
-                                                tabPanel("Density",
-                                                         uiOutput("phDensUI")
-                                                         ,
-                                                         div(id = "plot-container",
-                                                             plotOutput('phDens_output', height = 400)
-                                                         )
-                                                ),
-                                                tabPanel("Correlation",
-                                                         uiOutput("fbCorrVarsUI"),
-                                                         #tags$img(src = "www/35.gif"),
-                                                         #div(id = "plot-container",
-                                                             qtlcharts::iplotCorr_output('vcor_output', height = 900)
-                                                         #)
-                                                ),
-
-                                                tabPanel("Heatmap",
-                                                         uiOutput("phHeatCorrVarsUI"),
-                                                         d3heatmap::d3heatmapOutput('phHeat_output', height = 1400)
-                                                ),
-                                                tabPanel("Dendrogram",
-                                                         uiOutput("phDendCorrVarsUI"),
-                                                         plotOutput('phDend_output', height = 1400)
-                                                ),
-
-                                                tabPanel("Map",
-                                                         d3heatmap::d3heatmapOutput("fieldbook_heatmap")
-                                                )
-                                                ,
-                                                tabPanel(title = "Report",
-
-                                                         uiOutput("aovVarsUI"),
-
-                                                         radioButtons("aovFormat","Report format",
-                                                                      c("HTML", "WORD" #, "PDF"
-                                                                        ),
-                                                                      inline = TRUE),
-                                                         radioButtons("expType", "Experiment type",
-                                                                      c("RCBD", "ABD", "CRD", "A01D"), inline = TRUE),
-                                                         conditionalPanel("input.expType == 'A01D'",
-                                                                      selectInput("block", "BLOCK", c("BLOC", "BLOCK")),
-                                                                      numericInput("k", "k", 2, 2, 5, step = 1)
-                                                                          ),
-
-                                                         actionButton("fbRepoDo", "Create report!"),
-                                                         HTML("<center>"),
-                                                         uiOutput("fbRep"),
-                                                         HTML("</center>")
-
-                                                )
-
-                                         )
-                                  )
-
-                                )
+                                brapps::fbasingle_ui("Single-Environment Trial Explorer")
                         )
 
                       )        )

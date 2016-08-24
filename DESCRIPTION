@@ -1,6 +1,6 @@
 Package: hidap
 Title: High Productivity Data Analysis platform for Plant breeding
-Version: 0.0.9.9012
+Version: 0.1.0.9001
 Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
@@ -29,6 +29,7 @@ Imports:
     labeling,
     gdata,
     httpuv,
+    htmlwidgets,
     magrittr,
     minqa,
     munsell,
@@ -79,6 +80,8 @@ Imports:
     scales,
     xtable,
     Rcpp,
+    RColorBrewer,
+    spsurvey,
     colorspace,
     plyr,
     klaR,
