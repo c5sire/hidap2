@@ -4,3 +4,5 @@
 ^\.Rprofile$
 ^xxdata
 
+^README\.Rmd$
+^README-.*\.png$
