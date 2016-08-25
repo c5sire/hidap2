@@ -134,31 +134,7 @@ ui <- dashboardPage(skin = "yellow",
                       ),
                       tabItems(
                         tabItem(tabName = "about_dashboard",
-                                h2("Highly Interactive Data Analysis Platform for Clonal Plant Breeding"),
-
-
-                                #br(),
-
-                                img(src="potato2.png", width = "100%"),
-
-                                # br(),
-                                #br(),
-
-                                "HIDAP v1.0-preview [07/09/2016]",
-                                p(class = "text-muted", style="text-align:justify",
-                                  paste("HIDAP is a tool designed to help breeders of clonal plants (likw potato and sweetpotato) carry out field trial planning, documentation, analysis and reporting.")
-                                ),
-                                #div(style="margin-right: auto;",img(src = "Logo1.png", width = "230"))
-                                tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)"),
-
-
-                                #br(),
-                                tags$div(style = "display:inline-block",
-                                         img(src = "Logo1.png", width = "230"),
-                                         img(src = "gt4sp.png", width = "100")
-                                         ),
-                                br(),
-                                br()
+                                hidap::about_ui("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")
                         ),
                         tabItem(tabName = "env_dashboard",
                                 brapps::locations_ui("Trial Location Explorer")
