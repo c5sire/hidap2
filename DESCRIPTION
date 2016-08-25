@@ -1,6 +1,6 @@
 Package: hidap
 Title: High Productivity Data Analysis platform for Plant breeding
-Version: 0.1.0.9012
+Version: 1.0.0.9013
 Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
@@ -48,10 +48,7 @@ Imports:
     cropont,
     fbmaterials,
     fbcrops,
-    fbprogram,
-    fbprstages,
     fbsites,
-    fbmodule,
     readxl,
     stringr,
     shiny,
@@ -116,10 +113,8 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   c5sire/fbhelp,
   c5sire/fbmet,
   reyzaguirre/st4gi,
-  reyzaguirre/pepa, c5sire/fbprogram,
-  c5sire/fbprstages,
+  reyzaguirre/pepa,
   omarbenites/fbsites,
-  c5sire/fbmodule,
   omarbenites/fbdesign,
   omarbenites/traittools,
   omarbenites/fbanalysis,
