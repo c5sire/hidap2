@@ -27,10 +27,16 @@ about_ui <- function(title = "About"){
     column(width = 2,
            img(src = "Logo1.png", width = "230")
     ),
-    column(width = 1,
+    column(width = 2,
+           img(src = "rtb.png", width = "230")
+    ),
+    column(width = 2,
+           img(src = "sasha.png", width = "230")
+    ),
+    column(width = 2,
            img(src = "gt4sp.png", width = "100")
            ),
-    column(width = 9)
+    column(width = 7)
 
   )
 
