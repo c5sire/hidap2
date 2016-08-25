@@ -19,24 +19,17 @@ about_ui <- function(title = "About"){
     paste("HIDAP is a tool designed to help breeders of clonal plants (likw potato and sweetpotato) carry out field trial planning, documentation, analysis and reporting.")
   ),
   #div(style="margin-right: auto;",img(src = "Logo1.png", width = "230"))
-  tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)"),
+  #tags$div(style = "color: #9b9691;float: right;", "International Potato Center (CIP)"),
 
 
   #br(),
   fluidRow(
-    column(width = 2,
-           img(src = "Logo1.png", width = "230")
-    ),
-    column(width = 2,
-           img(src = "rtb.png", width = "230")
-    ),
-    column(width = 2,
-           img(src = "sasha.png", width = "230")
-    ),
-    column(width = 2,
-           img(src = "gt4sp.png", width = "100")
-           ),
-    column(width = 7)
+    column(width = 2, img(src = "Logo1.png", width = "230") ),
+    column(width = 2, img(src = "rtb.png", width = "230")   ),
+    column(width = 2, img(src = "gt4sp.png", width = "100") ),
+    column(width = 2, img(src = "sasha.png", width = "230") ),
+    column(width = 2, img(src = "usaid.png", width = "230") ),
+    column(width = 2)
 
   )
 
