@@ -1,8 +1,13 @@
-# hidap 1.1.0.9014
+# hidap 1.0.2.9001
+
+* English edits in dependencies
+
+
+# hidap 1.0.1.9014
 
 * Added README.Rmd
 
-# hidap 1.1.0.9013
+# hidap 1.0.1.9013
 
 * Added correct versioning
 * English editing
