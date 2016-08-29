@@ -6,7 +6,7 @@
 #' @import shiny
 #' @export
 about <- function(title = "About"){
-  hidap_release = paste0("HIDAP ", packageVersion("hidap"), " beta [", Sys.Date(), "]")
+  hidap_release = paste0("HIDAP 1.0 (build: ", packageVersion("hidap"), ") [", Sys.Date(), "]")
 
   # about_sv <- function(input, output, session) ({
   #   eventReactive(input$about_update, {
