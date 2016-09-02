@@ -119,9 +119,9 @@ ui <- dashboardPage(skin = "yellow",
 
 ),
                     dashboardBody(
-                      tags$head(
-                        tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-                      ),
+                      # tags$head(
+                      #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+                      # ),
                       tabItems(
                         tabItem(tabName = "about_dashboard",
                                 hidap::about("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")

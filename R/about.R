@@ -19,7 +19,7 @@ about <- function(title = "About"){
 
   img(src="about.png", width = "100%"),
   hidap_release,
-  p(class = "text-muted", style="text-align:justify",
+  p(class = "text-muted", style = "text-align:justify",
     paste0("HIDAP is a tool designed to help breeders of clonal crops (like potato and sweetpotato) ",
            "to carry out planning, documentation, analysis and reporting in breeding programs.")
   ),
@@ -27,7 +27,7 @@ about <- function(title = "About"){
     column(width = 2, img(src = "Logo1.png", width = "230") ),
     column(width = 2, img(src = "rtb.png", width = "230")   ),
     column(width = 2, img(src = "gt4sp.png", width = "100") ),
-    #column(width = 2, img(src = "sasha.png", width = "230") ),
+    column(width = 2, img(src = "sasha.png", width = "230") ),
     column(width = 2, img(src = "usaid.png", width = "230") ),
     column(width = 4)
 
