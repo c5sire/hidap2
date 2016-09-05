@@ -1,32 +1,32 @@
 library(shinysky)
-library(data.table)
-library(shinyTree)
+#library(data.table)
+#library(shinyTree)
 library(brapi)
 library(brapps)
 library(shinyFiles)
-library(DT)
-library(agricolae)
-library(dplyr)
-library(openxlsx)
+#library(DT)
+# library(agricolae)
+# library(dplyr)
+# library(openxlsx)
 #library(fbmet)
 #library(fbhelp)
 #library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-library(d3heatmap)
+# library(d3heatmap)
 library(shinyURL)
-library(qtlcharts)
+# library(qtlcharts)
 library(leaflet)
-library(dplyr)
-library(withr)
-library(DT)
-library(st4gi)
-library(tibble)
-library(knitr)
-library(readxl)
-library(countrycode)
-library(fbsites)
-library(fbmlist)
+# library(dplyr)
+# library(withr)
+# library(DT)
+# library(st4gi)
+# library(tibble)
+# library(knitr)
+# library(readxl)
+# library(countrycode)
+# library(fbsites)
+# library(fbmlist)
 
 library(fbcheck)
 library(fbmlist)
@@ -45,6 +45,15 @@ library(fbanalysis)
 library(traittools)
 library(sbformula)
 library(pepa)
+
+# init default data: TODO make a function with better logic checking whats new
+# from fbglobal get_base_dir
+dd = system.file("xdata/Demo", package = "fbglobal")
+file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+dd = system.file("xdata/Default", package = "fbglobal")
+file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+
+
 
 ui <- dashboardPage(skin = "yellow",
                     dashboardHeader(title = "HIDAP",
@@ -208,10 +217,13 @@ sv <- function(input, output, session) ({
 
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
+
+
   try({
   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
             80, "rsimon16",
             "sweetpotato")
+  })
 
   #shinyURL.server()
 
@@ -236,20 +248,20 @@ sv <- function(input, output, session) ({
   fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 
-  drat::addRepo("c5sire")
-  res = eventReactive(input$about_update, {
-    cat("Ok")
-    if(brapi::can_internet()){
-    withProgress({
-    try({
-      update.packages(ask = FALSE)
-    })
-    }, message = "Checking for updates ...")
-    }
-  })
-
-
-  })
+  # drat::addRepo("c5sire")
+  # res = eventReactive(input$about_update, {
+  #   cat("Ok")
+  #   if(brapi::can_internet()){
+  #   withProgress({
+  #   try({
+  #     update.packages(ask = FALSE)
+  #   })
+  #   }, message = "Checking for updates ...")
+  #   }
+  # })
+  #
+  #
+  # })
 
 })
 
