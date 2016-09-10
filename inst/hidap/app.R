@@ -96,7 +96,7 @@ ui <- dashboardPage(skin = "yellow",
                                                        tabName = "phe_met", icon = icon("calculator")),
 
                                            menuSubItem("MET report",
-                                                       tabName = "phe_met_report", icon = icon("calculator")),
+                                                       tabName = "phe_set_report", icon = icon("calculator")),
 
                                            menuSubItem("ELston index",
                                                        tabName = "phe_elston", icon = icon("calculator")),
