@@ -13,7 +13,7 @@ library(shinyFiles)
 #library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-# library(d3heatmap)
+library(d3heatmap)
 library(shinyURL)
 # library(qtlcharts)
 library(leaflet)
@@ -86,17 +86,17 @@ ui <- dashboardPage(skin = "yellow",
                                            menuSubItem("Check fieldbook", icon = icon("eraser"),
                                                        tabName = "phe_fb_check"),
 
-                                           menuSubItem("Single trial analysis",
+                                           menuSubItem("Single trial analytical graphs",
                                                        tabName = "phe_dashboard", icon = icon("calculator")),
 
                                            menuSubItem("Single trial report",
                                                        tabName = "phe_set_report", icon = icon("calculator")),
 
-                                           menuSubItem("MET analysis",
+                                           menuSubItem("MET analytical graphs",
                                                        tabName = "phe_met", icon = icon("calculator")),
 
                                            menuSubItem("MET report",
-                                                       tabName = "phe_set", icon = icon("calculator")),
+                                                       tabName = "phe_met_report", icon = icon("calculator")),
 
                                            menuSubItem("ELston index",
                                                        tabName = "phe_elston", icon = icon("calculator")),
@@ -136,7 +136,8 @@ ui <- dashboardPage(skin = "yellow",
                                 hidap::about("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")
                         ),
                         tabItem(tabName = "env_dashboard",
-                                brapps::locations_ui("Trial Location Explorer")
+                                h3("Temporarily disabled")
+                                #brapps::locations_ui("Trial Location Explorer")
                         ),
                         tabItem(tabName = "phe_fb_new",
                                 fluidRow((
@@ -174,7 +175,7 @@ ui <- dashboardPage(skin = "yellow",
                         tabItem(tabName = "phe_met",
                                 fluidRow((
                                   column(width = 12,
-                                         fbmet::met_ui("Multi-Environment Trial Explorer"))
+                                         fbmet::met_ui("Multi-Environment Analytical Graphs"))
                                 ))),
 
                         tabItem(tabName = "phe_set_report",
@@ -182,6 +183,13 @@ ui <- dashboardPage(skin = "yellow",
                                   column(width = 12,
                                          fbanalysis::single_ui("phe_set"))
                                 ))),
+
+                        tabItem(tabName = "phe_met_report",
+                                fluidRow((
+                                  column(width = 12,
+                                         fbanalysis::met_ui("phe_met"))
+                                ))),
+
 
                         tabItem(tabName = "phe_elston",
                                 fluidRow((
@@ -202,6 +210,7 @@ ui <- dashboardPage(skin = "yellow",
 
 
                         tabItem(tabName = "phe_dashboard",
+                                #p("Temporarily disabled")
                                 brapps::fbasingle_ui("Single-Environment Trial Explorer")
                         )
 
@@ -217,13 +226,13 @@ sv <- function(input, output, session) ({
 
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
-
-
-  try({
-  brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
-            80, "rsimon16",
-            "sweetpotato")
-  })
+#
+#
+#   try({
+#   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
+#             80, "rsimon16",
+#             "sweetpotato")
+#   })
 
   #shinyURL.server()
 
@@ -244,7 +253,7 @@ sv <- function(input, output, session) ({
   fbanalysis::pbaker_server(input, output, session, values)
 
   brapps::fieldbook_analysis(input, output, session, values)
-  brapps::locations(input, output, session, values)
+  #brapps::locations(input, output, session, values)
   fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 

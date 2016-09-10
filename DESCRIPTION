@@ -1,6 +1,6 @@
 Package: hidap
 Title: High Productivity Data Analysis platform for Plant breeding
-Version: 1.0.2.9016
+Version: 1.0.2.9018
 Authors@R: c(person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
            person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
