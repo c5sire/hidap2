@@ -1,32 +1,32 @@
 library(shinysky)
-#library(data.table)
-#library(shinyTree)
+library(data.table)
+library(shinyTree)
 library(brapi)
 library(brapps)
 library(shinyFiles)
-#library(DT)
-# library(agricolae)
-# library(dplyr)
-# library(openxlsx)
+library(DT)
+library(agricolae)
+library(dplyr)
+library(openxlsx)
 #library(fbmet)
-#library(fbhelp)
-#library(fbdesign)
+library(fbhelp)
+library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
 library(d3heatmap)
 library(shinyURL)
 # library(qtlcharts)
 library(leaflet)
-# library(dplyr)
-# library(withr)
-# library(DT)
-# library(st4gi)
-# library(tibble)
-# library(knitr)
-# library(readxl)
-# library(countrycode)
-# library(fbsites)
-# library(fbmlist)
+library(dplyr)
+library(withr)
+library(DT)
+library(st4gi)
+library(tibble)
+library(knitr)
+library(readxl)
+library(countrycode)
+library(fbsites)
+library(fbmlist)
 
 library(fbcheck)
 library(fbmlist)
@@ -55,155 +55,196 @@ file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 
 
-ui <- dashboardPage(skin = "yellow",
-                    dashboardHeader(title = "HIDAP",
-                                    dropdownMenuOutput("messageMenu")
-                    ),
+ui <- dashboardPage(
+  skin = "yellow",
+  dashboardHeader(title = "HIDAP", titleWidth = "250px"
 
-                    dashboardSidebar(
-                      sidebarMenu(id = "menu",
+  ),#end Header
+  dashboardSidebar(width = "250px",
 
+                   #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
+                   br(),
+                   div(img(src="hidapicon.png", width = "85px"), style="text-align: center;"),
 
-                                  menuItem("Phenotype", icon = icon("leaf"),
-                                           menuItem("Material management", icon = icon("list"),
-                                                    menuSubItem("Manage lists", icon = icon("list-ol"),
-                                                                tabName = "phe_ml_manager"),
+                   #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
+                   sidebarMenu(
+                     id = "tabs",
+                     # menuItem("Phenotype tool", icon = icon("th-list"),
+                     menuItem("Phenotype", icon = icon("th-list"),
 
-                                                    menuSubItem("Clone list", icon = icon("paste"),
-                                                                tabName = "phe_ml_clone"),
+                              menuItem("Material Management",
+                                       menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
+                                       menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
+                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt"))#,
 
-                                                    menuSubItem("Family list", icon = icon("list"),
-                                                                tabName = "phe_ml_family")
+                              ),
 
+                              menuItem("Fieldbook management",
+                                       menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
+                                       menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+                              ),
 
-                                           ),
+                              menuItem("Single Trial Analysis",
+                                       menuSubItem("Single trial graph",tabName = "singleAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
+                              ),
 
-                                           menuItem("Fieldbook management", icon = icon("list"),
-                                                    menuSubItem("New fieldbook", icon = icon("file"),
-                                                                tabName = "phe_fb_new"),
+                              menuItem("MET Trial Analysis",
+                                       menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
+                              ),
 
-                                                    menuSubItem("Open fieldbook", icon = icon("file-o"),
-                                                                tabName = "phe_fb_open"),
-
-                                                    menuSubItem("Check fieldbook", icon = icon("eraser"),
-                                                                tabName = "phe_fb_check")
-                                           ),
-
-                                           menuItem("Single trial", icon = icon("list"),
-                                                    menuSubItem("Single trial analytical graphs",
-                                                                tabName = "phe_dashboard", icon = icon("calculator")),
-
-                                                    menuSubItem("Single trial report",
-                                                                tabName = "phe_set_report", icon = icon("calculator"))
-                                           ),
-
-                                           menuItem("Multi-environment trial", icon = icon("list"),
-                                                    menuSubItem("MET analytical graphs",
-                                                                tabName = "phe_met", icon = icon("calculator")),
-
-                                                    menuSubItem("MET report",
-                                                                tabName = "phe_set_report", icon = icon("calculator"))
-                                           ),
-
-                                           menuItem("Selection indices", icon = icon("list"),
-                                                    menuSubItem("ELston index",
-                                                                tabName = "phe_elston", icon = icon("calculator")),
-
-                                                    menuSubItem("Pesek Baker index",
-                                                                tabName = "phe_pesek", icon = icon("calculator"))
-                                                    ,
-
-                                                    menuSubItem("Selection response",
-                                                                tabName = "phe_rts", icon = icon("calculator"))
-                                           )
-
-                                  )
-                                  # ,
-                                  #
-                                  # menuItem("Environment", tabName = "env_dashboard", icon = icon("globe")
-                                  # )
-                                  ,
-                                  menuItem("About", tabName = "about_dashboard", icon = icon("dashboard"),
-                                           selected = TRUE,
-                                           badgeLabel = "new", badgeColor = "green")
-                                  #,
-
-
-                                  #HTML("<div style='display:none'>"),
-                                  #shinyURL.ui(label = "",width=0, copyURL = F, tinyURL = F),
-                                  #shinyURL.ui("URL", tinyURL = F)
-                                  #HTML("</div>")
-                        )
-
-                    ),
-                    dashboardBody(
-                      tags$head(
-                        tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-                      ),
-                      tabItems(
-                        tabItem(tabName = "about_dashboard",
-                                hidap::about("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")
-                        ),
-                        tabItem(tabName = "env_dashboard",
-                                h3("Temporarily disabled")
-                                #brapps::locations_ui("Trial Location Explorer")
-                        ),
-                        tabItem(tabName = "phe_fb_new",
-                                fbdesign::ui_fieldbook(name = "phe_fb_new"))
-                                ,
-                        tabItem(tabName = "phe_fb_open",
-                                fbopenbooks::fbopenbooks_ui(name = "phe_fb_new"))
-                                ,
-                        tabItem(tabName = "phe_fb_check",
-                                fbcheck::fbcheck_ui(name = "phe_preprocess"))
-                                ,
-                        tabItem(tabName = "phe_ml_clone",
-                                fbmlist::generate_ui("phe_ml_clone"))
-                                ,
-                        tabItem(tabName = "phe_ml_manager",
-                                fbmlist::managerlist_ui(name = "phe_ml_manager"))
-                                ,
-                        tabItem(tabName = "phe_ml_family",
-                                fbmlist::createlist_ui(name = "phe_ml_family"))
-                                ,
+                              menuItem("Index Selection",
+                                       menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
+                                       menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
+                                       menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
+                              )
 
 
 
-                        tabItem(tabName = "phe_met"
-                                ,
-                                fbmet::met_ui("Multi-Environment Analytical Graphs")
-                                )
-                                ,
+                     ),
+                     menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
+                     #  ------------------------------------------------------------------------
 
-                        tabItem(tabName = "phe_set_report",
-                                fbanalysis::single_ui("phe_set"))
-                                ,
+                   )
+                   # )
+  ),
 
-                        tabItem(tabName = "phe_met_report",
-                                fbanalysis::met_ui("phe_met"))
-                                ,
+  dashboardBody(
+    #
+    #     tags$head(
+    #       tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+    #     ),
+
+    includeCSS("www/custom.css"),
+
+    tabItems(
+
+      ###
+      #Codigo Ivan Perez
+      tabItem(tabName = "dashboard",
+              h2("High Interactive Data Analysis Platform"),
+
+              br(),
+              br(),
+              #img(src="potato.jpg", width = "100%"),
+              img(src="about.png", width = "100%"),
+
+              br(),
+              br(),
+
+              "HIDAP Preview [13/09/2016]",
+              p(class = "text-muted", style="text-align:justify",
+                paste("HIDAP is a tool designed to help plant breeders of clonal crops like potato and sweetpotato to carry out field trial planning, documentation, analysis and reporting")
+              ),
 
 
-                        tabItem(tabName = "phe_elston",
-                                fbanalysis::elston_ui("phe_elston"))
-                                ,
-                        tabItem(tabName = "phe_pesek",
-                                fbanalysis::pbaker_ui("phe_pbaker"))
-                                ,
+              br(),
+              br(),
 
-                        tabItem(tabName = "phe_rts",
-                               brapps::rts_ui("phe_rts")
-                               ),
+              fluidRow(
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="logo1.png", width = "150px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="usaid.png", width = "150px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  div(img(src="sasha.png"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="rtb.png", width = "150px"), style="text-align: center;")
+                )
+              ),
+
+              br(),
+              br(),
+              br()
+      ),
+
+      tabItem(tabName = "integration",
+              fluidRow(
+                box(
+                  title = "CIPFBS report", width = 12, status = "primary", solidHeader = TRUE, collapsible = TRUE,
+                  tags$iframe(src = "http://176.34.251.32/cipfieldbookstorage_dev/protected/extensions/grid/demo.php",
+                              seamless=NA, width = "100%", height = "800px"
+                  )
+                )
+              ),
+
+              br(),
+              br(),
+              br()
+      ),
+      #Fin codigo Ivan Perez
+      ###
+
+      # Design Experiments Module ----------------------------------------------------
+      fbdesign::ui_fieldbook(name = "newFieldbook"),
+
+      # Data Quality and Check Fieldbook Module  ----------------------------------------------------
+      fbcheck::fbcheck_ui(name="checkFieldbook"),
+
+      # Fieldbook Manager Module ----------------------------------------------------
+      fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
+
+      # Material List Module ----------------------------------------------------
+
+      fbmlist::generate_ui(name = "generateList"),
+      fbmlist::managerlist_ui(name = "manageList"),
+      fbmlist::createlist_ui(name = "createList"),
 
 
-                        tabItem(tabName = "phe_dashboard",
-                                #p("Temporarily disabled")
-                                brapps::fbasingle_ui("Single-Environment Trial Explorer")
-                        )
-                      ))
+      brapps::fbasingle_ui("Single Chart"),
+      fbanalysis::single_ui(name="singleAnalysisReport"),
+      fbanalysis::met_ui(name="metAnalysisReport"),
+      fbanalysis::elston_ui(name="elstonIndex"),
+      fbanalysis::pbaker_ui(name="pesekIndex"),
+
+      brapps::rts_ui("selResponse"),
 
 
+      tabItem(tabName = "analysis",
+              h2("Analysis"),
+              p(class = "text-muted",
+                paste("Under construction...")
+              )
+      )
+    ) , #end of TabSetPanel
 
+    tags$div(
+      fluidRow(
+        tags$footer(
+          a(
+            list(
+              tags$div(id = "test", img(src="88x31_v2.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+            ),
+            href="#"
+          ),
+          tags$style("footer {background-color: #222d32;height: 40px;position: absolute;bottom: 0;width: 100%;}"),
+          tags$style("#test {color: #fff;padding-top: 5px;}")
+        )
+      )
+    )
+
+  )
 )
 
 
@@ -243,7 +284,7 @@ sv <- function(input, output, session) ({
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
-  fbmet::met_sv(input, output, session, values)
+  #fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
