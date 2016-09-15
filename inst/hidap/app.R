@@ -113,9 +113,9 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
-    #     tags$head(
-    #       tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-    #     ),
+        tags$head(
+          tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+        ),
 
     includeCSS("www/custom.css"),
 
