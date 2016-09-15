@@ -8,7 +8,7 @@ library(DT)
 library(agricolae)
 library(dplyr)
 library(openxlsx)
-#library(fbmet)
+library(fbmet)
 library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
@@ -86,7 +86,7 @@ ui <- dashboardPage(
                               ),
 
                               menuItem("Single Trial Analysis",
-                                       menuSubItem("Single trial graph",tabName = "singleAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("Single trial graph",tabName = "Single Chart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
                               ),
 
@@ -200,7 +200,7 @@ ui <- dashboardPage(
       fbdesign::ui_fieldbook(name = "newFieldbook"),
 
       # Data Quality and Check Fieldbook Module  ----------------------------------------------------
-      fbcheck::fbcheck_ui(name="checkFieldbook"),
+      fbcheck::fbcheck_ui(name= "checkFieldbook"),
 
       # Fieldbook Manager Module ----------------------------------------------------
       fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
@@ -213,8 +213,14 @@ ui <- dashboardPage(
 
 
       brapps::fbasingle_ui("Single Chart"),
+
       fbanalysis::single_ui(name="singleAnalysisReport"),
+
       fbanalysis::met_ui(name="metAnalysisReport"),
+      fbmet::met_ui("Multi-Environment Analytical Graphs"),
+
+
+
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::pbaker_ui(name="pesekIndex"),
 
@@ -284,7 +290,7 @@ sv <- function(input, output, session) ({
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
-  #fbmet::met_sv(input, output, session, values)
+  fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
