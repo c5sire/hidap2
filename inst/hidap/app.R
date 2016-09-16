@@ -1,8 +1,8 @@
 library(shinysky)
 library(data.table)
 library(shinyTree)
-library(brapi)
-library(brapps)
+#library(brapi)
+#library(brapps)
 library(shinyFiles)
 library(DT)
 library(agricolae)
@@ -48,10 +48,10 @@ library(pepa)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
-dd = system.file("xdata/Demo", package = "fbglobal")
-file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
-dd = system.file("xdata/Default", package = "fbglobal")
-file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+# dd = system.file("xdata/Demo", package = "fbglobal")
+# file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+# dd = system.file("xdata/Default", package = "fbglobal")
+# file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 
 
@@ -86,12 +86,12 @@ ui <- dashboardPage(
                               ),
 
                               menuItem("Single Trial Analysis",
-                                       menuSubItem("Single trial graph",tabName = "Single Chart", icon = icon("calculator")),
+                                      # menuSubItem("Single trial graph",tabName = "Single Chart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
                               ),
 
                               menuItem("MET Trial Analysis",
-                                       menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                      # menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
                               ),
 
@@ -212,7 +212,7 @@ ui <- dashboardPage(
       fbmlist::createlist_ui(name = "createList"),
 
 
-      brapps::fbasingle_ui("Single Chart"),
+      #brapps::fbasingle_ui("Single Chart"),
 
       fbanalysis::single_ui(name="singleAnalysisReport"),
 
@@ -224,7 +224,7 @@ ui <- dashboardPage(
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::pbaker_ui(name="pesekIndex"),
 
-      brapps::rts_ui("selResponse"),
+      #brapps::rts_ui("selResponse"),
 
 
       tabItem(tabName = "analysis",
@@ -288,10 +288,10 @@ sv <- function(input, output, session) ({
   fbanalysis::elston_server(input, output, session, values)
   fbanalysis::pbaker_server(input, output, session, values)
 
-  brapps::fieldbook_analysis(input, output, session, values)
+  #brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
   fbmet::met_sv(input, output, session, values)
-  brapps::rts_sv(input, output, session, values)
+  #brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
   # res = eventReactive(input$about_update, {
