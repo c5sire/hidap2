@@ -1,32 +1,31 @@
+library(d3heatmap)
 library(shinysky)
-#library(data.table)
-#library(shinyTree)
+library(data.table)
+library(shinyTree)
+library(agricolae)
 library(brapi)
 library(brapps)
 library(shinyFiles)
-#library(DT)
-# library(agricolae)
-# library(dplyr)
-# library(openxlsx)
-#library(fbmet)
-#library(fbhelp)
-#library(fbdesign)
+library(DT)
+library(dplyr)
+library(openxlsx)
+library(fbmet)
+library(fbhelp)
+library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-library(d3heatmap)
+
 library(shinyURL)
-# library(qtlcharts)
+library(qtlcharts)
 library(leaflet)
-# library(dplyr)
-# library(withr)
-# library(DT)
-# library(st4gi)
-# library(tibble)
-# library(knitr)
-# library(readxl)
-# library(countrycode)
-# library(fbsites)
-# library(fbmlist)
+library(withr)
+library(st4gi)
+library(tibble)
+library(knitr)
+library(readxl)
+library(countrycode)
+library(fbsites)
+library(fbmlist)
 
 library(fbcheck)
 library(fbmlist)
@@ -65,44 +64,45 @@ ui <- dashboardPage(skin = "yellow",
 
 
                                   menuItem("Phenotype", icon = icon("leaf"),
-                                           menuItem("Material management", icon = icon("list"),
-                                                    menuSubItem("Manage lists", icon = icon("list-ol"),
-                                                                tabName = "phe_ml_manager"),
-
-                                                    menuSubItem("Clone list", icon = icon("paste"),
-                                                                tabName = "phe_ml_clone"),
-
-                                                    menuSubItem("Family list", icon = icon("list"),
-                                                                tabName = "phe_ml_family")
-
-
-                                           ),
-
-                                           menuItem("Fieldbook management", icon = icon("list"),
-                                                    menuSubItem("New fieldbook", icon = icon("file"),
-                                                                tabName = "phe_fb_new"),
-
-                                                    menuSubItem("Open fieldbook", icon = icon("file-o"),
-                                                                tabName = "phe_fb_open"),
-
-                                                    menuSubItem("Check fieldbook", icon = icon("eraser"),
-                                                                tabName = "phe_fb_check")
-                                           ),
+                                           # menuItem("Material management", icon = icon("list"),
+                                           #          menuSubItem("Manage lists", icon = icon("list-ol"),
+                                           #                      tabName = "phe_ml_manager"),
+                                           #
+                                           #          menuSubItem("Clone list", icon = icon("paste"),
+                                           #                      tabName = "phe_ml_clone"),
+                                           #
+                                           #          menuSubItem("Family list", icon = icon("list"),
+                                           #                      tabName = "phe_ml_family")
+                                           #
+                                           #
+                                           # ),
+                                           #
+                                           # menuItem("Fieldbook management", icon = icon("list"),
+                                           #          menuSubItem("New fieldbook", icon = icon("file"),
+                                           #                      tabName = "phe_fb_new"),
+                                           #
+                                           #          menuSubItem("Open fieldbook", icon = icon("file-o"),
+                                           #                      tabName = "phe_fb_open"),
+                                           #
+                                           #          menuSubItem("Check fieldbook", icon = icon("eraser"),
+                                           #                      tabName = "phe_fb_check")
+                                           # ),
 
                                            menuItem("Single trial", icon = icon("list"),
-                                                    menuSubItem("Single trial analytical graphs",
-                                                                tabName = "phe_dashboard", icon = icon("calculator")),
+                                                    menuSubItem("Single trial graphs",
+                                                                tabName = "phe_dashboard", icon = icon("calculator"))#,
 
-                                                    menuSubItem("Single trial report",
-                                                                tabName = "phe_set_report", icon = icon("calculator"))
+                                                    # menuSubItem("Single trial report",
+                                                    #             tabName = "phe_set_report", icon = icon("calculator"))
                                            ),
 
                                            menuItem("Multi-environment trial", icon = icon("list"),
                                                     menuSubItem("MET analytical graphs",
-                                                                tabName = "phe_met", icon = icon("calculator")),
-
-                                                    menuSubItem("MET report",
-                                                                tabName = "phe_set_report", icon = icon("calculator"))
+                                                                tabName = "phe_met", icon = icon("calculator"))
+                                                    # ,
+                                                    #
+                                                    # menuSubItem("MET report",
+                                                    #             tabName = "phe_set_report", icon = icon("calculator"))
                                            ),
 
                                            menuItem("Selection indices", icon = icon("list"),
@@ -122,11 +122,11 @@ ui <- dashboardPage(skin = "yellow",
                                   #
                                   # menuItem("Environment", tabName = "env_dashboard", icon = icon("globe")
                                   # )
-                                  ,
-                                  menuItem("About", tabName = "about_dashboard", icon = icon("dashboard"),
-                                           selected = TRUE,
-                                           badgeLabel = "new", badgeColor = "green")
-                                  #,
+                                  # ,
+                                  # menuItem("About", tabName = "about_dashboard", icon = icon("dashboard"),
+                                  #          selected = TRUE,
+                                  #          badgeLabel = "new", badgeColor = "green")
+                                  # #,
 
 
                                   #HTML("<div style='display:none'>"),
@@ -141,65 +141,66 @@ ui <- dashboardPage(skin = "yellow",
                         tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
                       ),
                       tabItems(
-                        tabItem(tabName = "about_dashboard",
-                                hidap::about("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")
-                        ),
-                        tabItem(tabName = "env_dashboard",
-                                h3("Temporarily disabled")
-                                #brapps::locations_ui("Trial Location Explorer")
-                        ),
-                        tabItem(tabName = "phe_fb_new",
-                                fbdesign::ui_fieldbook(name = "phe_fb_new"))
-                                ,
-                        tabItem(tabName = "phe_fb_open",
-                                fbopenbooks::fbopenbooks_ui(name = "phe_fb_new"))
-                                ,
-                        tabItem(tabName = "phe_fb_check",
-                                fbcheck::fbcheck_ui(name = "phe_preprocess"))
-                                ,
-                        tabItem(tabName = "phe_ml_clone",
-                                fbmlist::generate_ui("phe_ml_clone"))
-                                ,
-                        tabItem(tabName = "phe_ml_manager",
-                                fbmlist::managerlist_ui(name = "phe_ml_manager"))
-                                ,
-                        tabItem(tabName = "phe_ml_family",
-                                fbmlist::createlist_ui(name = "phe_ml_family"))
-                                ,
+                        # tabItem(tabName = "about_dashboard",
+                        #         hidap::about("Highly Interactive Data Analysis Platform for Clonal Crop Breeding")
+                        # ),
+                        # tabItem(tabName = "env_dashboard",
+                        #         h3("Temporarily disabled")
+                        #         #brapps::locations_ui("Trial Location Explorer")
+                        # ),
+                        # tabItem(tabName = "phe_fb_new",
+                        #         fbdesign::ui_fieldbook(name = "phe_fb_new"))
+                        #         ,
+                        # tabItem(tabName = "phe_fb_open",
+                        #         fbopenbooks::fbopenbooks_ui(name = "phe_fb_new"))
+                        #         ,
+                        # tabItem(tabName = "phe_fb_check",
+                        #         fbcheck::fbcheck_ui(name = "phe_preprocess"))
+                        #         ,
+                        # tabItem(tabName = "phe_ml_clone",
+                        #         fbmlist::generate_ui("phe_ml_clone"))
+                        #         ,
+                        # tabItem(tabName = "phe_ml_manager",
+                        #         fbmlist::managerlist_ui(name = "phe_ml_manager"))
+                        #         ,
+                        # tabItem(tabName = "phe_ml_family",
+                        #         fbmlist::createlist_ui(name = "phe_ml_family"))
+                        #         ,
 
 
 
-                        tabItem(tabName = "phe_met"
+                        # tabItem(tabName = "phe_met"
+                        #         ,
+                                fbmet::met_ui("phe_met")
+                                # )
+                                 ,
+
+                        #tabItem(tabName = "phe_set_report",
+                                # fbanalysis::single_ui("phe_dashboard")
+                                # ,
+
+                        # tabItem(tabName = "phe_met_report",
+                        #         fbanalysis::met_ui("phe_met"))
+                        #         ,
+
+
+                        #tabItem(tabName = "phe_elston",
+                                fbanalysis::elston_ui("phe_elston")#)
                                 ,
-                                fbmet::met_ui("Multi-Environment Analytical Graphs")
-                                )
+                        #tabItem(tabName = "phe_pesek",
+                                fbanalysis::pbaker_ui("phe_pbaker")#)
                                 ,
 
-                        tabItem(tabName = "phe_set_report",
-                                fbanalysis::single_ui("phe_set"))
-                                ,
-
-                        tabItem(tabName = "phe_met_report",
-                                fbanalysis::met_ui("phe_met"))
-                                ,
-
-
-                        tabItem(tabName = "phe_elston",
-                                fbanalysis::elston_ui("phe_elston"))
-                                ,
-                        tabItem(tabName = "phe_pesek",
-                                fbanalysis::pbaker_ui("phe_pbaker"))
-                                ,
-
-                        tabItem(tabName = "phe_rts",
+                        #tabItem(tabName = "phe_rts",
                                brapps::rts_ui("phe_rts")
-                               ),
+                               #)
+                        ,
 
 
-                        tabItem(tabName = "phe_dashboard",
+                        #tabItem(tabName = "phe_dashboard",
                                 #p("Temporarily disabled")
-                                brapps::fbasingle_ui("Single-Environment Trial Explorer")
-                        )
+                                brapps::fbasingle_ui("phe_dashboard")
+                        #)
                       ))
 
 
