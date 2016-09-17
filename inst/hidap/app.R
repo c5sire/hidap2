@@ -54,7 +54,7 @@ file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HIDAP working dir by installer
-Sys.setenv("R_ZIPCMD" = file.path(Sys.setenv("HIDAP_HOME"), "zip.exe"))
+Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
 
 ui <- dashboardPage(
