@@ -52,6 +52,9 @@ library(pepa)
 dd = system.file("xdata/Default", package = "fbglobal")
 file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
+# remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
+# into HIDAP working dir by installer
+Sys.setenv("R_ZIPCMD" = file.path(getwd(), "zip.exe"))
 
 
 ui <- dashboardPage(
