@@ -1,10 +1,11 @@
+library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
-#library(brapi)
-#library(brapps)
 library(shinyFiles)
 library(DT)
+library(brapi)
+library(brapps)
 library(agricolae)
 library(dplyr)
 library(openxlsx)
@@ -13,13 +14,13 @@ library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-library(d3heatmap)
+library(date)
+
 library(shinyURL)
-# library(qtlcharts)
+library(qtlcharts)
 library(leaflet)
-library(dplyr)
 library(withr)
-library(DT)
+library(dplyr)
 library(st4gi)
 library(tibble)
 library(knitr)
@@ -48,11 +49,13 @@ library(pepa)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
-# dd = system.file("xdata/Demo", package = "fbglobal")
-# file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
-# dd = system.file("xdata/Default", package = "fbglobal")
-# file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
+dd = system.file("xdata/Default", package = "fbglobal")
+file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+
+# remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
+# into HIDAP working dir by installer
+Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
 
 ui <- dashboardPage(
@@ -86,12 +89,12 @@ ui <- dashboardPage(
                               ),
 
                               menuItem("Single Trial Analysis",
-                                      # menuSubItem("Single trial graph",tabName = "Single Chart", icon = icon("calculator")),
+                                       menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
                               ),
 
                               menuItem("MET Trial Analysis",
-                                      # menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                       menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
                               ),
 
@@ -113,9 +116,9 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
-        tags$head(
-          tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-        ),
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+    ),
 
     includeCSS("www/custom.css"),
 
@@ -148,7 +151,7 @@ ui <- dashboardPage(
                   width = 2, style="background-color = #fff", height = "128px",
                   solidHeader = TRUE,
                   br(),
-                  div(img(src="logo1.png", width = "150px"), style="text-align: center;")
+                  div(img(src="CIPlogo_RGB.png", width = "150px"), style="text-align: center;")
                 ),
                 box(
                   width = 2, style="background-color = #fff", height = "128px",
@@ -212,19 +215,19 @@ ui <- dashboardPage(
       fbmlist::createlist_ui(name = "createList"),
 
 
-      #brapps::fbasingle_ui("Single Chart"),
+      brapps::fbasingle_ui("SingleChart"),
 
       fbanalysis::single_ui(name="singleAnalysisReport"),
 
       fbanalysis::met_ui(name="metAnalysisReport"),
-      fbmet::met_ui("Multi-Environment Analytical Graphs"),
+      fbmet::met_ui("metAnalysisGraphs"),
 
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::pbaker_ui(name="pesekIndex"),
 
-      #brapps::rts_ui("selResponse"),
+      brapps::rts_ui("selResponse"),
 
 
       tabItem(tabName = "analysis",
@@ -262,13 +265,13 @@ sv <- function(input, output, session) ({
 
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
-#
-#
-#   try({
-#   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
-#             80, "rsimon16",
-#             "sweetpotato")
-#   })
+  #
+  #
+  #   try({
+  #   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
+  #             80, "rsimon16",
+  #             "sweetpotato")
+  #   })
 
   #shinyURL.server()
 
@@ -288,10 +291,10 @@ sv <- function(input, output, session) ({
   fbanalysis::elston_server(input, output, session, values)
   fbanalysis::pbaker_server(input, output, session, values)
 
-  #brapps::fieldbook_analysis(input, output, session, values)
+  brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
   fbmet::met_sv(input, output, session, values)
-  #brapps::rts_sv(input, output, session, values)
+  brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
   # res = eventReactive(input$about_update, {
@@ -311,12 +314,3 @@ sv <- function(input, output, session) ({
 })
 
 shinyApp(ui, sv)
-
-
-
-
-
-
-
-
-
