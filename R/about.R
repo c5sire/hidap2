@@ -6,36 +6,65 @@
 #' @import shiny
 #' @export
 about <- function(title = "About"){
-  hidap_release = paste0("HIDAP preview 1.0 (build: ", packageVersion("hidap"), ") [", Sys.Date(), "]")
+  #hidap_release = paste0("HIDAP preview 1.0 (build: ", packageVersion("hidap"), ") [", Sys.Date(), "]")
 
-  # about_sv <- function(input, output, session) ({
-  #   eventReactive(input$about_update, {
-  #     devtools::update_packages()
-  #   })
-  # })
+  about_hidap = "www/about_hidap.txt"
 
-  out = tagList(
-  h2(title),
+  shinydashboard::tabItem(tabName = "dashboard",
+          h2("High Interactive Data Analysis Platform"),
 
-  img(src="about.png", width = "100%"),
-  hidap_release,
-  p(class = "text-muted", style = "text-align:justify",
-    paste0("HIDAP is a tool designed to help breeders of clonal crops (like potato and sweetpotato) ",
-           "to carry out planning, documentation, analysis and reporting in breeding programs.")
-  ),
-  fluidRow(
-    column(width = 2, img(src = "Logo1.png", width = "230") ),
-    column(width = 2, img(src = "rtb.png", width = "230")   ),
-    column(width = 2, img(src = "gt4sp.png", width = "100") ),
-    column(width = 2, img(src = "sasha.png", width = "230") ),
-    column(width = 2, img(src = "usaid.png", width = "230") ),
-    column(width = 4)
+          #br(),
+          br(),
+          #img(src="potato.jpg", width = "100%"),
+          img(src="about.png", width = "100%"),
 
-  ),
-  br()
-  # ,
-  # actionButton("about_update", "Check for updates.", icon = icon("cloud-download"))
+          br(),
+          br(),
+
+          "HIDAP Preview [19/09/2016]",
+          p(class = "text-muted", style="text-align:justify",
+            #paste("HIDAP is a tool designed to help plant breeders of clonal crops like potato and sweetpotato to carry out field trial planning, documentation, analysis and reporting")
+            shiny::includeHTML(about_hidap)
+
+          ),
+
+
+          #br(),
+          #br(),
+
+          fluidRow(
+            box(
+              width = 2, style="background-color = #fff", height = "128px",
+              solidHeader = TRUE,
+              br(),
+              div(img(src="CIP_Logo_300px_RGB.png", width = "150px"), style="text-align: center;")
+            ),
+            box(
+              width = 2, style="background-color = #fff", height = "128px",
+              solidHeader = TRUE,
+              div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
+            ),
+            box(
+              width = 2, style="background-color = #fff", height = "128px",
+              solidHeader = TRUE,
+              br(),
+              div(img(src="usaid.png", width = "150px"), style="text-align: center;")
+            ),
+            box(
+              width = 2, style="background-color = #fff", height = "128px",
+              solidHeader = TRUE,
+              div(img(src="sasha.png"), style="text-align: center;")
+            ),
+            box(
+              width = 2, style="background-color = #fff", height = "128px",
+              solidHeader = TRUE,
+              br(),
+              div(img(src="rtb.png", width = "150px"), style="text-align: center;")
+            )
+          ),
+
+          br(),
+          #br(),
+          br()
   )
-
-  out
 }

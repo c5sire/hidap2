@@ -52,10 +52,6 @@ library(pepa)
 dd = system.file("xdata/Default", package = "fbglobal")
 file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
-# remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
-# into HIDAP working dir by installer
-Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
-
 
 ui <- dashboardPage(
   skin = "yellow",
@@ -115,72 +111,17 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
-        tags$head(
-          tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-        ),
-
-    includeCSS("www/custom.css"),
+        # tags$head(
+        #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+        # ),
+        includeCSS("www/bootstrap.min.css"),
+        includeCSS("www/custom.css"),
 
     tabItems(
+      hidap::about(),
 
       ###
       #Codigo Ivan Perez
-      tabItem(tabName = "dashboard",
-              h2("High Interactive Data Analysis Platform"),
-
-              br(),
-              br(),
-              #img(src="potato.jpg", width = "100%"),
-              img(src="about.png", width = "100%"),
-
-              br(),
-              br(),
-
-              "HIDAP Preview [13/09/2016]",
-              p(class = "text-muted", style="text-align:justify",
-                paste("HIDAP is a tool designed to help plant breeders of clonal crops like potato and sweetpotato to carry out field trial planning, documentation, analysis and reporting")
-              ),
-
-
-              br(),
-              br(),
-
-              fluidRow(
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="logo1.png", width = "150px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="usaid.png", width = "150px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  div(img(src="sasha.png"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="rtb.png", width = "150px"), style="text-align: center;")
-                )
-              ),
-
-              br(),
-              br(),
-              br()
-      ),
-
       tabItem(tabName = "integration",
               fluidRow(
                 box(
@@ -242,7 +183,7 @@ ui <- dashboardPage(
         tags$footer(
           a(
             list(
-              tags$div(id = "test", img(src="88x31_v2.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+              tags$div(id = "test", img(src="cc_by.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
             ),
             href="#"
           ),
