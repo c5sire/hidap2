@@ -55,7 +55,7 @@ file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HIDAP working dir by installer
-Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
+#Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
 
 ui <- dashboardPage(
@@ -127,7 +127,7 @@ ui <- dashboardPage(
       ###
       #Codigo Ivan Perez
       tabItem(tabName = "dashboard",
-              h2("High Interactive Data Analysis Platform"),
+              br(h2("High Interactive Data Analysis Platform")),
 
               br(),
               br(),
@@ -137,9 +137,10 @@ ui <- dashboardPage(
               br(),
               br(),
 
-              "HIDAP Preview [13/09/2016]",
+              h3("HIDAP Preview [20/09/2016]"),
               p(class = "text-muted", style="text-align:justify",
-                paste("HIDAP is a tool designed to help plant breeders of clonal crops like potato and sweetpotato to carry out field trial planning, documentation, analysis and reporting")
+                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
+                shiny::includeHTML("www/about_hidap.txt")
               ),
 
 
@@ -243,7 +244,7 @@ ui <- dashboardPage(
         tags$footer(
           a(
             list(
-              tags$div(id = "test", img(src="88x31_v2.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
+              tags$div(id = "test", img(src="cc_by.png"), "2016 International Potato Center. Av La Molina 1895, La Molina - Peru.")
             ),
             href="#"
           ),
