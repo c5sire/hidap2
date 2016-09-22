@@ -11,7 +11,7 @@ about <- function(title = "About"){
   about_hidap = "www/about_hidap.txt"
 
   shinydashboard::tabItem(tabName = "dashboard",
-          h2("High Interactive Data Analysis Platform"),
+          h2("Highly Interactive Data Analysis Platform"),
 
           #br(),
           br(),
