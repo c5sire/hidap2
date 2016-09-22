@@ -127,7 +127,7 @@ ui <- dashboardPage(
       ###
       #Codigo Ivan Perez
       tabItem(tabName = "dashboard",
-              br(h2("High Interactive Data Analysis Platform")),
+              br(h2("Highly Interactive Data Analysis Platform")),
 
               br(),
               br(),
