@@ -2,7 +2,7 @@ library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
-library(shinyFiles)
+
 library(DT)
 library(brapi)
 library(brapps)
@@ -46,12 +46,14 @@ library(fbanalysis)
 library(traittools)
 library(sbformula)
 library(pepa)
+library(shinyFiles)
+library(shinyFiles)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
-dd = system.file("xdata/Default", package = "fbglobal")
-file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+#dd = system.file("xdata/Default", package = "fbglobal")
+#file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 # remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
 # into HIDAP working dir by installer
@@ -90,7 +92,8 @@ ui <- dashboardPage(
 
                               menuItem("Single Trial Analysis",
                                        menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
+                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
+                                       menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
 
                               menuItem("MET Trial Analysis",
@@ -100,7 +103,7 @@ ui <- dashboardPage(
 
                               menuItem("Index Selection",
                                        menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
-                                       menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
+                                       #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
                                        menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
                               )
 
@@ -219,6 +222,8 @@ ui <- dashboardPage(
       brapps::fbasingle_ui("SingleChart"),
 
       fbanalysis::single_ui(name="singleAnalysisReport"),
+      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+
 
       fbanalysis::met_ui(name="metAnalysisReport"),
       fbmet::met_ui("metAnalysisGraphs"),
@@ -226,7 +231,7 @@ ui <- dashboardPage(
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
-      fbanalysis::pbaker_ui(name="pesekIndex"),
+      #fbanalysis::pbaker_ui(name="pesekIndex"),
 
       brapps::rts_ui("selResponse"),
 
@@ -286,6 +291,7 @@ sv <- function(input, output, session) ({
   fbdesign::server_design_big(input, output, session, values)
   fbopenbooks::fbopenbooks_server(input, output, session, values)
   fbanalysis::single_server(input, output, session, values)
+  fbanalysis::dtr_server(input, output, session, values)
 
   fbanalysis::met_server(input, output, session, values)
 
