@@ -3,6 +3,8 @@ library(shinysky)
 library(data.table)
 library(shinyTree)
 
+library(doBy)
+library(tidyr)
 library(DT)
 library(brapi)
 library(brapps)
@@ -16,6 +18,7 @@ library(rhandsontable)
 library(shinydashboard)
 library(date)
 
+library(purrr)
 library(shinyURL)
 library(qtlcharts)
 library(leaflet)
@@ -28,6 +31,7 @@ library(readxl)
 library(countrycode)
 library(fbsites)
 library(fbmlist)
+library(fbmet)
 
 library(fbcheck)
 library(fbmlist)
@@ -47,7 +51,12 @@ library(traittools)
 library(sbformula)
 library(pepa)
 library(shinyFiles)
-library(shinyFiles)
+library(rlist)
+library(rprojroot)
+library(factoextra)
+library(ggrepel)
+
+library(fbdocs)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
@@ -69,7 +78,7 @@ ui <- dashboardPage(
 
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
-                   div(img(src="hidapicon.png", width = "85px"), style="text-align: center;"),
+                   div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
 
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    sidebarMenu(
@@ -96,6 +105,11 @@ ui <- dashboardPage(
                                        menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
 
+                              menuItem("PVS Trial Analysis",
+                                       menuSubItem("PVS report", tabName = "singlePVS", icon = icon("calculator"))#,
+                                       #menuSubItem("PVS anova report",tabName = "singlePVS", icon = icon("calculator"))
+                              ),
+
                               menuItem("MET Trial Analysis",
                                        menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
@@ -105,11 +119,28 @@ ui <- dashboardPage(
                                        menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
                                        #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
                                        menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
-                              )
+                              )#,
+
 
 
 
                      ),
+
+                     # menuItem("Geographic Information",
+                     #          menuSubItem("Add trial sites",tabName = "trialSites",icon = icon("file-text-o")),
+                     #          menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+                     #
+                     # ),
+
+                     menuItem("Geographic Information", icon = icon("globe"),
+                              menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
+                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+                              ),
+
+                     menuItem("Documentation",  icon = icon("book"),
+                              menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
+                     ),
+
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
                      #  ------------------------------------------------------------------------
 
@@ -130,12 +161,14 @@ ui <- dashboardPage(
       ###
       #Codigo Ivan Perez
       tabItem(tabName = "dashboard",
-              br(h2("Highly Interactive Data Analysis Platform")),
 
-              br(),
-              br(),
-              #img(src="potato.jpg", width = "100%"),
-              img(src="about.png", width = "100%"),
+              #br(h2("Highly Interactive Data Analysis Platform")),
+              br( p(class = "text-muted", style="text-align:right", "Highly Interactive Data Analysis Platform")),
+
+              # br(),
+              # br(),
+              #img(src="potato.jpg", width = "100%"),-
+              img(src="about.jpg", width = "100%"),
 
               br(),
               br(),
@@ -229,12 +262,20 @@ ui <- dashboardPage(
       fbmet::met_ui("metAnalysisGraphs"),
 
 
+      fbsites::addsite_ui(name = "trialSites"),
+      fbsites::ui_site(name ="trialSitesTable"),
+
 
       fbanalysis::elston_ui(name="elstonIndex"),
+      fbanalysis::ui_pvs(name = "singlePVS"),
+
+      fbdocs::fbdocs_ui(name = "docHidap") ,
+
+
+
       #fbanalysis::pbaker_ui(name="pesekIndex"),
 
       brapps::rts_ui("selResponse"),
-
 
       tabItem(tabName = "analysis",
               h2("Analysis"),
@@ -297,6 +338,15 @@ sv <- function(input, output, session) ({
 
   fbanalysis::elston_server(input, output, session, values)
   fbanalysis::pbaker_server(input, output, session, values)
+
+  fbanalysis::pvs_server(input, output, session, values)
+  fbanalysis::pvs_anova_server(input, output, session, values)
+
+  fbdocs::fbdocs_server(input, output, session, values)
+
+
+  fbsites::server_addsite(input, output, session, values = values)
+  fbsites::server_site(input, output, session, values = values)
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
