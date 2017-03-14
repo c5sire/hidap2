@@ -1,15 +1,14 @@
 Package: hidap
-Title: High Productivity Data Analysis platform for Plant breeding
-Version: 1.0.2.9030
+Title: High Interactive Data Analysis Platform for Plant breeding
+Version: 1.0.3
 Authors@R: c(
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
-           person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
+           person("Omar", "Benites", email = "o.benites@cgiar.org", role = c("ctr")),
            person("Ivan", "Perez", email = "i.perez@cgiar.org", role = c("ctr")),
-           person("Luka", "Wanjohi", email = "l.wanjohi@cgiar.org", role = c("ctr")),
            person("Vilma", "Hualla", email = "v.hualla@cgiar.org", role = c("ctr")),
            person("Elisa", "Salas", email = "e.salas@cgiar.org", role = c("ctr")),
-           person("Awais", "Khan", email = "awais.khan@cgiar.org", role = c("ctr"))
+           person("Luka", "Wanjohi", email = "l.wanjohi@cgiar.org", role = c("ctr"))
   )
 Author: Reinhard Simon <r.simon@cgiar.org>
 Maintainer: Reinhard Simon <r.simon@cgiar.org>
@@ -28,6 +27,7 @@ Imports:
     bitops,
     curl,
     DBI,
+    date,
     devtools,
     drat,
     labeling,
@@ -65,6 +65,7 @@ Imports:
     qtlcharts,
     qtl,
     pander,
+    purrr,
     fbdesign,
     plotly,
     sbformula,
@@ -112,7 +113,13 @@ Imports:
     fbmlist,
     fbopenbooks,
     rmarkdown,
-    yaml
+    yaml,
+    rlist,
+    rprojroot,
+    tidyr,
+    factoextra,
+    backports,
+    ggrepel
 Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   c5sire/fbhelp,
   c5sire/fbmet,
@@ -128,6 +135,7 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   omarbenites/fbmlist,
   omarbenites/openxlsx,
   omarbenites/fbopenbooks,
+  omarbenites/pvs,
   aoles/shinyURL,
   rstudio/leaflet,
    rstudio/d3heatmap,
