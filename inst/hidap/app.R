@@ -1,8 +1,11 @@
-  library(d3heatmap)
+library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
 library(shinyFiles)
+
+library(doBy)
+library(tidyr)
 library(DT)
 library(brapi)
 library(brapps)
@@ -14,6 +17,10 @@ library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
+
+library(date)
+
+library(purrr)
 
 library(shinyURL)
 library(qtlcharts)
@@ -27,6 +34,7 @@ library(readxl)
 library(countrycode)
 library(fbsites)
 library(fbmlist)
+library(fbmet)
 
 library(fbcheck)
 library(fbmlist)
@@ -45,12 +53,17 @@ library(fbanalysis)
 library(traittools)
 library(sbformula)
 library(pepa)
+library(shinyFiles)
+library(rlist)
+library(rprojroot)
+library(factoextra)
+library(ggrepel)
+
+library(fbdocs)
 
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
-dd = system.file("xdata/Default", package = "fbglobal")
-file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
 
 
 ui <- dashboardPage(
@@ -62,7 +75,7 @@ ui <- dashboardPage(
 
                    #div(style="margin-right: auto;",img(src = "Logo1.png", width = "250")),
                    br(),
-                   div(img(src="hidapicon.png", width = "85px"), style="text-align: center;"),
+                   div(img(src="hidapicon.png", width = "150px"), style="text-align: center;"),
 
                    #sidebarSearchForm(label = "Enter a word", "searchText", "searchButton"),
                    sidebarMenu(
@@ -85,7 +98,15 @@ ui <- dashboardPage(
 
                               menuItem("Single Trial Analysis",
                                        menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
+
+                                       menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
+                                       menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+                              ),
+
+                              menuItem("PVS Trial Analysis",
+                                       menuSubItem("PVS report", tabName = "singlePVS", icon = icon("calculator"))#,
+                                       #menuSubItem("PVS anova report",tabName = "singlePVS", icon = icon("calculator"))
+
                               ),
 
                               menuItem("MET Trial Analysis",
@@ -95,13 +116,30 @@ ui <- dashboardPage(
 
                               menuItem("Index Selection",
                                        menuSubItem("Elston index",tabName = "elstonIndex",icon = icon("file-text-o")),
-                                       menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
+                                       #menuSubItem("Pesek-Baker index", tabName = "pesekIndex",icon = icon("indent")),
                                        menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
-                              )
+                              )#,
+
 
 
 
                      ),
+
+                     # menuItem("Geographic Information",
+                     #          menuSubItem("Add trial sites",tabName = "trialSites",icon = icon("file-text-o")),
+                     #          menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+                     #
+                     # ),
+
+                     menuItem("Geographic Information", icon = icon("globe"),
+                              menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
+                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+                     ),
+
+                     menuItem("Documentation",  icon = icon("book"),
+                              menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
+                     ),
+
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
                      #  ------------------------------------------------------------------------
 
@@ -111,17 +149,80 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
-        # tags$head(
-        #   tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
-        # ),
-        includeCSS("www/bootstrap.min.css"),
-        includeCSS("www/custom.css"),
+
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
+    ),
+
+    includeCSS("www/custom.css"),
+
 
     tabItems(
       hidap::about(),
 
       ###
       #Codigo Ivan Perez
+
+      tabItem(tabName = "dashboard",
+
+              #br(h2("Highly Interactive Data Analysis Platform")),
+              br( p(class = "text-muted", style="text-align:right", "Highly Interactive Data Analysis Platform")),
+
+              # br(),
+              # br(),
+              #img(src="potato.jpg", width = "100%"),-
+              img(src="about.jpg", width = "100%"),
+
+              br(),
+              br(),
+
+              h3("HIDAP Preview [20/09/2016]"),
+              p(class = "text-muted", style="text-align:justify",
+                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
+                shiny::includeHTML("www/about_hidap.txt")
+              ),
+
+
+              br(),
+              br(),
+
+              fluidRow(
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="CIPlogo_RGB.png", width = "150px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="usaid.png", width = "150px"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  div(img(src="sasha.png"), style="text-align: center;")
+                ),
+                box(
+                  width = 2, style="background-color = #fff", height = "128px",
+                  solidHeader = TRUE,
+                  br(),
+                  div(img(src="rtb.png", width = "150px"), style="text-align: center;")
+                )
+              ),
+
+              br(),
+              br(),
+              br()
+      ),
+
+
       tabItem(tabName = "integration",
               fluidRow(
                 box(
@@ -158,17 +259,27 @@ ui <- dashboardPage(
       brapps::fbasingle_ui("SingleChart"),
 
       fbanalysis::single_ui(name="singleAnalysisReport"),
+      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+
 
       fbanalysis::met_ui(name="metAnalysisReport"),
       fbmet::met_ui("metAnalysisGraphs"),
 
 
+      fbsites::addsite_ui(name = "trialSites"),
+      fbsites::ui_site(name ="trialSitesTable"),
+
 
       fbanalysis::elston_ui(name="elstonIndex"),
-      fbanalysis::pbaker_ui(name="pesekIndex"),
+      fbanalysis::ui_pvs(name = "singlePVS"),
+
+      fbdocs::fbdocs_ui(name = "docHidap") ,
+
+
+
+
 
       brapps::rts_ui("selResponse"),
-
 
       tabItem(tabName = "analysis",
               h2("Analysis"),
@@ -205,13 +316,13 @@ sv <- function(input, output, session) ({
 
   values <- shiny::reactiveValues(crop = "sweetpotato", amode = "brapi")
 
-#
-#
-#   try({
-#   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
-#             80, "rsimon16",
-#             "sweetpotato")
-#   })
+  #
+  #
+  #   try({
+  #   brapi_con("sweetpotato", "sgn:eggplant@sweetpotatobase-test.sgn.cornell.edu",
+  #             80, "rsimon16",
+  #             "sweetpotato")
+  #   })
 
   #shinyURL.server()
 
@@ -225,11 +336,22 @@ sv <- function(input, output, session) ({
   fbdesign::server_design_big(input, output, session, values)
   fbopenbooks::fbopenbooks_server(input, output, session, values)
   fbanalysis::single_server(input, output, session, values)
+  fbanalysis::dtr_server(input, output, session, values)
 
   fbanalysis::met_server(input, output, session, values)
 
   fbanalysis::elston_server(input, output, session, values)
   fbanalysis::pbaker_server(input, output, session, values)
+
+  fbanalysis::pvs_server(input, output, session, values)
+  fbanalysis::pvs_anova_server(input, output, session, values)
+
+  fbdocs::fbdocs_server(input, output, session, values)
+
+
+  fbsites::server_addsite(input, output, session, values = values)
+  fbsites::server_site(input, output, session, values = values)
+
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
@@ -254,12 +376,3 @@ sv <- function(input, output, session) ({
 })
 
 shinyApp(ui, sv)
-
-
-
-
-
-
-
-
-

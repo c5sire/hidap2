@@ -1,5 +1,5 @@
 Package: hidap
-Title: High Productivity Data Analysis platform for Plant breeding
+Title: Highly Interactive Data Analysis Platform for Plant breeding
 Version: 1.0.4
 Authors@R: c(
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
@@ -111,7 +111,8 @@ Imports:
     fbmlist,
     fbopenbooks,
     rmarkdown,
-    yaml
+    yaml,
+    fbdocs
 Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   c5sire/fbhelp,
   c5sire/fbmet,
@@ -128,6 +129,7 @@ Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
   omarbenites/fbmlist,
   omarbenites/openxlsx,
   omarbenites/fbopenbooks,
+  omarbenites/fbdocs,
   aoles/shinyURL,
   rstudio/leaflet,
    rstudio/d3heatmap,
