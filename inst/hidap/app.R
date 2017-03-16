@@ -1,7 +1,9 @@
+
 library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
+library(shinyFiles)
 
 library(doBy)
 library(tidyr)
@@ -16,9 +18,11 @@ library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
+
 library(date)
 
 library(purrr)
+
 library(shinyURL)
 library(qtlcharts)
 library(leaflet)
@@ -61,12 +65,6 @@ library(fbdocs)
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
-#dd = system.file("xdata/Default", package = "fbglobal")
-#file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
-
-# remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
-# into HIDAP working dir by installer
-#Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
 
 ui <- dashboardPage(
@@ -101,6 +99,7 @@ ui <- dashboardPage(
 
                               menuItem("Single Trial Analysis",
                                        menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
+
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
                                        menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
@@ -108,6 +107,7 @@ ui <- dashboardPage(
                               menuItem("PVS Trial Analysis",
                                        menuSubItem("PVS report", tabName = "singlePVS", icon = icon("calculator"))#,
                                        #menuSubItem("PVS anova report",tabName = "singlePVS", icon = icon("calculator"))
+
                               ),
 
                               menuItem("MET Trial Analysis",
@@ -150,16 +150,20 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
+
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
     ),
 
     includeCSS("www/custom.css"),
 
+
     tabItems(
+      hidap::about(),
 
       ###
       #Codigo Ivan Perez
+
       tabItem(tabName = "dashboard",
 
               #br(h2("Highly Interactive Data Analysis Platform")),
@@ -219,6 +223,7 @@ ui <- dashboardPage(
               br()
       ),
 
+
       tabItem(tabName = "integration",
               fluidRow(
                 box(
@@ -273,7 +278,7 @@ ui <- dashboardPage(
 
 
 
-      #fbanalysis::pbaker_ui(name="pesekIndex"),
+
 
       brapps::rts_ui("selResponse"),
 
@@ -347,6 +352,7 @@ sv <- function(input, output, session) ({
 
   fbsites::server_addsite(input, output, session, values = values)
   fbsites::server_site(input, output, session, values = values)
+
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
