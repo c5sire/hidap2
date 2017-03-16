@@ -1,6 +1,6 @@
 #' about
 #'
-#' @param title
+#' @param title character
 #'
 #' @return shiny tagList
 #' @import shiny
@@ -33,29 +33,29 @@ about <- function(title = "About"){
           #br(),
 
           fluidRow(
-            box(
+            shinydashboard::box(
               width = 2, style="background-color = #fff", height = "128px",
               solidHeader = TRUE,
               br(),
               div(img(src="CIP_Logo_300px_RGB.png", width = "150px"), style="text-align: center;")
             ),
-            box(
+            shinydashboard::box(
               width = 2, style="background-color = #fff", height = "128px",
               solidHeader = TRUE,
               div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
             ),
-            box(
+            shinydashboard::box(
               width = 2, style="background-color = #fff", height = "128px",
               solidHeader = TRUE,
               br(),
               div(img(src="usaid.png", width = "150px"), style="text-align: center;")
             ),
-            box(
+            shinydashboard::box(
               width = 2, style="background-color = #fff", height = "128px",
               solidHeader = TRUE,
               div(img(src="sasha.png"), style="text-align: center;")
             ),
-            box(
+            shinydashboard::box(
               width = 2, style="background-color = #fff", height = "128px",
               solidHeader = TRUE,
               br(),

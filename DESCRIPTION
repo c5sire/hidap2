@@ -1,6 +1,6 @@
 Package: hidap
 Title: Highly Interactive Data Analysis Platform for Plant breeding
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: c(
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
@@ -81,7 +81,6 @@ Imports:
     xtable,
     Rcpp,
     RColorBrewer,
-    spsurvey,
     colorspace,
     plyr,
     klaR,
@@ -110,7 +109,6 @@ Imports:
     fbanalysis,
     fbmlist,
     fbopenbooks,
-    rmarkdown,
     yaml,
     fbdocs
 Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,

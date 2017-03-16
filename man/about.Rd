@@ -7,7 +7,7 @@
 about(title = "About")
 }
 \arguments{
-\item{title}{}
+\item{title}{character}
 }
 \value{
 shiny tagList

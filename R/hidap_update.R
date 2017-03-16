@@ -5,7 +5,7 @@
 #'
 #' @export
 hidap_update <- function(){
-  if (!brapi::can_internet()) stop("No interent connection!")
+  if (!brapi::ba_can_internet()) stop("No interent connection!")
   drat::addRepo("c5sire")
-  update.packages()
+  utils::update.packages()
 }
