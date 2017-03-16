@@ -263,7 +263,7 @@ ui <- dashboardPage(
 
 
       fbanalysis::met_ui(name="metAnalysisReport"),
-      fbmet::met_ui("metAnalysisGraphs"),
+      fbmet::fbmet_ui("metAnalysisGraphs"),
 
 
       fbsites::addsite_ui(name = "trialSites"),
@@ -355,7 +355,7 @@ sv <- function(input, output, session) ({
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
-  fbmet::met_sv(input, output, session, values)
+  fbmet::fbmet_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
