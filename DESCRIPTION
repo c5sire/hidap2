@@ -18,6 +18,7 @@ Depends:
 License: GPL-3
 LazyData: true
 Imports:
+    expm,
     agricolae,
     openxlsx,
     foreign,
@@ -111,17 +112,18 @@ Imports:
     fbopenbooks,
     yaml,
     fbdocs
-Remotes: c5sire/cropont, c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
-  c5sire/fbhelp,
-  c5sire/fbmet,
+Remotes: c5sire/cropont, 
   reyzaguirre/st4gi,
   reyzaguirre/pepa,
+  c5sire/fbcrops, c5sire/shinyFiles, c5sire/fbmaterials,
+  c5sire/fbhelp,
+  c5sire/fbmet,
   omarbenites/fbsites,
   omarbenites/fbdesign,
+  omarbenites/sbformula,
   omarbenites/traittools,
   omarbenites/pvs,
   omarbenites/fbanalysis,
-  omarbenites/sbformula,
   omarbenites/fbcheck,
   omarbenites/shinysky,
   omarbenites/fbmlist,
