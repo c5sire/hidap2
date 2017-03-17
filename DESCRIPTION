@@ -33,6 +33,7 @@ Imports:
     labeling,
     gdata,
     httpuv,
+    htmlTable,
     htmlwidgets,
     magrittr,
     minqa,
