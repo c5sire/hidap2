@@ -125,11 +125,11 @@ ui <- dashboardPage(
 
                      ),
 
-                     # menuItem("Geographic Information",
-                     #          menuSubItem("Add trial sites",tabName = "trialSites",icon = icon("file-text-o")),
-                     #          menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
-                     #
-                     # ),
+                     menuItem("Geographic Information",
+                              menuSubItem("Add trial sites",tabName = "trialSites",icon = icon("file-text-o")),
+                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+
+                     ),
 
                      # menuItem("Geographic Information", icon = icon("globe"),
                      #          menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
