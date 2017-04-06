@@ -131,10 +131,10 @@ ui <- dashboardPage(
                               menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
                               menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
                      ),
-                     #
-                     # menuItem("Documentation",  icon = icon("book"),
-                     #          menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
-                     # ),
+
+                     menuItem("Documentation",  icon = icon("book"),
+                              menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
+                     ),
 
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
                      #  ------------------------------------------------------------------------
