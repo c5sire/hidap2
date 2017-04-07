@@ -1,6 +1,6 @@
 Package: hidap
 Title: Highly Interactive Data Analysis Platform for Plant breeding
-Version: 1.0.13
+Version: 1.0.14
 Authors@R: c(
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
