@@ -1,6 +1,6 @@
 Package: hidap
 Title: Highly Interactive Data Analysis Platform for Plant breeding
-Version: 1.0.12
+Version: 1.0.13
 Authors@R: c(
            person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre")),
            person("Raul", "Eyzaguirre", email = "r.eyzaguirre@cgiar.org", role = c("ctr")),
@@ -122,7 +122,7 @@ Remotes: c5sire/cropont,
   c5sire/brapi,
   c5sire/fbhelp,
   c5sire/fbmet,
-  omarbenites/fbsites,
+  c5sire/fbsites,
   omarbenites/fbdesign,
   omarbenites/sbformula,
   omarbenites/traittools,
