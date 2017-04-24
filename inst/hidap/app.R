@@ -63,12 +63,15 @@ library(fbdocs)
 
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
-            c(#"Windows",
-              "Darwin") )
+            c("Windows" ,
+              "Darwin"
+              ))
 }
 
+empty_menu <- shiny::br()
+
 menu_material_management <- function() {
-  if (is_server()) return(shiny::tags$div())
+  if (is_server()) return(empty_menu)
   menuItem("Material Management",
            menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
            menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
@@ -78,7 +81,7 @@ menu_material_management <- function() {
 }
 
 menu_fieldbook_management <- function() {
-  if (is_server()) return(shiny::tags$div())
+  if (is_server()) return(empty_menu)
   menuItem("Fieldbook management",
            menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
            menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
@@ -87,12 +90,12 @@ menu_fieldbook_management <- function() {
 }
 
 menuSub_data_transformation <- function() {
-  if (is_server()) return(shiny::tags$div())
+  if (is_server()) return(empty_menu)
   menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
 }
 
 menu_geographic_information <- function() {
-  if (is_server()) return(shiny::tags$div())
+  if (is_server()) return(empty_menu)
   menuItem("Geographic Information", icon = icon("globe"),
            menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
            menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
@@ -100,7 +103,7 @@ menu_geographic_information <- function() {
 }
 
 menu_documentation <- function() {
-  if (is_server()) return(shiny::tags$div())
+  if (is_server()) return(empty_menu)
   menuItem("Documentation",  icon = icon("book"),
            menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
   )
