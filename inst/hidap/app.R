@@ -39,8 +39,8 @@ library(brapps)
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
             c("Windows"
-              ,
-              "Darwin"
+              # ,
+              # "Darwin"
             ))
 }
 
@@ -275,19 +275,25 @@ ui <- dashboardPage(
       ),
 
       # Design Experiments Module ----------------------------------------------------
-      if (!is_server()) fbdesign::ui_fieldbook(name = "newFieldbook"),
+      #if (!is_server())
+        fbdesign::ui_fieldbook(name = "newFieldbook"),
 
       # Data Quality and Check Fieldbook Module  ----------------------------------------------------
-      if (!is_server()) fbcheck::fbcheck_ui(name = "checkFieldbook"),
+      #if (!is_server())
+      fbcheck::fbcheck_ui(name = "checkFieldbook"),
 
       # Fieldbook Manager Module ----------------------------------------------------
-      if (!is_server()) fbopenbooks::fbopenbooks_ui(name = "openFieldbook"),
+      #if (!is_server())
+      fbopenbooks::fbopenbooks_ui(name = "openFieldbook"),
 
       # Material List Module ----------------------------------------------------
 
-      if (!is_server()) fbmlist::generate_ui(name = "generateList"),
-      if (!is_server()) fbmlist::managerlist_ui(name = "manageList"),
-      if (!is_server()) fbmlist::createlist_ui(name = "createList"),
+      #if (!is_server())
+      fbmlist::generate_ui(name = "generateList"),
+      #if (!is_server())
+      fbmlist::managerlist_ui(name = "manageList"),
+      #if (!is_server())
+      fbmlist::createlist_ui(name = "createList"),
 
 
 
@@ -301,14 +307,17 @@ ui <- dashboardPage(
       fbmet::fbmet_ui("metAnalysisGraphs"),
 
 
-      if (!is_server()) fbsites::addsite_ui(name = "trialSites"),
-      if (!is_server()) fbsites::ui_site(name ="trialSitesTable"),
+      #if (!is_server())
+      fbsites::addsite_ui(name = "trialSites"),
+      #if (!is_server())
+      fbsites::ui_site(name ="trialSitesTable"),
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::ui_pvs(name = "singlePVS"),
 
-      if (!is_server()) fbdocs::fbdocs_ui(name = "docHidap") ,
+      #if (!is_server())
+      fbdocs::fbdocs_ui(name = "docHidap") ,
 
 
 
