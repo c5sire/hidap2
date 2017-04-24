@@ -1,73 +1,88 @@
-library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
 library(shinyFiles)
+library(shinyBS)
+library(shinyjs)
+library(shinyFiles)
 
-library(doBy)
-library(tidyr)
-library(DT)
-library(brapi)
-library(brapps)
-library(agricolae)
-library(dplyr)
-library(openxlsx)
-library(fbmet)
-library(fbhelp)
-library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-
-library(date)
-
-library(purrr)
-
-library(shinyURL)
-library(qtlcharts)
-library(leaflet)
-library(withr)
+library(d3heatmap)
+library(DT)
 library(dplyr)
-library(st4gi)
-library(tibble)
-library(knitr)
-library(readxl)
-library(countrycode)
-library(fbsites)
-library(fbmlist)
-library(fbmet)
-
-library(fbcheck)
-library(fbmlist)
-library(countrycode)
-library(shinyjs)
-library(DBI)
-library(RMySQL)
-library(spsurvey)
-library(foreign)
+library(tidyr)
 library(tools)
 library(stringr)
-library(shinyBS)
-library(fbdesign)
-library(fbopenbooks)
-library(fbanalysis)
+
+library(tibble)
+library(knitr)
+
+library(ggplot2)
+library(ggrepel)
+library(withr)
+
+library(agricolae)
+library(st4gi)
+library(pepa)
 library(traittools)
 library(sbformula)
-library(pepa)
-library(shinyFiles)
-library(rlist)
-library(rprojroot)
-library(factoextra)
-library(ggrepel)
 
-library(fbdocs)
+
+library(fbmet)
+library(fbhelp)
+
+library(brapi)
+library(brapps)
+
 
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
             c("Windows"
               ,
               "Darwin"
-              ))
+            ))
 }
+
+if (!is_server()) {
+  library(doBy)
+
+  library(openxlsx)
+  library(fbdesign)
+
+  library(date)
+
+  library(purrr)
+
+  #library(shinyURL)
+  #library(qtlcharts)
+  #library(leaflet)
+
+  #library(dplyr)
+  library(readxl)
+  library(countrycode)
+  library(fbsites)
+  library(fbmlist)
+
+
+  library(fbcheck)
+
+  library(countrycode)
+  library(DBI)
+  library(RMySQL)
+  library(spsurvey)
+  library(foreign)
+  library(fbdesign)
+  library(fbopenbooks)
+  library(fbanalysis)
+  library(rlist)
+  library(rprojroot)
+  library(factoextra)
+
+  library(fbdocs)
+
+}
+
 
 empty_menu <- shiny::div("")
 
@@ -108,6 +123,11 @@ menu_documentation <- function() {
   menuItem("Documentation",  icon = icon("book"),
            menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))
   )
+}
+
+ui_offline <- function() {
+
+
 }
 
 
@@ -188,17 +208,8 @@ ui <- dashboardPage(
     tabItems(
       hidap::about(),
 
-      ###
-      #Codigo Ivan Perez
-
       tabItem(tabName = "dashboard",
-
-              #br(h2("Highly Interactive Data Analysis Platform")),
               br( p(class = "text-muted", style="text-align:right", "Highly Interactive Data Analysis Platform")),
-
-              # br(),
-              # br(),
-              #img(src="potato.jpg", width = "100%"),-
               img(src="about.jpg", width = "100%"),
 
               br(),
@@ -206,11 +217,8 @@ ui <- dashboardPage(
 
               h3("HIDAP Preview [20/09/2016]"),
               p(class = "text-muted", style="text-align:justify",
-                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
                 shiny::includeHTML("www/about_hidap.txt")
               ),
-
-
               br(),
               br(),
 
@@ -265,23 +273,22 @@ ui <- dashboardPage(
               br(),
               br()
       ),
-      #Fin codigo Ivan Perez
-      ###
 
       # Design Experiments Module ----------------------------------------------------
-      fbdesign::ui_fieldbook(name = "newFieldbook"),
+      if (!is_server()) fbdesign::ui_fieldbook(name = "newFieldbook"),
 
       # Data Quality and Check Fieldbook Module  ----------------------------------------------------
-      fbcheck::fbcheck_ui(name= "checkFieldbook"),
+      if (!is_server()) fbcheck::fbcheck_ui(name = "checkFieldbook"),
 
       # Fieldbook Manager Module ----------------------------------------------------
-      fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
+      if (!is_server()) fbopenbooks::fbopenbooks_ui(name = "openFieldbook"),
 
       # Material List Module ----------------------------------------------------
 
-      fbmlist::generate_ui(name = "generateList"),
-      fbmlist::managerlist_ui(name = "manageList"),
-      fbmlist::createlist_ui(name = "createList"),
+      if (!is_server()) fbmlist::generate_ui(name = "generateList"),
+      if (!is_server()) fbmlist::managerlist_ui(name = "manageList"),
+      if (!is_server()) fbmlist::createlist_ui(name = "createList"),
+
 
 
       brapps::fbasingle_ui("SingleChart"),
@@ -294,27 +301,22 @@ ui <- dashboardPage(
       fbmet::fbmet_ui("metAnalysisGraphs"),
 
 
-      fbsites::addsite_ui(name = "trialSites"),
-      fbsites::ui_site(name ="trialSitesTable"),
+      if (!is_server()) fbsites::addsite_ui(name = "trialSites"),
+      if (!is_server()) fbsites::ui_site(name ="trialSitesTable"),
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::ui_pvs(name = "singlePVS"),
 
-      fbdocs::fbdocs_ui(name = "docHidap") ,
+      if (!is_server()) fbdocs::fbdocs_ui(name = "docHidap") ,
 
 
 
 
 
-      brapps::rts_ui("selResponse"),
+      brapps::rts_ui("selResponse")
 
-      tabItem(tabName = "analysis",
-              h2("Analysis"),
-              p(class = "text-muted",
-                paste("Under construction...")
-              )
-      )
+
     ) , #end of TabSetPanel
 
     tags$div(
@@ -354,15 +356,23 @@ sv <- function(input, output, session) ({
 
   #shinyURL.server()
 
-  fbcheck::fbcheck_server(input, output, session, values)
 
-  fbmlist::server_managerlist(input, output, session, values)
-  fbmlist::server_generate(input, output, session, values)
-  fbmlist::server_createlist(input, output, session, values)
+  if (!is_server()) {
+    fbcheck::fbcheck_server(input, output, session, values)
+    fbmlist::server_managerlist(input, output, session, values)
+    fbmlist::server_generate(input, output, session, values)
+    fbmlist::server_createlist(input, output, session, values)
 
-  fbdesign::server_design(input, output, session, values)
-  fbdesign::server_design_big(input, output, session, values)
-  fbopenbooks::fbopenbooks_server(input, output, session, values)
+    fbdesign::server_design(input, output, session, values)
+    fbdesign::server_design_big(input, output, session, values)
+    fbopenbooks::fbopenbooks_server(input, output, session, values)
+
+    fbdocs::fbdocs_server(input, output, session, values)
+    fbsites::server_addsite(input, output, session, values = values)
+    fbsites::server_site(input, output, session, values = values)
+
+  }
+
   fbanalysis::single_server(input, output, session, values)
   fbanalysis::dtr_server(input, output, session, values)
 
@@ -373,12 +383,6 @@ sv <- function(input, output, session) ({
 
   fbanalysis::pvs_server(input, output, session, values)
   fbanalysis::pvs_anova_server(input, output, session, values)
-
-  fbdocs::fbdocs_server(input, output, session, values)
-
-
-  fbsites::server_addsite(input, output, session, values = values)
-  fbsites::server_site(input, output, session, values = values)
 
 
   brapps::fieldbook_analysis(input, output, session, values)
