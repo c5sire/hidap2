@@ -61,9 +61,50 @@ library(ggrepel)
 
 library(fbdocs)
 
-# init default data: TODO make a function with better logic checking whats new
-# from fbglobal get_base_dir
+is_server <- function() {
+  return( !Sys.info()["sysname"] %in%
+            c(#"Windows",
+              "Darwin") )
+}
 
+menu_material_management <- function() {
+  if (is_server()) return("")
+  menuItem("Material Management",
+           menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
+           menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
+           menuSubItem("Family list", tabName = "createList", icon = icon("list-alt"))#,
+
+  )
+}
+
+menu_fieldbook_management <- function() {
+  if (is_server()) return("")
+  menuItem("Fieldbook management",
+           menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
+           menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
+           menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+  )
+}
+
+menuSub_data_transformation <- function() {
+  if (is_server()) return("")
+  menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+}
+
+menu_geographic_information <- function() {
+  if (is_server()) return("")
+  menuItem("Geographic Information", icon = icon("globe"),
+           menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
+           menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
+  )
+}
+
+menu_documentation <- function() {
+  if (is_server()) return("")
+  menuItem("Documentation",  icon = icon("book"),
+           menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
+  )
+}
 
 
 ui <- dashboardPage(
@@ -83,24 +124,15 @@ ui <- dashboardPage(
                      # menuItem("Phenotype tool", icon = icon("th-list"),
                      menuItem("Phenotype", icon = icon("th-list"),
 
-                              menuItem("Material Management",
-                                       menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
-                                       menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
-                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt"))#,
+                             menu_material_management(),
 
-                              ),
-
-                              menuItem("Fieldbook management",
-                                       menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
-                                       menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
-                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
-                              ),
+                             menu_fieldbook_management(),
 
                               menuItem("Single Trial Analysis",
                                        menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
 
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
-                                       menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
+                                       menuSub_data_transformation()
                               ),
 
                               menuItem("PVS Trial Analysis",
@@ -127,14 +159,9 @@ ui <- dashboardPage(
 
 
 
-                     menuItem("Geographic Information", icon = icon("globe"),
-                              menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
-                              menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
-                     ),
+                     menu_geographic_information(),
 
-                     menuItem("Documentation",  icon = icon("book"),
-                              menuSubItem("HIDAP documents", tabName = "docHidap",icon = icon("file-text-o"))#,
-                     ),
+                     menu_documentation(),
 
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
                      #  ------------------------------------------------------------------------
@@ -237,19 +264,19 @@ ui <- dashboardPage(
       ###
 
       # Design Experiments Module ----------------------------------------------------
-      fbdesign::ui_fieldbook(name = "newFieldbook"),
+      if (is_server()) fbdesign::ui_fieldbook(name = "newFieldbook"),
 
       # Data Quality and Check Fieldbook Module  ----------------------------------------------------
-      fbcheck::fbcheck_ui(name= "checkFieldbook"),
+      if (is_server()) fbcheck::fbcheck_ui(name= "checkFieldbook"),
 
       # Fieldbook Manager Module ----------------------------------------------------
-      fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
+      if (is_server()) fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
 
       # Material List Module ----------------------------------------------------
 
-      fbmlist::generate_ui(name = "generateList"),
-      fbmlist::managerlist_ui(name = "manageList"),
-      fbmlist::createlist_ui(name = "createList"),
+      if (is_server()) fbmlist::generate_ui(name = "generateList"),
+      if (is_server()) fbmlist::managerlist_ui(name = "manageList"),
+      if (is_server()) fbmlist::createlist_ui(name = "createList"),
 
 
       brapps::fbasingle_ui("SingleChart"),
@@ -262,14 +289,14 @@ ui <- dashboardPage(
       fbmet::fbmet_ui("metAnalysisGraphs"),
 
 
-      fbsites::addsite_ui(name = "trialSites"),
-      fbsites::ui_site(name ="trialSitesTable"),
+      if (is_server()) fbsites::addsite_ui(name = "trialSites"),
+      if (is_server()) fbsites::ui_site(name ="trialSitesTable"),
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
       fbanalysis::ui_pvs(name = "singlePVS"),
 
-      fbdocs::fbdocs_ui(name = "docHidap") ,
+      if (is_server()) fbdocs::fbdocs_ui(name = "docHidap") ,
 
 
 
