@@ -63,7 +63,7 @@ library(fbdocs)
 
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
-            c(#"Windows",
+            c("Windows",
               "Darwin") )
 }
 
