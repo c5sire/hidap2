@@ -63,8 +63,50 @@ library(fbdocs)
 
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
-            c("Windows",
-              "Darwin") )
+            c("Windows"
+              ,
+              "Darwin"
+            ))
+}
+
+if (!is_server()) {
+  library(doBy)
+
+  library(openxlsx)
+  library(fbdesign)
+
+  library(date)
+
+  library(purrr)
+
+  #library(shinyURL)
+  #library(qtlcharts)
+  #library(leaflet)
+
+  #library(dplyr)
+  library(readxl)
+  library(countrycode)
+  library(fbsites)
+  library(fbmlist)
+
+
+  library(fbcheck)
+
+  library(countrycode)
+  library(DBI)
+  library(RMySQL)
+  library(spsurvey)
+  library(foreign)
+  library(fbdesign)
+  library(fbopenbooks)
+  library(fbanalysis)
+  library(rlist)
+  library(rprojroot)
+  library(factoextra)
+
+  library(fbdocs)
+
+>>>>>>> 136261d7ee2b7ccdbed2b86f18ab51a7f208da37
 }
 
 menu_material_management <- function() {
