@@ -39,8 +39,8 @@ library(brapps)
 is_server <- function() {
   return( !Sys.info()["sysname"] %in%
             c("Windows"
-              # ,
-              # "Darwin"
+              ,
+              "Darwin"
             ))
 }
 
