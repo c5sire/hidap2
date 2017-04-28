@@ -106,7 +106,6 @@ if (!is_server()) {
 
   library(fbdocs)
 
->>>>>>> 136261d7ee2b7ccdbed2b86f18ab51a7f208da37
 }
 
 menu_material_management <- function() {
