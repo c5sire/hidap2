@@ -222,116 +222,116 @@ ui <- dashboardPage(
 
 
     tabItems(
-      hidap::about(),
-
-      ###
-      #Codigo Ivan Perez
-
-      tabItem(tabName = "dashboard",
-
-              #br(h2("Highly Interactive Data Analysis Platform")),
-              br( p(class = "text-muted", style="text-align:right", "Highly Interactive Data Analysis Platform")),
-
-              # br(),
-              # br(),
-              #img(src="potato.jpg", width = "100%"),-
-              img(src="about.jpg", width = "100%"),
-
-              br(),
-              br(),
-
-              h3("HIDAP Preview [20/09/2016]"),
-              p(class = "text-muted", style="text-align:justify",
-                #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
-                shiny::includeHTML("www/about_hidap.txt")
-              ),
-
-
-              br(),
-              br(),
-
-              fluidRow(
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="CIPlogo_RGB.png", width = "150px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="usaid.png", width = "150px"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  div(img(src="sasha.png"), style="text-align: center;")
-                ),
-                box(
-                  width = 2, style="background-color = #fff", height = "128px",
-                  solidHeader = TRUE,
-                  br(),
-                  div(img(src="rtb.png", width = "150px"), style="text-align: center;")
-                )
-              ),
-
-              br(),
-              br(),
-              br()
-      ),
-
-
-      tabItem(tabName = "integration",
-              fluidRow(
-                box(
-                  title = "CIPFBS report", width = 12, status = "primary", solidHeader = TRUE, collapsible = TRUE,
-                  tags$iframe(src = "http://176.34.251.32/cipfieldbookstorage_dev/protected/extensions/grid/demo.php",
-                              seamless=NA, width = "100%", height = "800px"
-                  )
-                )
-              ),
-
-              br(),
-              br(),
-              br()
-      ),
-      #Fin codigo Ivan Perez
-      ###
-
-      # Design Experiments Module ----------------------------------------------------
-      if (is_server()) fbdesign::ui_fieldbook(name = "newFieldbook"),
-
-      # Data Quality and Check Fieldbook Module  ----------------------------------------------------
-      if (is_server()) fbcheck::fbcheck_ui(name= "checkFieldbook"),
-
-      # Fieldbook Manager Module ----------------------------------------------------
-      if (is_server()) fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
-
-      # Material List Module ----------------------------------------------------
-
-      if (is_server()) fbmlist::generate_ui(name = "generateList"),
-      if (is_server()) fbmlist::managerlist_ui(name = "manageList"),
-      if (is_server()) fbmlist::createlist_ui(name = "createList"),
-
-
-      brapps::fbasingle_ui("SingleChart"),
-
-      fbanalysis::single_ui(name="singleAnalysisReport"),
-      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
-
-
-      fbanalysis::met_ui(name="metAnalysisReport"),
-      fbmet::fbmet_ui("metAnalysisGraphs"),
-
-
-      if (is_server()) fbsites::addsite_ui(name = "trialSites"),
-      if (is_server()) fbsites::ui_site(name ="trialSitesTable"),
+      # hidap::about(),
+      # 
+      # ###
+      # #Codigo Ivan Perez
+      # 
+      # tabItem(tabName = "dashboard",
+      # 
+      #         #br(h2("Highly Interactive Data Analysis Platform")),
+      #         br( p(class = "text-muted", style="text-align:right", "Highly Interactive Data Analysis Platform")),
+      # 
+      #         # br(),
+      #         # br(),
+      #         #img(src="potato.jpg", width = "100%"),-
+      #         img(src="about.jpg", width = "100%"),
+      # 
+      #         br(),
+      #         br(),
+      # 
+      #         h3("HIDAP Preview [20/09/2016]"),
+      #         p(class = "text-muted", style="text-align:justify",
+      #           #paste("HiDAP is a Highly Interactive Data Analysis Platform originally meant to support clonal crop breeders at the <a href='http://www.cipotato.org' target='_new'>International Potato Center</a>. It is part of a continuous institutional effort to improve data collection, data quality, data analysis and open access publication. The recent iteration simultaneously also represents efforts to unify best practices from experiences in breeding data management of over 10 years, specifically with DataCollector and CloneSelector for potato and sweetpotato breeding, to address new demands for open access publishing and continue to improve integration with both corporate and community databases (such as biomart and sweetpotatobase) and platforms such as the <a href='https://research.cip.cgiar.org/gtdms/' target='_new'> Global Trial Data Management System (GTDMS)</a> at CIP. </br> One of the main new characteristics of the current software development platform established over the last two years is the web-based interface which provides also a highly interactive environment. It could be used both online and offline and on desktop as well as tablets and laptops. Key features include support for data capture, creation of field books, upload field books from and to accudatalogger, data access from breeding databases (e.g., <a href = 'http://germplasmdb.cip.cgiar.org/' target='_new'>CIP BioMart</a>, <a href='http://www.sweetpotatobase.org' target='_new'>sweetpotatobase</a> via <a href='http://docs.brapi.apiary.io/' target='_new'>breeding API</a>), data quality checks, single and multi-environmental data analysis, selection indices, and report generations. For users of DataCollector or CloneSelector many of the features are known but have been improved upon. Novel features include list management of breeding families, connection with the institutional pedigree database, interactive and linked graphs as well as reproducible reports. With the first full release by end of November 2016 we will include all characteristics from both DataCollector and CloneSelector. HIDAP, with additional support from <a href='https://sweetpotatogenomics.cals.ncsu.edu/' target='_new'>GT4SP</a>, <a href='http://www.rtb.cgiar.org/' target='_new'>RTB</a>, USAID, and <a href='http://cipotato.org/research/partnerships-and-special-projects/sasha-program/' target='_new'>SASHA</a>, is aimed to support the broader research community working on all aspects with primary focus on breeding, genetics, biotechnology, physiology and agronomy.")
+      #           shiny::includeHTML("www/about_hidap.txt")
+      #         ),
+      # 
+      # 
+      #         br(),
+      #         br(),
+      # 
+      #         fluidRow(
+      #           box(
+      #             width = 2, style="background-color = #fff", height = "128px",
+      #             solidHeader = TRUE,
+      #             br(),
+      #             div(img(src="CIPlogo_RGB.png", width = "150px"), style="text-align: center;")
+      #           ),
+      #           box(
+      #             width = 2, style="background-color = #fff", height = "128px",
+      #             solidHeader = TRUE,
+      #             div(img(src="gt4sp.png", height = "108px"), style="text-align: center;")
+      #           ),
+      #           box(
+      #             width = 2, style="background-color = #fff", height = "128px",
+      #             solidHeader = TRUE,
+      #             br(),
+      #             div(img(src="usaid.png", width = "150px"), style="text-align: center;")
+      #           ),
+      #           box(
+      #             width = 2, style="background-color = #fff", height = "128px",
+      #             solidHeader = TRUE,
+      #             div(img(src="sasha.png"), style="text-align: center;")
+      #           ),
+      #           box(
+      #             width = 2, style="background-color = #fff", height = "128px",
+      #             solidHeader = TRUE,
+      #             br(),
+      #             div(img(src="rtb.png", width = "150px"), style="text-align: center;")
+      #           )
+      #         ),
+      # 
+      #         br(),
+      #         br(),
+      #         br()
+      # ),
+      # 
+      # 
+      # tabItem(tabName = "integration",
+      #         fluidRow(
+      #           box(
+      #             title = "CIPFBS report", width = 12, status = "primary", solidHeader = TRUE, collapsible = TRUE,
+      #             tags$iframe(src = "http://176.34.251.32/cipfieldbookstorage_dev/protected/extensions/grid/demo.php",
+      #                         seamless=NA, width = "100%", height = "800px"
+      #             )
+      #           )
+      #         ),
+      # 
+      #         br(),
+      #         br(),
+      #         br()
+      # ),
+      # #Fin codigo Ivan Perez
+      # ###
+      # 
+      # # Design Experiments Module ----------------------------------------------------
+      # if (is_server()) fbdesign::ui_fieldbook(name = "newFieldbook"),
+      # 
+      # # Data Quality and Check Fieldbook Module  ----------------------------------------------------
+      # if (is_server()) fbcheck::fbcheck_ui(name= "checkFieldbook"),
+      # 
+      # # Fieldbook Manager Module ----------------------------------------------------
+      # if (is_server()) fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
+      # 
+      # # Material List Module ----------------------------------------------------
+      # 
+      # if (is_server()) fbmlist::generate_ui(name = "generateList"),
+      # if (is_server()) fbmlist::managerlist_ui(name = "manageList"),
+      # if (is_server()) fbmlist::createlist_ui(name = "createList"),
+      # 
+      # 
+      # brapps::fbasingle_ui("SingleChart"),
+      # 
+      # fbanalysis::single_ui(name="singleAnalysisReport"),
+      # fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+      # 
+      # 
+      # fbanalysis::met_ui(name="metAnalysisReport"),
+      # fbmet::fbmet_ui("metAnalysisGraphs"),
+      # 
+      # 
+      # if (is_server()) fbsites::addsite_ui(name = "trialSites"),
+      # if (is_server()) fbsites::ui_site(name ="trialSitesTable"),
 
 
       fbanalysis::elston_ui(name="elstonIndex"),
