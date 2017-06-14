@@ -1,9 +1,7 @@
-
 library(d3heatmap)
 library(shinysky)
 library(data.table)
 library(shinyTree)
-library(shinyFiles)
 
 library(doBy)
 library(tidyr)
@@ -18,11 +16,9 @@ library(fbhelp)
 library(fbdesign)
 library(rhandsontable)
 library(shinydashboard)
-
 library(date)
 
 library(purrr)
-
 library(shinyURL)
 library(qtlcharts)
 library(leaflet)
@@ -65,6 +61,12 @@ library(fbdocs)
 # init default data: TODO make a function with better logic checking whats new
 # from fbglobal get_base_dir
 
+#dd = system.file("xdata/Default", package = "fbglobal")
+#file.copy(from = dd, to = fbglobal::get_base_dir(""), recursive = TRUE)
+
+# remove dependency on RTools by pointing to a zip.exe. NOTE: needs to be installed
+# into HIDAP working dir by installer
+#Sys.setenv("R_ZIPCMD" = file.path(Sys.getenv("HIDAP_HOME"), "zip.exe"))
 
 
 ui <- dashboardPage(
@@ -87,19 +89,20 @@ ui <- dashboardPage(
                               menuItem("Material Management",
                                        menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
                                        menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
-                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt"))#,
-
+                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt")),
+                                       menuSubItem("Parental list", tabName = "parentList", icon = icon("list-alt")),
+                                       menuSubItem("Distribution Data", tabName = "distributionDB", icon = icon("database"))
                               ),
 
                               menuItem("Fieldbook management",
                                        menuSubItem("New fieldbook", tabName = "newFieldbook", icon = icon("file")),
                                        menuSubItem("Open fieldbook", tabName = "openFieldbook", icon = icon("file-o")),
-                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser"))#,
+                                       menuSubItem("Check fieldbook", tabName = "checkFieldbook", icon = icon("eraser")),
+                                       menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
 
                               menuItem("Single Trial Analysis",
                                        menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
-
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
                                        menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
@@ -107,10 +110,9 @@ ui <- dashboardPage(
                               menuItem("PVS Trial Analysis",
                                        menuSubItem("PVS report", tabName = "singlePVS", icon = icon("calculator"))#,
                                        #menuSubItem("PVS anova report",tabName = "singlePVS", icon = icon("calculator"))
-
                               ),
 
-                              menuItem("MET Trial Analysis",
+                              menuItem("MET Analysis",
                                        menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
                               ),
@@ -121,16 +123,7 @@ ui <- dashboardPage(
                                        menuSubItem("Selection response", tabName = "selResponse",icon = icon("indent"))
                               )#,
 
-
-
-
                      ),
-
-                     # menuItem("Geographic Information",
-                     #          menuSubItem("Add trial sites",tabName = "trialSites",icon = icon("file-text-o")),
-                     #          menuSubItem("Locations table",tabName = "trialSitesTable",icon = icon("file-text-o"))
-                     #
-                     # ),
 
                      menuItem("Geographic Information", icon = icon("globe"),
                               menuSubItem("Add trial sites",tabName = "trialSites", icon = icon("location-arrow")),
@@ -150,20 +143,16 @@ ui <- dashboardPage(
 
   dashboardBody(
     #
-
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css")
     ),
 
     includeCSS("www/custom.css"),
 
-
     tabItems(
-      hidap::about(),
 
       ###
       #Codigo Ivan Perez
-
       tabItem(tabName = "dashboard",
 
               #br(h2("Highly Interactive Data Analysis Platform")),
@@ -223,7 +212,6 @@ ui <- dashboardPage(
               br()
       ),
 
-
       tabItem(tabName = "integration",
               fluidRow(
                 box(
@@ -250,17 +238,24 @@ ui <- dashboardPage(
       # Fieldbook Manager Module ----------------------------------------------------
       fbopenbooks::fbopenbooks_ui(name="openFieldbook"),
 
+      # Data Transformation
+      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+
+
       # Material List Module ----------------------------------------------------
 
       fbmlist::generate_ui(name = "generateList"),
       fbmlist::managerlist_ui(name = "manageList"),
       fbmlist::createlist_ui(name = "createList"),
-
+      fbmlist::parent_ui(name = "parentList"),
+      fbmlist::distribution_ui(name = "distributionDB"),
 
       brapps::fbasingle_ui("SingleChart"),
 
+
+
       fbanalysis::single_ui(name="singleAnalysisReport"),
-      fbanalysis::dtr_ui(name = "singleAnalysisTrans"),
+
 
 
       fbanalysis::met_ui(name="metAnalysisReport"),
@@ -278,7 +273,7 @@ ui <- dashboardPage(
 
 
 
-
+      #fbanalysis::pbaker_ui(name="pesekIndex"),
 
       brapps::rts_ui("selResponse"),
 
@@ -332,6 +327,8 @@ sv <- function(input, output, session) ({
   fbmlist::server_managerlist(input, output, session, values)
   fbmlist::server_generate(input, output, session, values)
   fbmlist::server_createlist(input, output, session, values)
+  fbmlist::server_parentlist(input, output, session, values)
+  fbmlist::server_distribution(input,output,session, values)
 
   fbdesign::server_design(input, output, session, values)
   fbdesign::server_design_big(input, output, session, values)
@@ -352,7 +349,6 @@ sv <- function(input, output, session) ({
 
   fbsites::server_addsite(input, output, session, values = values)
   fbsites::server_site(input, output, session, values = values)
-
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
