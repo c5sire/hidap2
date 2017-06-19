@@ -89,9 +89,9 @@ ui <- dashboardPage(
                               menuItem("Material Management",
                                        menuSubItem("Manage list", tabName = "manageList", icon = icon("table")),
                                        menuSubItem("Clone list", tabName = "generateList", icon = icon("list")),
-                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt")),
-                                       menuSubItem("Parental list", tabName = "parentList", icon = icon("list-alt")),
-                                       menuSubItem("Distribution Data", tabName = "distributionDB", icon = icon("database"))
+                                       menuSubItem("Family list", tabName = "createList", icon = icon("list-alt"))#,
+                                       #menuSubItem("Parental list", tabName = "parentList", icon = icon("list-alt")),
+                                       #menuSubItem("Distribution Data", tabName = "distributionDB", icon = icon("database"))
                               ),
 
                               menuItem("Fieldbook management",
@@ -327,8 +327,8 @@ sv <- function(input, output, session) ({
   fbmlist::server_managerlist(input, output, session, values)
   fbmlist::server_generate(input, output, session, values)
   fbmlist::server_createlist(input, output, session, values)
-  fbmlist::server_parentlist(input, output, session, values)
-  fbmlist::server_distribution(input,output,session, values)
+  #fbmlist::server_parentlist(input, output, session, values)
+  #fbmlist::server_distribution(input,output,session, values)
 
   fbdesign::server_design(input, output, session, values)
   fbdesign::server_design_big(input, output, session, values)
