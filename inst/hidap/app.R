@@ -102,7 +102,7 @@ ui <- dashboardPage(
                               ),
 
                               menuItem("Single Trial Analysis",
-                                       menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
+                                       #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o")),
                                        menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
@@ -113,7 +113,7 @@ ui <- dashboardPage(
                               ),
 
                               menuItem("MET Analysis",
-                                       menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
+                                       #menuSubItem("MET analytical graph",tabName = "metAnalysisGraphs", icon = icon("calculator")),
                                        menuSubItem("MET report", tabName = "metAnalysisReport",icon = icon("file-text-o"))#,
                               ),
 
@@ -352,7 +352,7 @@ sv <- function(input, output, session) ({
 
   brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
-  fbmet::met_sv(input, output, session, values)
+  #fbmet::met_sv(input, output, session, values)
   brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
