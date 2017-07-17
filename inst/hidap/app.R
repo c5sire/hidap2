@@ -106,6 +106,7 @@ ui <- dashboardPage(
                                        #menuSubItem("Single trial graph",tabName = "SingleChart", icon = icon("calculator")),
                                        menuSubItem("Single report", tabName = "singleAnalysisReport", icon = icon("file-text-o"))#,
                                        #menuSubItem("Genetic report", tabName = "geneticAnalysisReport", icon = icon("file-text-o"))
+
                                        #menuSubItem("Data Transformation", tabName = "singleAnalysisTrans", icon = icon("file-text-o"))
                               ),
 
@@ -137,7 +138,6 @@ ui <- dashboardPage(
                      ),
 
                      menuItem("About", tabName = "dashboard", icon = icon("dashboard"), selected = TRUE)#,
-                     #  ------------------------------------------------------------------------
 
                    )
                    # )
@@ -249,10 +249,10 @@ ui <- dashboardPage(
       fbmlist::generate_ui(name = "generateList"),
       fbmlist::managerlist_ui(name = "manageList"),
       fbmlist::createlist_ui(name = "createList"),
-      fbmlist::parent_ui(name = "parentList"),
-      fbmlist::distribution_ui(name = "distributionDB"),
+      #fbmlist::parent_ui(name = "parentList"),
+      #fbmlist::distribution_ui(name = "distributionDB"),
 
-      brapps::fbasingle_ui("SingleChart"),
+      #brapps::fbasingle_ui("SingleChart"),
 
 
 
@@ -353,10 +353,10 @@ sv <- function(input, output, session) ({
   fbsites::server_addsite(input, output, session, values = values)
   fbsites::server_site(input, output, session, values = values)
 
-  brapps::fieldbook_analysis(input, output, session, values)
+  #brapps::fieldbook_analysis(input, output, session, values)
   #brapps::locations(input, output, session, values)
   #fbmet::met_sv(input, output, session, values)
-  brapps::rts_sv(input, output, session, values)
+  #brapps::rts_sv(input, output, session, values)
 
   # drat::addRepo("c5sire")
   # res = eventReactive(input$about_update, {
